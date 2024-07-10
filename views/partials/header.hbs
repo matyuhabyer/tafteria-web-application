@@ -1,0 +1,21 @@
+<!-- Header Section -->
+    <header class="w-full bg-green-800 h-20 flex items-center justify-between px-5 text-white relative z-10">
+        <div class="flex items-center">
+            <!-- Logo -->
+            <a href="/">
+                <img class="w-64 h-auto" alt="Tafteria Logo" src="/images/tafteria-logo.png">
+            </a>
+        </div>
+        <!-- Search Bar -->
+        <div class="flex-grow max-w-md mx-5">
+            <form action="/search" method="GET" class="flex">
+                <input type="text" name="query" class="w-full h-10 rounded-l-lg border border-gray-300 px-4 text-black" placeholder="Search establishments or reviews...">
+                <button type="submit" class="h-10 px-4 rounded-r-lg bg-yellow-500 text-white hover:bg-yellow-400 transition-colors">Search</button>
+            </form>
+        </div>
+        <!-- Register and Login Buttons -->
+        <div class="flex items-center">
+            <a class="bg-yellow-500 w-32 h-9 flex items-center justify-center rounded-lg font-bold text-white hover:bg-white hover:text-yellow-500 transition-colors mx-2" href="/register">Register</a>
+            <a class="bg-yellow-500 w-32 h-9 flex items-center justify-center rounded-lg font-bold text-white hover:bg-white hover:text-yellow-500 transition-colors mx-2" href="/login">Login</a>
+        </div>
+    </header>
