@@ -1,0 +1,36 @@
+
+<div class="flex items-center justify-center h-full bg-cover bg-center text-black" style="background-image: url(/images/agno1.jpg);">
+    <div class="w-full h-full flex flex-col items-center justify-center bg-black bg-opacity-50 text-center text-black p-10">
+        <div id="establishments" class="bg-white-500 p-5 flex justify-center w-full">
+            <div id="reviews-box" class="w-screen bg-white p-5 rounded-lg grid grid-row gap-4">
+                <h2 class="text-4xl font-bold mb-5 text-center">Taft Establishments</h2>
+
+                {{#each establishments}}
+                 <a href="/establishments/{{_id}}">
+                        <div class="flex rounded-lg shadow-lg transition transform hover:-translate-y-1 hover:bg-yellow-100">
+                            <div class="w-1/2 h-64 rounded-lg flex justify-end bg-cover" style="background-image: url({{mainImage}});">
+                                <img src="/images/hrt.jpg" class="w-12 h-12 p-2 rounded-full transition-transform transform hover:-translate-y-1">
+                            </div>
+                            <div class="p-2 ml-4 w-full">
+                                <div class="flex justify-between font-bold">
+                                    <p class="text-3xl underline underline-offset-2">{{name}}</p>
+                                    <p class="text-l mt-5">{{phone}}</p>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="text-yellow-400 text-2xl mr-2">
+                                        &#9733
+                                    </div>
+                                    <p class="text-sm font-bold mr-1">{{rating}}</p>
+                                    <p class="text-sm text-gray-500">({{reviewsCount}} Reviews)</p>
+                                </div>
+                                <p class="text-sm text-gray-700 mt-14">{{description}}<span class="italic font-semibold">{{reviewer}}</span></p>
+                            </div>
+                        </div>
+                    </a>
+                {{/each}}
+                
+            </div>  
+        </div>
+    </div>
+</div>
+

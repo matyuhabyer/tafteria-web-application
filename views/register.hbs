@@ -1,0 +1,37 @@
+
+<div id="main" class="main-content-white">
+    <div class="min-h-screen flex flex-col justify-center items-center flex items-center justify-center h-screen bg-cover bg-center" style="background-image: url(/images/agno1.jpg);">
+        <div class="w-full h-full flex flex-col items-center justify-center bg-black bg-opacity-50 text-center text-white p-10">
+            <div class="bg-white p-8 rounded shadow-md w-96 border-4 border-green-900">
+                <h1 class="text-2xl font-semibold mb-2 text-black">Register</h1>
+                <h2 class="text-gray-500 text-sm text-center mb-4">Please create your account</h2>
+                <form action="/register" method="POST" enctype="multipart/form-data">
+                    <div class="mb-4">
+                        <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username:</label>
+                        <input type="text" id="username" name="username" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:shadow-outline" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+                        <input type="password" id="password" name="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:shadow-outline" required>
+                    </div>
+                    <div class="mb-6">
+                        <label for="avatar" class="block text-gray-700 text-sm font-bold mb-2">Avatar:</label>
+                        <input type="file" id="avatar" name="avatar" accept="image/*" class="block w-full text-sm text-gray-900 border border-gray-300 cursor-pointer bg-gray-50" required>
+                    </div>
+                    <div class="mb-6">
+                        <label for="description" class="block text-gray-700 text-sm font-bold mb-2">Short Description (Optional):</label>
+                        <textarea id="description" name="description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:shadow-outline" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        Register
+                    </button>
+                    <p class="mt-4 text-center text-sm text-gray-700">
+                        Already have an account? 
+                        <a href="/login" class="text-blue-500 hover:underline">Login</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
