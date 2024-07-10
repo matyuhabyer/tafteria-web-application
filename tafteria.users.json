@@ -1,0 +1,85 @@
+[{
+  "_id": {
+    "$oid": "668d3daf701a18de9c9563b1"
+  },
+  "username": "aawdasdwa",
+  "password": "$2b$10$JEnFMOU28TYXVBsXhQZ.YOCMvT0ZHcBpJ4Z2ILHJivb.H120g0bK6",
+  "avatar": "1720532399428.jpg",
+  "description": "",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "668e428e34fb8b867fae6633"
+  },
+  "username": "patcaps",
+  "password": "$2b$10$7Aw./faJJQtkgrVRaf7UjO.BgTeCkelywucWh9tikvmIH9stYoJM2",
+  "avatar": "1720599182854.png",
+  "description": "",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "668e96ca50f103d6b34dc2ec"
+  },
+  "username": "Yuta Okkotsu",
+  "password": "$2b$10$nKwGaT/we6XFj4potFI3keejiq7JWzXigr44RTCxXfEG3ZFwAE/rO",
+  "avatar": "https://static.wikia.nocookie.net/jujutsu-kaisen/images/7/79/Yuta_Okkotsu_%28Chapter_137%29.png/revision/latest?cb=20210201190010",
+  "description": "Gojo Wannabe",
+  "joinedDate": {
+    "$date": "2022-05-20T00:00:00.000Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "668e96ca50f103d6b34dc2ed"
+  },
+  "username": "Kamado Tanjiro",
+  "password": "$2b$10$K6cRlwTDx0zrGbQyqtxObebyX11CxTJS0vpMWk020sjygWMLV2M7W",
+  "avatar": "https://upload.wikimedia.org/wikipedia/en/e/ea/Tanjirou_manga.png",
+  "description": "Hinokami Kagura",
+  "joinedDate": {
+    "$date": "2024-07-10T14:12:26.253Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "668e96ca50f103d6b34dc2ee"
+  },
+  "username": "Lebron James",
+  "password": "$2b$10$/XJAdE7pyO0fbCA7h3mgted7kPkhkT9uTYvo1XgmLFDVmUfTso3mO",
+  "avatar": "https://upload.wikimedia.org/wikipedia/commons/7/7a/LeBron_James_%2851959977144%29_%28cropped2%29.jpg",
+  "description": "KING!",
+  "joinedDate": {
+    "$date": "2024-07-10T14:12:26.253Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "668e96ca50f103d6b34dc2ef"
+  },
+  "username": "Tom Cruise",
+  "password": "$2b$10$CuDIbKQHRULZpTH3qnN3OO2OlPIzn53EkNAXRr/KKzixsyo1lK0DG",
+  "avatar": "999.jpg",
+  "description": "See you at the movies!",
+  "joinedDate": {
+    "$date": "2024-07-10T14:12:26.253Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "668e96ca50f103d6b34dc2f0"
+  },
+  "username": "Zed",
+  "password": "$2b$10$MitYrgTOqS07T/Pe4vV4feBexgDr71wBwAVOBi137byglihBBX01S",
+  "avatar": "https://static.wikia.nocookie.net/leagueoflegends/images/d/de/Zed_Render.png/revision/latest?cb=20240219201225",
+  "description": "Shadow",
+  "joinedDate": {
+    "$date": "2022-05-20T00:00:00.000Z"
+  },
+  "__v": 0
+}]

@@ -1,0 +1,144 @@
+[{
+  "_id": {
+    "$oid": "668e35fd0b62edb05ce2f37c"
+  },
+  "name": "24 Chicken",
+  "mainImage": "/images/24chk.jpg",
+  "phone": "(0912) 345 67890",
+  "rating": 5,
+  "reviewsCount": 3,
+  "description": "...24 Chicken offers some of the best Korean fried chicken...",
+  "reviewer": "- Jungkook",
+  "gallery": [
+    "/images/24chk.jpg",
+    "/images/24chk.jpg",
+    "/images/24chk.jpg"
+  ],
+  "createdAt": {
+    "$date": "2024-07-10T07:19:25.529Z"
+  },
+  "updatedAt": {
+    "$date": "2024-07-10T15:22:39.354Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "668e35fd0b62edb05ce2f37d"
+  },
+  "name": "Prelude Cafe",
+  "mainImage": "/images/prelude.jpg",
+  "phone": "(0912) 345 67890",
+  "rating": 2,
+  "reviewsCount": 1,
+  "description": "...Prelude Cafe is a wonderful place to unwind...",
+  "reviewer": "- Luka Doncic",
+  "gallery": [
+    "/images/prelude.jpg",
+    "/images/prelude.jpg",
+    "/images/prelude.jpg"
+  ],
+  "createdAt": {
+    "$date": "2024-07-10T07:19:25.530Z"
+  },
+  "updatedAt": {
+    "$date": "2024-07-10T15:31:34.564Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "668e35fd0b62edb05ce2f380"
+  },
+  "name": "Ate Rica's Bacsilog",
+  "mainImage": "/images/bcs.png",
+  "phone": "(0912) 345 67890",
+  "rating": 5,
+  "reviewsCount": 69,
+  "description": "...Ate Rica's Bacsilog is the ultimate comfort food...",
+  "reviewer": "- Jose Rizal",
+  "gallery": [
+    "/images/bcs.jpg",
+    "/images/bcs.jpg",
+    "/images/bcs.jpg"
+  ],
+  "createdAt": {
+    "$date": "2024-07-10T07:19:25.530Z"
+  },
+  "updatedAt": {
+    "$date": "2024-07-10T07:19:25.530Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "668e35fd0b62edb05ce2f381"
+  },
+  "name": "Mongolian Master",
+  "mainImage": "/images/mongolian.jpg",
+  "phone": "(0912) 345 67890",
+  "rating": 5,
+  "reviewsCount": 69,
+  "description": "...Mongolian Master offers a fantastic DIY stir-fry experience...",
+  "reviewer": "- Gordon Ramsay",
+  "gallery": [
+    "/images/mongolian.jpg",
+    "/images/mongolian.jpg",
+    "/images/mongolian.jpg"
+  ],
+  "createdAt": {
+    "$date": "2024-07-10T07:19:25.530Z"
+  },
+  "updatedAt": {
+    "$date": "2024-07-10T07:19:25.530Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "668e35fd0b62edb05ce2f37e"
+  },
+  "name": "Brother's Burger",
+  "mainImage": "/images/brothers.jpg",
+  "phone": "(0912) 345 67890",
+  "rating": 5,
+  "reviewsCount": 69,
+  "description": "...The burgers at Brother's Burger are top-notch...",
+  "reviewer": "- Vice Ganda",
+  "gallery": [
+    "/images/brothers.jpg",
+    "/images/brothers.jpg",
+    "/images/brothers.jpg"
+  ],
+  "createdAt": {
+    "$date": "2024-07-10T07:19:25.530Z"
+  },
+  "updatedAt": {
+    "$date": "2024-07-10T07:19:25.530Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "668e35fd0b62edb05ce2f37f"
+  },
+  "name": "Subway",
+  "mainImage": "/images/subway.jpeg",
+  "phone": "(0912) 345 67890",
+  "rating": 5,
+  "reviewsCount": 69,
+  "description": "...Subway never disappoints with their fresh ingredients...",
+  "reviewer": "- Albert Einstein",
+  "gallery": [
+    "/images/subway.jpg",
+    "/images/subway.jpg",
+    "/images/subway.jpg"
+  ],
+  "createdAt": {
+    "$date": "2024-07-10T07:19:25.530Z"
+  },
+  "updatedAt": {
+    "$date": "2024-07-10T07:19:25.530Z"
+  },
+  "__v": 0
+}]
