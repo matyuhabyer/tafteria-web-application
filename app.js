@@ -10,11 +10,12 @@ const multer = require('multer');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
+const { check, validationResult } = require('express-validator');
 
 // Models
 const User = require('./models/User');
 const Establishment = require('./models/Establishment');
-const Reviews = require('./models/Review')
+const Reviews = require('./models/Review');
 
 // Middleware for parsing JSON and URL-encoded form data
 app.use(express.json());
@@ -38,7 +39,30 @@ app.engine('hbs', handlebars.engine({
   defaultLayout: 'index',
   layoutsDir: path.join(__dirname, 'views/layouts'),
   partialsDir: path.join(__dirname, 'views/partials'),
+  helpers: {
+    repeat: function (n, block) {
+      let accum = '';
+      for (let i = 0; i < n; ++i) {
+        accum += block.fn(i < n);
+      }
+      return accum;
+    },
+    jsonify: function (context) {
+      return JSON.stringify(context);
+    },
+    range: function (n) {
+      return Array.from({ length: n }, (_, i) => i);
+    },
+    gt: function (a, b) {
+      return a > b;
+    },
+    eq: function (a, b) {
+      return a === b;
+    }
+
+  }
 }));
+
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 
@@ -62,47 +86,59 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Define a route for the root path
-app.get('/', (req, res) => {
-  res.render('home', { title: 'Tafteria' , layout:'index'});
+app.get('/', async (req, res) => {
+  try {
+    const establishments = await Establishment.find({}).lean();
+    const reviews = await Reviews.find({})
+      .sort({ date: -1 }) // Sort reviews by date in descending order
+      .populate('user')
+      .populate('establishment')
+      .lean();
+
+    res.render('home', { title: 'Tafteria', establishments, reviews, layout: 'index' });
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
 // Define a route for the login page
 app.get('/login', (req, res) => {
-  res.render('login', { title: 'Login | Tafteria', layout:'index'});
+  res.render('login', { title: 'Login | Tafteria', layout: 'index' });
 });
 
 // Define a route for the register page
 app.get('/register', (req, res) => {
-  res.render('register', { title: 'Register | Tafteria' , layout:'index'});
+  res.render('register', { title: 'Register | Tafteria', layout: 'index' });
 });
 
 // Define a route for the establishments page
 app.get('/establishments', async (req, res, next) => {
   let establishments = await Establishment.find({}).lean();
-  res.render('establishments', { title: 'Establishments | Tafteria', establishments:establishments, layout: 'index', user: req.session.user}); 
+  res.render('establishments', { title: 'Establishments | Tafteria', establishments: establishments, layout: 'index', user: req.session.user });
 });
 
 app.get('/profile', async (req, res) => {
-  res.render('profile', { title: 'Profile | Tafteria', layout: 'index', user: req.session.user}); 
+  const id = req.params.id;
+  let reviews = await Reviews.find({ establishment: id }).populate('user').lean();
+  res.render('profile', { title: 'Profile | Tafteria', layout: 'index', user: req.session.user, reviews: reviews });
 });
 
-//Handle establishments: render to pages
+// Handle establishments: render to pages
 app.get('/establishments/:id', async (req, res) => {
   const id = req.params.id;
   try {
     let establishmentData = await Establishment.findById(id).lean();
-    let reviews = await Reviews.find({ establishment: id }).lean().populate('user'); // Populate user data from User model
-    // Assuming you want to fetch the user who made the first review (just an example)
-    let user = reviews.length > 0 ? reviews[0].user : null; // Adjust based on your logic
+    let reviews = await Reviews.find({ establishment: id }).populate('user').populate('comments.user').lean();
 
     if (establishmentData) {
-      res.render('pages', { 
-        title: 'Tafteria', 
-        establishmentData: establishmentData, 
-        reviews: reviews, 
+      res.render('pages', {
+        title: 'Tafteria',
+        establishmentData: establishmentData,
+        reviews: reviews,
         user: req.session.user,
         layout: 'index'
-      }); 
+      });
     } else {
       res.status(404).send('Establishment not found');
     }
@@ -111,6 +147,7 @@ app.get('/establishments/:id', async (req, res) => {
     res.status(500).send('Error retrieving establishment');
   }
 });
+
 
 // Handle user registration
 app.post('/register', upload.single('avatar'), async (req, res) => {
@@ -144,7 +181,7 @@ app.post('/login', async (req, res) => {
   try {
     const user = await User.findOne({ username });
     if (user && await bcrypt.compare(password, user.password)) {
-        req.session.user = {
+      req.session.user = {
         id: user._id,
         username: user.username,
         avatar: user.avatar,
@@ -161,18 +198,186 @@ app.post('/login', async (req, res) => {
   }
 });
 
+// Handle review deletion
+app.delete('/reviews/:id', async (req, res) => {
+  const reviewId = req.params.id;
+  const user = req.session.user;
+
+  if (!user) {
+    console.log('User not logged in.'); 
+    return res.status(401).send('You must be logged in to delete a review.');
+  }
+
+  try {
+    const review = await Reviews.findById(reviewId);
+    if (!review) {
+      console.log('Review not found.');
+      return res.status(404).send('Review not found.');
+    }
+
+    // Check if the logged-in user is the owner of the review
+    if (review.user.toString() !== user.id) {
+      console.log('User does not have permission to delete this review.');  
+      return res.status(403).send('You do not have permission to delete this review.');
+    }
+
+    await Reviews.findByIdAndDelete(reviewId);
+    console.log('Review deleted successfully.');
+    res.status(200).send('Review deleted successfully.');
+  } catch (error) {
+    console.error('Error deleting review:', error);
+    res.status(500).send('Error deleting review.');
+  }
+});
+
+// Route to add a comment to a review
+app.post('/reviews/:id/comments', async (req, res) => {
+  const reviewId = req.params.id;
+  const { text, establishmentId } = req.body;
+  const user = req.session.user;
+
+  if (!user || !user.id) {
+    return res.status(401).send('You must be logged in to comment.');
+  }
+
+  try {
+    await Reviews.findByIdAndUpdate(reviewId, {
+      $push: { comments: { user: user.id, text } }
+    });
+    res.redirect(`/establishments/${establishmentId}`);
+  } catch (error) {
+    console.error('Error adding comment:', error);
+    res.status(500).send('Error adding comment.');
+  }
+});
+
+
+// Handle review update
+app.post('/reviews/:id/edit', async (req, res) => {
+  const reviewId = req.params.id;
+  const { comment } = req.body;
+  const user = req.session.user;
+
+  if (!user || !user.id) {
+    return res.status(401).send('You must be logged in to edit a review.');
+  }
+
+  try {
+    const review = await Reviews.findById(reviewId);
+    if (!review) {
+      return res.status(404).send('Review not found.');
+    }
+
+    // Check if the logged-in user is the owner of the review
+    if (review.user.toString() !== user.id) {
+      return res.status(403).send('You do not have permission to edit this review.');
+    }
+
+    review.comment = comment;
+    await review.save();
+
+    res.redirect(`/establishments/${review.establishment}`);
+  } catch (error) {
+    console.error('Error updating review:', error);
+    res.status(500).send('Error updating review.');
+  }
+});
+
+
+// Route to Handle profile edit
+app.post('/profile/edit', upload.single('avatar'), [
+  check('description').isLength({ max: 200 }).withMessage('Description must be less than 200 characters')
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+  }
+
+  if (!req.session.user) {
+      return res.redirect('/login');
+  }
+
+  try {
+      const userId = req.session.user.id;
+      const { description } = req.body;
+      const avatar = req.file ? req.file.filename : req.session.user.avatar;
+
+      // Update the user profile
+      await User.findByIdAndUpdate(userId, {
+          avatar,
+          description
+      });
+
+      // Update session data
+      req.session.user.avatar = avatar;
+      req.session.user.description = description;
+
+      res.redirect('/profile');
+  } catch (error) {
+      console.error('Error updating profile:', error);
+      res.status(500).send('Error updating profile.');
+  }
+});
+
+
 // Define a route for the home page of user
-app.get('/home-user', (req, res) => {
+app.get('/home-user', async (req, res) => {
   if (req.session.user) {
     console.log('Session user:', req.session.user);
-    res.render('home-user', {
-      title: 'User-Home | Tafteria',
-      user: req.session.user,
-      layout: 'index'
-    });
+
+    try {
+      // Fetch establishments
+      let establishments = await Establishment.find({}).lean();
+
+      // Fetch reviews for the logged-in user and sort them by date in descending order
+      let reviews = await Reviews.find({})
+        .sort({ date: -1 }) // Sort reviews by date in descending order
+        .populate('establishment')
+        .populate('user')
+        .lean();
+
+      res.render('home-user', {
+        title: 'User-Home | Tafteria',
+        user: req.session.user,
+        establishments: establishments,
+        reviews: reviews,
+        layout: 'index'
+      });
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      res.status(500).send('Error fetching data.');
+    }
   } else {
     res.redirect('/login');
   }
+});
+
+//About
+app.get('/about', (req, res) => {
+  const data = {
+    title: 'About | Tafteria',
+    npmPackages: [
+      { name: 'bcrypt', version: '^5.1.1', description: 'Library for hashing passwords.' },
+      { name: 'body-parser', version: '^1.20.2', description: 'Middleware for parsing request bodies.' },
+      { name: 'crypto', version: '^1.0.1', description: 'Core Node.js module for cryptographic functions.' },
+      { name: 'dotenv', version: '^16.4.5', description: 'Loads environment variables from a .env file.' },
+      { name: 'express', version: '^4.19.2', description: 'Fast, minimalist web framework for Node.js.' },
+      { name: 'express-handlebars', version: '^7.1.3', description: 'Handlebars view engine for Express.' },
+      { name: 'express-session', version: '^1.18.0', description: 'Middleware for managing session data.' },
+      { name: 'express-validator', version: '^6.14.0', description: 'Express middleware for validation.' },
+      { name: 'hbs', version: '^4.2.0', description: 'Handlebars templating library.' },
+      { name: 'moment', version: '^2.30.1', description: 'Library for parsing, validating, and formatting dates.' },
+      { name: 'mongoose', version: '^8.5.0', description: 'MongoDB object modeling tool for Node.js.' },
+      { name: 'multer', version: '^1.4.5-lts.1', description: 'Middleware for handling file uploads.' }
+    ],
+    thirdPartyLibraries: [
+      { name: 'Handlebars', description: 'Templating engine used for rendering dynamic HTML.' },
+      { name: 'Tailwind CSS', description: 'Utility-first CSS framework for designing custom user interfaces.' }
+      // Add more third-party libraries if applicable
+    ]
+  };
+
+  res.render('about', data);
 });
 
 
@@ -186,14 +391,11 @@ app.get('/logout', (req, res) => {
   });
 });
 
-//Handle review input
+// Handle review input
 app.post('/establishments/:id/reviews', async (req, res) => {
   const establishmentId = req.params.id;
   const { rating, comment } = req.body;
   const user = req.session.user;
-
-  console.log('Session User:', user);
-  console.log('Establishment ID:', establishmentId);
 
   if (!user || !user.id) {
     return res.status(401).send('You must be logged in to post a review.');
@@ -215,6 +417,63 @@ app.post('/establishments/:id/reviews', async (req, res) => {
   }
 });
 
+app.post('/reviews/:id/like', async (req, res) => {
+  const reviewId = req.params.id;
+
+  try {
+    const review = await Reviews.findById(reviewId);
+    if (!review) return res.status(404).json({ error: 'Review not found' });
+
+    review.likes += 1;
+    await review.save();
+
+    console.log('Updated review:', review);
+    res.json({ newLikeCount: review.likes });
+  } catch (error) {
+    console.error('Error updating like count:', error);
+    res.status(500).json({ error: 'Failed to update like count' });
+  }
+});
+
+
+
+// Define a route for search results
+app.get('/search', async (req, res) => {
+  // Extract the query parameter and trim it for case-insensitive search
+  const query = req.query.q ? req.query.q.trim() : '';
+  console.log('Search Query:', query);
+
+  try {
+    // Search for establishments based on exact match of the query in name or description
+    const establishments = await Establishment.find({
+      $or: [
+        { name: { $regex: `\\b${query}\\b`, $options: 'i' } },
+        { description: { $regex: `\\b${query}\\b`, $options: 'i' } }
+      ]
+    }).lean();
+    console.log('Establishments Found:', establishments);
+
+    // Search for reviews based on exact match of the query in comment
+    const reviews = await Reviews.find({
+      $or: [
+        { comment: { $regex: `\\b${query}\\b`, $options: 'i' } },
+        { 'establishment.name': { $regex: `\\b${query}\\b`, $options: 'i' } }
+      ]
+    }).populate('user').populate('establishment').lean();
+    console.log('Reviews Found:', reviews);
+
+    // Render the search results page with the query, establishments, and reviews
+    res.render('search', {
+      title: 'Search Results | Tafteria',
+      query,
+      establishments,
+      reviews
+    });
+  } catch (error) {
+    console.error('Search Error:', error);
+    res.status(500).send('Error performing search.');
+  }
+});
 
 
 // Error handling for 404
@@ -238,7 +497,3 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
-
-
-
-

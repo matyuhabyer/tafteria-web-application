@@ -1,100 +1,102 @@
 [{
   "_id": {
-    "$oid": "668e9cdc4187099f617055ca"
+    "$oid": "66ac119a1f9ba07047891517"
   },
   "user": {
     "$oid": "668e96ca50f103d6b34dc2ef"
   },
   "rating": 5,
-  "comment": "Great food!",
+  "comment": "Hi",
   "establishment": {
     "$oid": "668e35fd0b62edb05ce2f37c"
   },
   "likes": 0,
   "dislikes": 0,
   "date": {
-    "$date": "2024-07-10T14:38:20.057Z"
+    "$date": "2024-08-01T22:52:10.737Z"
   },
   "createdAt": {
-    "$date": "2024-07-10T14:38:20.060Z"
+    "$date": "2024-08-01T22:52:10.739Z"
   },
   "updatedAt": {
-    "$date": "2024-07-10T14:38:20.060Z"
+    "$date": "2024-08-02T02:51:07.264Z"
   },
-  "__v": 0
+  "__v": 0,
+  "comments": [
+    {
+      "user": {
+        "$oid": "668e96ca50f103d6b34dc2ef"
+      },
+      "text": "a",
+      "_id": {
+        "$oid": "66ac43ba037ba331848870fc"
+      },
+      "date": {
+        "$date": "2024-08-02T02:26:02.127Z"
+      }
+    },
+    {
+      "user": {
+        "$oid": "668e428e34fb8b867fae6633"
+      },
+      "text": "hi",
+      "_id": {
+        "$oid": "66ac4414037ba3318488710c"
+      },
+      "date": {
+        "$date": "2024-08-02T02:27:32.467Z"
+      }
+    },
+    {
+      "user": {
+        "$oid": "668e428e34fb8b867fae6633"
+      },
+      "text": "a",
+      "_id": {
+        "$oid": "66ac499bfd7974a4b13906d1"
+      },
+      "date": {
+        "$date": "2024-08-02T02:51:07.268Z"
+      }
+    }
+  ]
 },
 {
   "_id": {
-    "$oid": "668ea51b77d5a555f7e49355"
+    "$oid": "66ac4385037ba331848870f1"
   },
   "user": {
     "$oid": "668e96ca50f103d6b34dc2ef"
   },
   "rating": 5,
-  "comment": "Comment",
+  "comment": "hello",
   "establishment": {
     "$oid": "668e35fd0b62edb05ce2f37c"
   },
   "likes": 0,
   "dislikes": 0,
   "date": {
-    "$date": "2024-07-10T15:13:31.345Z"
+    "$date": "2024-08-02T02:25:09.947Z"
   },
+  "comments": [
+    {
+      "user": {
+        "$oid": "668e96ca50f103d6b34dc2ef"
+      },
+      "text": "b",
+      "_id": {
+        "$oid": "66ac43cb037ba33184887101"
+      },
+      "date": {
+        "$date": "2024-08-02T02:26:19.670Z"
+      }
+    }
+  ],
   "createdAt": {
-    "$date": "2024-07-10T15:13:31.346Z"
+    "$date": "2024-08-02T02:25:09.950Z"
   },
   "updatedAt": {
-    "$date": "2024-07-10T15:13:31.346Z"
-  },
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "668ea73f77d5a555f7e49366"
-  },
-  "user": {
-    "$oid": "668e96ca50f103d6b34dc2ef"
-  },
-  "rating": 5,
-  "comment": "Type anything",
-  "establishment": {
-    "$oid": "668e35fd0b62edb05ce2f37c"
-  },
-  "likes": 0,
-  "dislikes": 0,
-  "date": {
-    "$date": "2024-07-10T15:22:39.350Z"
-  },
-  "createdAt": {
-    "$date": "2024-07-10T15:22:39.351Z"
-  },
-  "updatedAt": {
-    "$date": "2024-07-10T15:22:39.351Z"
-  },
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "668ea95677d5a555f7e49386"
-  },
-  "user": {
-    "$oid": "668e96ca50f103d6b34dc2ef"
-  },
-  "rating": 2,
-  "comment": "awdawd",
-  "establishment": {
-    "$oid": "668e35fd0b62edb05ce2f37d"
-  },
-  "likes": 0,
-  "dislikes": 0,
-  "date": {
-    "$date": "2024-07-10T15:31:34.561Z"
-  },
-  "createdAt": {
-    "$date": "2024-07-10T15:31:34.561Z"
-  },
-  "updatedAt": {
-    "$date": "2024-07-10T15:31:34.561Z"
+    "$date": "2024-08-02T02:26:19.669Z"
   },
   "__v": 0
 }]

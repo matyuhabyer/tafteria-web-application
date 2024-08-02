@@ -6,7 +6,7 @@
   "mainImage": "/images/24chk.jpg",
   "phone": "(0912) 345 67890",
   "rating": 5,
-  "reviewsCount": 3,
+  "reviewsCount": 2,
   "description": "...24 Chicken offers some of the best Korean fried chicken...",
   "reviewer": "- Jungkook",
   "gallery": [
@@ -18,7 +18,7 @@
     "$date": "2024-07-10T07:19:25.529Z"
   },
   "updatedAt": {
-    "$date": "2024-07-10T15:22:39.354Z"
+    "$date": "2024-08-02T02:25:09.955Z"
   },
   "__v": 0
 },
@@ -29,7 +29,7 @@
   "name": "Prelude Cafe",
   "mainImage": "/images/prelude.jpg",
   "phone": "(0912) 345 67890",
-  "rating": 2,
+  "rating": 5,
   "reviewsCount": 1,
   "description": "...Prelude Cafe is a wonderful place to unwind...",
   "reviewer": "- Luka Doncic",
@@ -42,7 +42,7 @@
     "$date": "2024-07-10T07:19:25.530Z"
   },
   "updatedAt": {
-    "$date": "2024-07-10T15:31:34.564Z"
+    "$date": "2024-08-02T01:24:38.163Z"
   },
   "__v": 0
 },
@@ -53,8 +53,8 @@
   "name": "Ate Rica's Bacsilog",
   "mainImage": "/images/bcs.png",
   "phone": "(0912) 345 67890",
-  "rating": 5,
-  "reviewsCount": 69,
+  "rating": 0,
+  "reviewsCount": 0,
   "description": "...Ate Rica's Bacsilog is the ultimate comfort food...",
   "reviewer": "- Jose Rizal",
   "gallery": [
@@ -66,7 +66,7 @@
     "$date": "2024-07-10T07:19:25.530Z"
   },
   "updatedAt": {
-    "$date": "2024-07-10T07:19:25.530Z"
+    "$date": "2024-08-02T01:01:07.157Z"
   },
   "__v": 0
 },
@@ -77,8 +77,8 @@
   "name": "Mongolian Master",
   "mainImage": "/images/mongolian.jpg",
   "phone": "(0912) 345 67890",
-  "rating": 5,
-  "reviewsCount": 69,
+  "rating": 0,
+  "reviewsCount": 0,
   "description": "...Mongolian Master offers a fantastic DIY stir-fry experience...",
   "reviewer": "- Gordon Ramsay",
   "gallery": [
@@ -101,8 +101,8 @@
   "name": "Brother's Burger",
   "mainImage": "/images/brothers.jpg",
   "phone": "(0912) 345 67890",
-  "rating": 5,
-  "reviewsCount": 69,
+  "rating": 0,
+  "reviewsCount": 0,
   "description": "...The burgers at Brother's Burger are top-notch...",
   "reviewer": "- Vice Ganda",
   "gallery": [
@@ -125,8 +125,8 @@
   "name": "Subway",
   "mainImage": "/images/subway.jpeg",
   "phone": "(0912) 345 67890",
-  "rating": 5,
-  "reviewsCount": 69,
+  "rating": 0,
+  "reviewsCount": 0,
   "description": "...Subway never disappoints with their fresh ingredients...",
   "reviewer": "- Albert Einstein",
   "gallery": [
@@ -138,7 +138,7 @@
     "$date": "2024-07-10T07:19:25.530Z"
   },
   "updatedAt": {
-    "$date": "2024-07-10T07:19:25.530Z"
+    "$date": "2024-07-13T12:40:45.466Z"
   },
   "__v": 0
 }]
