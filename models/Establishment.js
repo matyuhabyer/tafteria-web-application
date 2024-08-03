@@ -8,7 +8,6 @@ const establishmentSchema = new mongoose.Schema({
   rating: { type: Number, default: 0 },
   reviewsCount: { type: Number, default: 0 },
   description: { type: String },
-  reviewer: { type: String },
   gallery: [{ type: String }]  // for the page
 
 },{ timestamps: true });

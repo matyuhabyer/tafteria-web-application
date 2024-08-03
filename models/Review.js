@@ -9,7 +9,8 @@ const reviewSchema = new mongoose.Schema({
   establishment: { type: mongoose.Schema.Types.ObjectId, ref: 'Establishment', required: true },
   date: { type: Date, default: Date.now },
   likes: { type: Number, default: 0 },
-  dislikes: { type: Number, default: 0 }
+  likesUserIds: { type: [mongoose.Schema.Types.ObjectId], ref: 'User' },
+  comments: [{ user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, text: String, date: { type: Date, default: Date.now } }]
 }, {
   timestamps: true
 });
@@ -27,6 +28,16 @@ reviewSchema.post('remove', async function(doc) {
   const establishment = await mongoose.model('Establishment').findById(doc.establishment);
   if (establishment) {
     await establishment.updateAverageRating();
+  }
+});
+
+// Middleware to update establishment's average rating after removing a review: based on app.js
+reviewSchema.post('findOneAndDelete', async function(doc) {
+  if (doc) {
+    const establishment = await mongoose.model('Establishment').findById(doc.establishment);
+    if (establishment) {
+      await establishment.updateAverageRating();
+    }
   }
 });
 
