@@ -27,36 +27,119 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-document.addEventListener('DOMContentLoaded', () => {
-  const modal = document.getElementById('editModal');
-  const openEditBtn = document.getElementById('openEditBtn'); // Button to open the modal
-  const closeEditBtn = document.getElementById('closeEditBtn');
-  const submitEdit = document.getElementById('submitEdit');
 
-  if (openEditBtn) {
-    openEditBtn.addEventListener('click', () => {
-      modal.classList.remove('hidden');
+//Review Interactions
+document.addEventListener('DOMContentLoaded', () => {
+  // Edit functionality
+  const editButtons = document.querySelectorAll('.openEditBtn');
+  console.log('Number of edit buttons found:', editButtons.length);
+
+  const editModal = document.getElementById('editModal');
+  const editForm = document.getElementById('editForm');
+  const editTextarea = document.getElementById('editTextarea');
+  const closeEditBtn = document.getElementById('closeEditBtn');
+  const likeButtons = document.querySelectorAll('.likeButton'); // Assuming multiple like buttons
+  console.log('Number of like buttons found:', likeButtons.length);
+  
+  if (likeButtons.length > 0) {
+    likeButtons.forEach(likeButton => {
+      likeButton.addEventListener('click', async () => {
+        const reviewId = likeButton.dataset.reviewId; // Assume you have this data attribute
+
+        try {
+          const response = await fetch(`/reviews/${reviewId}/like`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+
+          if (response.ok) {
+            // Update UI or button state
+            console.log('Marked as Helpful');
+            window.location.reload();
+            likeButton.disabled = true; // Disable the button after liking
+          } else {
+            const errorMessage = await response.text();
+            alert(errorMessage);
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('An error occurred while marking as helpful');
+        }
+      });
     });
   }
+
+  editButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const reviewContainer = button.closest('.review-container');
+      if (reviewContainer) {
+        const reviewId = reviewContainer.dataset.reviewId;
+        const currentComment = reviewContainer.querySelector('.review-content p').textContent;
+        
+        editTextarea.value = currentComment;
+        editForm.setAttribute('action', `/reviews/${reviewId}/edit`);
+        editModal.classList.remove('hidden');
+      } else {
+        console.error('Review container not found');
+      }
+    });
+  });
 
   if (closeEditBtn) {
     closeEditBtn.addEventListener('click', () => {
-      modal.classList.add('hidden');
+      editModal.classList.add('hidden');
     });
+  } else {
+    console.error('Close edit button not found');
   }
 
-  if (submitEdit) {
-    submitEdit.addEventListener('click', () => {
-      modal.classList.add('hidden');
+  // Delete functionality
+  const deleteButtons = document.querySelectorAll('.deleteReviewBtn');
+  
+  deleteButtons.forEach(button => {
+    button.addEventListener('click', async () => {
+      if (confirm('Are you sure you want to delete this review?')) {
+        const reviewContainer = button.closest('.review-container');
+        if (reviewContainer) {
+          const reviewId = reviewContainer.dataset.reviewId;
+          
+          try {
+            const response = await fetch(`/reviews/${reviewId}`, {
+              method: 'DELETE',
+            });
+            
+            if (response.ok) {
+              reviewContainer.remove();
+            } else {
+              alert('Failed to delete review');
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while deleting the review');
+          }
+        } else {
+          console.error('Review container not found');
+        }
+      }
     });
-  }
+  });
 });
+  
+
 
 //WRITE A COMMENT
 // Function to show the modal
-function showCommentModal() {
-    var modal = document.getElementById("commentModal");
-    modal.classList.remove("hidden");
+document.querySelectorAll('[id^="openComment-"]').forEach(button => {
+  button.addEventListener('click', () => {
+      const reviewId = button.id.split('-')[1];
+      document.getElementById(`commentModal-${reviewId}`).classList.remove('hidden');
+  });
+});
+
+function closeCommentModal(reviewId) {
+  document.getElementById(`commentModal-${reviewId}`).classList.add('hidden');
 }
 
 // Function to hide the modal
@@ -64,74 +147,6 @@ function hideCommentModal() {
     var modal = document.getElementById("commentModal");
     modal.classList.add("hidden");
 }
-
-// Event listener for opening the modal
-document.getElementById('openComment').addEventListener('click', showCommentModal);
-
-// Event listener for closing the modal when the submit button is clicked
-document.getElementById('submitComment').addEventListener('click', hideCommentModal);
-
-// Event listener for closing the modal when the close button is clicked
-document.getElementById('closeCommentModal').addEventListener('click', hideCommentModal);
-
-
-document.addEventListener('DOMContentLoaded', () => {
-  const starRatingContainer = document.getElementById('starRating');
-  const rating = parseFloat(starRatingContainer.getAttribute('data-rating'));
-
-  const fullStars = Math.floor(rating);
-  const decimalPart = rating % 1;
-  const halfStar = decimalPart >= 0.25 && decimalPart < 0.75;
-  const halfAltStar = decimalPart >= 0.75;
-  const emptyStars = 5 - fullStars - (halfStar ? 1 : 0) - (halfAltStar ? 1 : 0);
-
-  let starHTML = '';
-  
-  for (let i = 0; i < fullStars; i++) {
-      starHTML += '<span class="fa fa-star"></span>';
-  }
-  if (halfStar) {
-      starHTML += '<span class="fa fa-star-half-alt"></span>';
-  }
-  if (halfAltStar) {
-      starHTML += '<span class="fa fa-star"></span>';
-  }
-  for (let i = 0; i < emptyStars; i++) {
-      starHTML += '<span class="fa fa-star-o"></span>';
-  }
-
-  starRatingContainer.innerHTML = starHTML;
-});
-
-
-//DELETE MODAL
-document.addEventListener('DOMContentLoaded', () => {
-  const deleteButtons = document.querySelectorAll('#deleteReviewBtn');
-
-  deleteButtons.forEach(button => {
-      button.addEventListener('click', async (event) => {
-          const reviewId = button.getAttribute('data-review-id');
-          if (confirm('Are you sure you want to delete this review?')) {
-              try {
-                  const response = await fetch(`/reviews/${reviewId}`, {
-                      method: 'DELETE',
-                      headers: {
-                          'Content-Type': 'application/json'
-                      }
-                  });
-                  if (response.ok) {
-                      window.location.reload();
-                  } else {
-                      console.error('Failed to delete review.');
-                  }
-              } catch (error) {
-                  console.error('Error deleting review:', error);
-              }
-          }
-      });
-  });
-});
-
 
 //PROFILE MODAL
 function showModal(action) {
