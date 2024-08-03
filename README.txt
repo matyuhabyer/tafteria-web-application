@@ -10,7 +10,19 @@ Add new collections as necessary.
 
 Open terminal in current directory:
 
-npm i express express-handlebars body-parser mongoose
+install these first:
+const express = require('express');
+const app = express();
+const path = require('path');
+const handlebars = require('express-handlebars');
+const mongoose = require('mongoose');
+const multer = require('multer');
+const session = require('express-session');
+const bcrypt = require('bcrypt');
+const bodyParser = require('body-parser');
+const { check, validationResult } = require('express-validator');
+
+
 npm init -y
 
 node app.js

@@ -6,7 +6,7 @@
     "$oid": "668e96ca50f103d6b34dc2ef"
   },
   "rating": 5,
-  "comment": "Hi",
+  "comment": "Hello, testing abc123",
   "establishment": {
     "$oid": "668e35fd0b62edb05ce2f37c"
   },
@@ -19,15 +19,15 @@
     "$date": "2024-08-01T22:52:10.739Z"
   },
   "updatedAt": {
-    "$date": "2024-08-02T02:51:07.264Z"
+    "$date": "2024-08-03T10:39:13.089Z"
   },
-  "__v": 0,
+  "__v": 11,
   "comments": [
     {
       "user": {
         "$oid": "668e96ca50f103d6b34dc2ef"
       },
-      "text": "a",
+      "text": "Hello",
       "_id": {
         "$oid": "66ac43ba037ba331848870fc"
       },
@@ -39,64 +39,137 @@
       "user": {
         "$oid": "668e428e34fb8b867fae6633"
       },
-      "text": "hi",
+      "text": "hello",
       "_id": {
-        "$oid": "66ac4414037ba3318488710c"
+        "$oid": "66ad209fc990cee6bb4ced88"
       },
       "date": {
-        "$date": "2024-08-02T02:27:32.467Z"
+        "$date": "2024-08-02T18:08:31.751Z"
       }
+    }
+  ],
+  "likesUserIds": [
+    {
+      "$oid": "66adf56d88a5128a70a80f7e"
     },
     {
-      "user": {
-        "$oid": "668e428e34fb8b867fae6633"
-      },
-      "text": "a",
-      "_id": {
-        "$oid": "66ac499bfd7974a4b13906d1"
-      },
-      "date": {
-        "$date": "2024-08-02T02:51:07.268Z"
-      }
+      "$oid": "66ae06a6abac42082cad2296"
     }
   ]
 },
 {
   "_id": {
-    "$oid": "66ac4385037ba331848870f1"
+    "$oid": "66ad12e051d654138c11dddd"
   },
   "user": {
-    "$oid": "668e96ca50f103d6b34dc2ef"
+    "$oid": "668e428e34fb8b867fae6633"
   },
   "rating": 5,
   "comment": "hello",
   "establishment": {
-    "$oid": "668e35fd0b62edb05ce2f37c"
+    "$oid": "668e35fd0b62edb05ce2f37d"
   },
-  "likes": 0,
+  "likes": 1,
   "dislikes": 0,
   "date": {
-    "$date": "2024-08-02T02:25:09.947Z"
+    "$date": "2024-08-02T17:09:52.512Z"
   },
   "comments": [
     {
       "user": {
-        "$oid": "668e96ca50f103d6b34dc2ef"
+        "$oid": "66ae1424b4904b7e4f3545f7"
       },
-      "text": "b",
+      "text": "very helpful !",
       "_id": {
-        "$oid": "66ac43cb037ba33184887101"
+        "$oid": "66ae159db4904b7e4f354659"
       },
       "date": {
-        "$date": "2024-08-02T02:26:19.670Z"
+        "$date": "2024-08-03T11:33:49.268Z"
       }
     }
   ],
   "createdAt": {
-    "$date": "2024-08-02T02:25:09.950Z"
+    "$date": "2024-08-02T17:09:52.515Z"
   },
   "updatedAt": {
-    "$date": "2024-08-02T02:26:19.669Z"
+    "$date": "2024-08-03T11:33:49.262Z"
+  },
+  "__v": 2,
+  "likesUserIds": [
+    {
+      "$oid": "668e428e34fb8b867fae6633"
+    },
+    {
+      "$oid": "66ae1424b4904b7e4f3545f7"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "66ae1c7320783cbcdf38a408"
+  },
+  "user": {
+    "$oid": "668e96ca50f103d6b34dc2ef"
+  },
+  "rating": 4,
+  "comment": "jack daniels chicken very yummy",
+  "establishment": {
+    "$oid": "668e35fd0b62edb05ce2f37c"
+  },
+  "likes": 1,
+  "likesUserIds": [
+    {
+      "$oid": "66ae1bed20783cbcdf38a3ea"
+    }
+  ],
+  "date": {
+    "$date": "2024-08-03T12:02:59.663Z"
+  },
+  "comments": [
+    {
+      "user": {
+        "$oid": "66ae1bed20783cbcdf38a3ea"
+      },
+      "text": "thank you !",
+      "_id": {
+        "$oid": "66ae1d2420783cbcdf38a44a"
+      },
+      "date": {
+        "$date": "2024-08-03T12:05:56.898Z"
+      }
+    }
+  ],
+  "createdAt": {
+    "$date": "2024-08-03T12:02:59.665Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-03T12:05:56.894Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "66ae1d9c20783cbcdf38a463"
+  },
+  "user": {
+    "$oid": "66ae1bed20783cbcdf38a3ea"
+  },
+  "rating": 5,
+  "comment": "chicken tender juicy",
+  "establishment": {
+    "$oid": "668e35fd0b62edb05ce2f37c"
+  },
+  "likes": 0,
+  "likesUserIds": [],
+  "date": {
+    "$date": "2024-08-03T12:07:56.121Z"
+  },
+  "comments": [],
+  "createdAt": {
+    "$date": "2024-08-03T12:07:56.122Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-03T12:07:56.122Z"
   },
   "__v": 0
 }]

@@ -58,8 +58,17 @@ app.engine('hbs', handlebars.engine({
     },
     eq: function (a, b) {
       return a === b;
+    },
+    times: function (n, block) {
+      let accum = '';
+      for (let i = 0; i < n; ++i) {
+        accum += block.fn(i);
+      }
+      return accum;
+    },
+    sub: function (a, b) {
+      return a - b;
     }
-
   }
 }));
 
@@ -119,17 +128,48 @@ app.get('/establishments', async (req, res, next) => {
 });
 
 app.get('/profile', async (req, res) => {
-  const id = req.params.id;
-  let reviews = await Reviews.find({ establishment: id }).populate('user').lean();
-  res.render('profile', { title: 'Profile | Tafteria', layout: 'index', user: req.session.user, reviews: reviews });
+  if (!req.session.user) {
+    return res.redirect('/login');
+  }
+
+  try {
+    // Find the logged-in user's details
+    const user = await User.findById(req.session.user.id).lean();
+
+    // Find all reviews written by the logged-in user and populate the establishment field
+    const reviews = await Reviews.find({ user: req.session.user.id }).populate('establishment').lean();
+
+    res.render('profile', {
+      title: 'Profile | Tafteria',
+      layout: 'index',
+      user: user,
+      reviews: reviews
+    });
+  } catch (error) {
+    console.error('Error fetching profile data:', error);
+    res.status(500).send('Error fetching profile data.');
+  }
 });
+
 
 // Handle establishments: render to pages
 app.get('/establishments/:id', async (req, res) => {
   const id = req.params.id;
+  const userId = req.session.user?.id;
+  
   try {
     let establishmentData = await Establishment.findById(id).lean();
-    let reviews = await Reviews.find({ establishment: id }).populate('user').populate('comments.user').lean();
+    // Find reviews related to the specific establishment
+    let reviews = await Reviews.find({ establishment: id })
+                               .populate('user')
+                               .populate('comments.user')
+                               .populate('likesUserIds')
+                               .lean();
+    
+    console.log("Reviews: ", reviews);
+    console.log("Establishments: ", establishmentData);
+    console.log("ID: ", id);
+    console.log("User ID: ", userId);
 
     if (establishmentData) {
       res.render('pages', {
@@ -147,6 +187,8 @@ app.get('/establishments/:id', async (req, res) => {
     res.status(500).send('Error retrieving establishment');
   }
 });
+
+
 
 
 // Handle user registration
@@ -185,7 +227,8 @@ app.post('/login', async (req, res) => {
         id: user._id,
         username: user.username,
         avatar: user.avatar,
-        description: user.description
+        description: user.description,
+        joinedDate: user.joinedDate
       };
       console.log('User logged in:', req.session.user);
       res.redirect('/home-user');
@@ -195,38 +238,6 @@ app.post('/login', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send('Error logging in.');
-  }
-});
-
-// Handle review deletion
-app.delete('/reviews/:id', async (req, res) => {
-  const reviewId = req.params.id;
-  const user = req.session.user;
-
-  if (!user) {
-    console.log('User not logged in.'); 
-    return res.status(401).send('You must be logged in to delete a review.');
-  }
-
-  try {
-    const review = await Reviews.findById(reviewId);
-    if (!review) {
-      console.log('Review not found.');
-      return res.status(404).send('Review not found.');
-    }
-
-    // Check if the logged-in user is the owner of the review
-    if (review.user.toString() !== user.id) {
-      console.log('User does not have permission to delete this review.');  
-      return res.status(403).send('You do not have permission to delete this review.');
-    }
-
-    await Reviews.findByIdAndDelete(reviewId);
-    console.log('Review deleted successfully.');
-    res.status(200).send('Review deleted successfully.');
-  } catch (error) {
-    console.error('Error deleting review:', error);
-    res.status(500).send('Error deleting review.');
   }
 });
 
@@ -248,38 +259,6 @@ app.post('/reviews/:id/comments', async (req, res) => {
   } catch (error) {
     console.error('Error adding comment:', error);
     res.status(500).send('Error adding comment.');
-  }
-});
-
-
-// Handle review update
-app.post('/reviews/:id/edit', async (req, res) => {
-  const reviewId = req.params.id;
-  const { comment } = req.body;
-  const user = req.session.user;
-
-  if (!user || !user.id) {
-    return res.status(401).send('You must be logged in to edit a review.');
-  }
-
-  try {
-    const review = await Reviews.findById(reviewId);
-    if (!review) {
-      return res.status(404).send('Review not found.');
-    }
-
-    // Check if the logged-in user is the owner of the review
-    if (review.user.toString() !== user.id) {
-      return res.status(403).send('You do not have permission to edit this review.');
-    }
-
-    review.comment = comment;
-    await review.save();
-
-    res.redirect(`/establishments/${review.establishment}`);
-  } catch (error) {
-    console.error('Error updating review:', error);
-    res.status(500).send('Error updating review.');
   }
 });
 
@@ -336,6 +315,7 @@ app.get('/home-user', async (req, res) => {
         .populate('user')
         .lean();
 
+      console.log("Reviews",reviews);
       res.render('home-user', {
         title: 'User-Home | Tafteria',
         user: req.session.user,
@@ -352,8 +332,9 @@ app.get('/home-user', async (req, res) => {
   }
 });
 
-//About
+// About
 app.get('/about', (req, res) => {
+  const user = req.session.user;
   const data = {
     title: 'About | Tafteria',
     npmPackages: [
@@ -377,8 +358,18 @@ app.get('/about', (req, res) => {
     ]
   };
 
-  res.render('about', data);
+  try {
+    res.render('about', {
+      title: 'About | Tafteria',
+      user,
+      data
+    });
+  } catch (error) {
+    console.error('Error rendering about page:', error);
+    res.status(500).send('An error occurred while rendering the about page.');
+  }
 });
+
 
 
 // Handle user logout
@@ -417,31 +408,12 @@ app.post('/establishments/:id/reviews', async (req, res) => {
   }
 });
 
-app.post('/reviews/:id/like', async (req, res) => {
-  const reviewId = req.params.id;
-
-  try {
-    const review = await Reviews.findById(reviewId);
-    if (!review) return res.status(404).json({ error: 'Review not found' });
-
-    review.likes += 1;
-    await review.save();
-
-    console.log('Updated review:', review);
-    res.json({ newLikeCount: review.likes });
-  } catch (error) {
-    console.error('Error updating like count:', error);
-    res.status(500).json({ error: 'Failed to update like count' });
-  }
-});
-
-
-
 // Define a route for search results
 app.get('/search', async (req, res) => {
   // Extract the query parameter and trim it for case-insensitive search
   const query = req.query.q ? req.query.q.trim() : '';
   console.log('Search Query:', query);
+  const user = req.session.user;
 
   try {
     // Search for establishments based on exact match of the query in name or description
@@ -465,6 +437,7 @@ app.get('/search', async (req, res) => {
     // Render the search results page with the query, establishments, and reviews
     res.render('search', {
       title: 'Search Results | Tafteria',
+      user,
       query,
       establishments,
       reviews
@@ -472,6 +445,140 @@ app.get('/search', async (req, res) => {
   } catch (error) {
     console.error('Search Error:', error);
     res.status(500).send('Error performing search.');
+  }
+});
+
+// Delete review route
+app.delete('/reviews/:id', async (req, res) => {
+  const reviewId = req.params.id;
+  const userId = req.session.user.id;
+
+  try {
+    const review = await Reviews.findById(reviewId);
+
+    if (!review) {
+      return res.status(404).send('Review not found');
+    }
+
+    if (review.user.toString() !== userId) {
+      return res.status(403).send('Unauthorized');
+    }
+
+    await Reviews.findByIdAndDelete(reviewId);
+    res.status(200).send('Review deleted successfully');
+  } catch (error) {
+    console.error('Error deleting review:', error);
+    res.status(500).send('Error deleting review');
+  }
+});
+
+// Edit review route
+app.post('/reviews/:id/edit', async (req, res) => {
+  const reviewId = req.params.id;
+  const { comment } = req.body;
+  const userId = req.session.user.id;
+
+  try {
+    const review = await Reviews.findById(reviewId);
+
+    if (!review) {
+      return res.status(404).send('Review not found');
+    }
+
+    if (review.user.toString() !== userId) {
+      return res.status(403).send('Unauthorized');
+    }
+
+    review.comment = comment;
+    await review.save();
+
+    res.redirect(`/establishments/${review.establishment}`);
+  } catch (error) {
+    console.error('Error updating review:', error);
+    res.status(500).send('Error updating review');
+  }
+});
+
+//Mark as helpful
+app.post('/reviews/:id/like', async (req, res) => {
+  const reviewId = req.params.id;
+  const userId = req.session.user?.id;
+
+  if (!userId) {
+    return res.status(401).send('You must be logged in to like a review.');
+  }
+
+  try {
+    const review = await Reviews.findById(reviewId);
+
+    if (!review) {
+      return res.status(404).send('Review not found');
+    }
+
+    // Check if the user has already liked the review
+    if (review.likesUserIds.includes(userId)) {
+      return res.status(400).send('You have already liked this review.');
+    }
+
+    review.likesUserIds.push(userId); // Add userId to the array
+    review.likes += 1; // Increment likes count
+    await review.save();
+
+    res.status(200).send('Review marked as helpful');
+  } catch (error) {
+    console.error('Error marking review as helpful:', error);
+    res.status(500).send('Error marking review as helpful');
+  }
+});
+
+// Edit review route
+app.post('/profile/reviews/:id/edit', async (req, res) => {
+  const reviewId = req.params.id;
+  const { comment } = req.body;
+  const userId = req.session.user.id;
+
+  try {
+    const review = await Reviews.findById(reviewId);
+
+    if (!review) {
+      return res.status(404).send('Review not found');
+    }
+
+    if (review.user.toString() !== userId) {
+      return res.status(403).send('Unauthorized');
+    }
+
+    review.comment = comment;
+    await review.save();
+
+    res.redirect('/profile'); // Redirect back to profile
+  } catch (error) {
+    console.error('Error updating review:', error);
+    res.status(500).send('Error updating review');
+  }
+});
+
+// Delete review route
+app.post('/profile/reviews/:id/delete', async (req, res) => {
+  const reviewId = req.params.id;
+  const userId = req.session.user.id;
+
+  try {
+    const review = await Reviews.findById(reviewId);
+
+    if (!review) {
+      return res.status(404).send('Review not found');
+    }
+
+    if (review.user.toString() !== userId) {
+      return res.status(403).send('Unauthorized');
+    }
+
+    await Reviews.findByIdAndDelete(reviewId);
+    res.redirect('/profile'); // Redirect back to profile
+  } catch (error) {
+    console.error('Error deleting review:', error);
+    res.status(500).send('Error deleting review');
   }
 });
 

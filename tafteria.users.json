@@ -82,4 +82,30 @@
     "$date": "2022-05-20T00:00:00.000Z"
   },
   "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66ae1a6edc3c30be1a57854b"
+  },
+  "username": "matt",
+  "password": "$2b$10$1VijrWPi3twDokp1KJc4au1MvKiSmBOd3CHSjqYzAgDyvMSpeZMv.",
+  "avatar": "1722686124874.png",
+  "description": "pogi",
+  "joinedDate": {
+    "$date": "2024-08-03T11:54:22.700Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66ae1bed20783cbcdf38a3ea"
+  },
+  "username": "josh",
+  "password": "$2b$10$GWJVmrQzfs9hCIKle9U4NOftDD5eJa55A9a.nGldCxXAoC.O/ywse",
+  "avatar": "1722686512159.png",
+  "description": "josh policarps",
+  "joinedDate": {
+    "$date": "2024-08-03T12:00:45.135Z"
+  },
+  "__v": 0
 }]
