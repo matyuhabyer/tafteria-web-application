@@ -1,0 +1,133 @@
+<div class="flex items-center justify-center min-h-screen bg-cover bg-center" style="background-image: url(/images/agno1.jpg);">
+  <div class="w-screen h-full flex flex-col items-center justify-center bg-black bg-opacity-50 text-white p-10">
+    <div class="flex flex-col items-center justify-center py-10">
+      <h1 class="text-5xl font-bold mb-5">Search Results</h1>
+      <p class="text-2xl mb-10 font-bold">Results for "<span id="search-query" class="font-semibold">{{query}}</span>"</p>
+
+      {{!-- Filters --}}
+      <div class="w-full flex justify-end mb-5">
+        <select id="rating-filter" class="h-10 px-4 rounded-lg border border-gray-300 text-black">
+          <option value="all">All Ratings</option>
+          <option value="4.5">4.5 & Up</option>
+          <option value="4.0">4.0 & Up</option>
+          <option value="3.5">3.5 & Up</option>
+        </select>
+      </div>
+
+      <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-10 px-5">
+        {{!-- Establishment Results --}}
+        <div id="establishment-results" class="col-span-1 md:col-span-2">
+          <h2 class="text-3xl font-bold mb-5">Establishments</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-10 text-black">
+            {{#each establishments}}
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-4">
+              <a href="/establishments/{{_id}}">
+                <h1 class="text-2xl font-semibold mb-2">{{name}}</h1>
+              </a>
+              <div class="flex items-center mb-2">
+                <span class="mb-5 text-yellow-400">&#9733</span>
+                <p class="text-gray-600 text-sm mb-5 ml-1">Rating: {{rating}} ({{reviewsCount}} reviews)</p>
+              </div>
+              <p class="text-gray-700">{{description}}</p>
+              
+            </div>
+            {{/each}}
+          </div>
+        </div>
+
+        {{!-- Review Results --}}
+        <div id="review-results" class="col-span-1 md:col-span-2">
+          <h2 class="text-3xl font-bold mb-5">Reviews</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-10 text-black">
+            {{#each reviews}}
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-4">
+              <h1 class="text-2xl font-semibold mb-2">{{establishment.name}}</h1>
+              <h3 class="text-base font-semibold mb-2">{{title}}</h3>
+              <div class="flex items-center mb-2">
+                <span class="text-yellow-400">&#9733</span>
+                <p class="text-gray-600 text-sm ml-1">: {{rating}}</p>
+              </div>
+              <p class="text-gray-700">{{comment}}</p>
+              <p class="text-gray-600 text-sm mt-2 mb-5">Profile: {{user.username}}</p>
+            </div>
+            {{/each}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const query = "{{query}}";
+    const ratingFilter = document.getElementById('rating-filter');
+
+    // Data initialization from Handlebars context
+    const establishments = {{jsonify establishments}};
+    const reviews = {{jsonify reviews}};
+
+    ratingFilter.addEventListener('change', () => filterResults(query));
+
+    function filterResults(query) {
+      const ratingFilterValue = parseFloat(ratingFilter.value) || 0;
+
+      const filteredEstablishments = establishments.filter(establishment => {
+        const lowerCaseQuery = query.toLowerCase();
+        return (establishment.name.toLowerCase().includes(lowerCaseQuery) || 
+                establishment.description.toLowerCase().includes(lowerCaseQuery)) &&
+               (ratingFilterValue === 0 || establishment.rating >= ratingFilterValue);
+      });
+
+      const filteredReviews = reviews.filter(review => {
+        const lowerCaseQuery = query.toLowerCase();
+        return review.comment.toLowerCase().includes(lowerCaseQuery) ||
+               review.establishment.name.toLowerCase().includes(lowerCaseQuery);
+      });
+
+      updateResults('establishment-results', filteredEstablishments, false);
+      updateResults('review-results', filteredReviews, true);
+    }
+
+    function updateResults(containerId, data, isReview) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+
+      data.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'bg-white rounded-lg shadow-lg p-6 mb-4';
+
+        if (isReview) {
+          card.innerHTML = `
+            <h1 class="text-2xl font-semibold mb-2">${item.establishment.name}</h1>
+            <h3 class="text-base font-semibold mb-2">${item.title}</h3>
+            <div class="flex items-center mb-2">
+              ${Array.from({ length: 5 }, (_, i) => `
+                <span class="${i < item.rating ? 'text-yellow-500' : 'text-gray-400'}">&#9733;</span>
+              `).join('')}
+            </div>
+            <p class="text-gray-700">${item.comment}</p>
+            <p class="text-gray-600 text-sm mt-2 mb-5">Profile: ${item.user.username}</p>
+          `;
+        } else {
+          card.innerHTML = `
+            <a href="${item.link}">
+              <h1 class="text-2xl font-semibold mb-2">${item.name}</h1>
+            </a>
+            <div class="flex items-center mb-2">
+              ${Array.from({ length: 5 }, (_, i) => `
+                <span class="${i < item.rating ? 'text-yellow-500' : 'text-gray-400'}">&#9733;</span>
+              `).join('')}
+            </div>
+            <p class="text-gray-700">${item.description}</p>
+            <p class="text-gray-600 text-sm mt-2 mb-5">Rating: ${item.rating} (${item.reviewsCount} reviews)</p>
+          `;
+        }
+
+        container.appendChild(card);
+      });
+    }
+
+    filterResults(query);
+  });
+</script>

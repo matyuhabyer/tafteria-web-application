@@ -16,8 +16,8 @@
                     <div class="text-center">
                         <h1 class="text-3xl font-bold mb-2 italic">{{establishmentData.name}}</h1>
                         <div class="flex justify-center items-center mb-4">
-                            <div id="starRating" class="text-yellow-400" data-rating="3.75">
-                                
+                            <div id="starRating" class="text-yellow-400">
+                                <span class="fa fa-star"></span>
                             </div>
                             <span id="ratingText" class="text-gray-600 ml-2">{{establishmentData.rating}} out of 5</span>
                         </div>
@@ -47,31 +47,17 @@
                     </div>
                 </form>
                 </div>
-
-
                 
-                <!-- Comment Modal-->
-                <div id="commentModal" class="fixed inset-0 flex items-center flex-col justify-center bg-gray-800 bg-opacity-90 hidden">
-                    <h2 class="text-white italic">Leave a comment</h2>
-                    <div class="bg-white rounded-lg shadow-lg p-6 w-96 flex flex-col items-center justify-center">
-                        <textarea id="commentTextarea" class="outline w-full focus:outline-white h-52" placeholder="Write your comment here..." style="resize: none;"></textarea>
-                        <div class="flex justify-between gap-4 mt-4">
-                            <button id="submitComment" class="px-4 py-2 bg-green-500 text-white rounded">Submit</button>
-                            <button id="closeCommentModal" class="px-4 py-2 bg-red-500 text-white rounded">Close</button>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Edit Modal -->
                 <div id="editModal" class="fixed inset-0 flex items-center flex-col justify-center bg-gray-800 bg-opacity-90 hidden">
-                    <h2 class="text-white italic">EDIT</h2>
-                    <div class="bg-white rounded-lg shadow-lg p-6 w-96 flex flex-col items-center justify-center">
-                        <textarea id="commentTextarea" class="outline w-full focus:outline-white h-52" placeholder="TO BE IMPLEMENTED" style="resize: none;"></textarea>
-                        <div class="flex justify-between gap-4 mt-4">
-                            <button id="submitEdit" class="px-4 py-2 bg-green-500 text-white rounded">Confirm</button>
-                            <button id="closeEditBtn" class="px-4 py-2 bg-red-500 text-white rounded">Close</button>
-                        </div>
+                <h2 class="text-white italic">Edit Your Review</h2>
+                <form id="editForm" action="" method="POST" class="bg-white rounded-lg shadow-lg p-6 w-96 flex flex-col items-center justify-center">
+                    <textarea id="editTextarea" name="comment" class="outline w-full focus:outline-white h-52" placeholder="Edit your review..." style="resize: none;" required></textarea>
+                    <div class="flex justify-between gap-4 mt-4">
+                    <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded">Update</button>
+                    <button type="button" id="closeEditBtn" class="px-4 py-2 bg-red-500 text-white rounded">Cancel</button>
                     </div>
+                </form>
                 </div>
 
                 <!-- Interactive -->
@@ -84,72 +70,78 @@
                     <span class="text-green-500">Write a Review!</span>
                 </a>
                 
-                <a href="#" class="mr-1 inline-flex items-center gap-x-2 rounded-md bg-gray-200 px-3.5 py-2.5 text-sm font-semibold text-gray-500 shadow-sm hover:bg-gray-400 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600">
-                    <span>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
-                        </svg>
-                    </span>
-                    <span>Contact</span>
-                </a>
-                
-                <a href="#" class="mr-1 inline-flex items-center gap-x-2 rounded-md bg-gray-200 px-3.5 py-2.5 text-sm font-semibold text-gray-500 shadow-sm hover:bg-gray-400 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600">
-                    <span>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                            <path fill-rule="evenodd" d="M15.75 4.5a3 3 0 1 1 .825 2.066l-8.421 4.679a3.002 3.002 0 0 1 0 1.51l8.421 4.679a3 3 0 1 1-.729 1.31l-8.421-4.678a3 3 0 1 1 0-4.132l8.421-4.679a3 3 0 0 1-.096-.755Z" clip-rule="evenodd" />
-                        </svg>
-                    </span>
-                    <span>Share</span>
-                </a>
-                
-                <a href="#" class="mr-1 inline-flex items-center gap-x-2 rounded-md bg-gray-200 px-3.5 py-2.5 text-sm font-semibold text-gray-500 shadow-sm hover:bg-gray-400 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600">
-                    <span>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15M9 12l3 3m0 0 3-3m-3 3V2.25" />
-                        </svg>
-                    </span>
-                    <span>Add Photo</span>
-                </a>        
-
                 <!-- Reviews -->
                 <div class="space-y-4">
                     {{#each reviews}}
-
-                    <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
-                        <div class="flex items-center mb-2">
+                        <div class="review-container p-4 bg-gray-50 rounded-lg shadow-sm" data-review-id="{{this._id}}">
+                            <div class="flex items-center mb-2">
                             <img src="/uploads/{{user.avatar}}" alt="User avatar" class="w-12 h-12 rounded-full mr-4">
                             <div>
                                 <p class="font-semibold">@{{user.username}}</p>
                                 <p class="text-sm text-gray-500">{{date}}</p>
                             </div>
-                            
-                        </div>
-                        <div class="text-gray-800">
-                            <!-- Display rating stars -->
+                            </div>
+                            <div class="review-content text-gray-800">
                             <div class="text-yellow-400 mb-2">
                                 {{rating}}&#9733; 
                             </div>
-                            <p>"{{comment}}"</p> <!-- Display review comment -->
-                        </div>
-                        <div class="flex items-center ml-2 mt-4">
-                            <button type="button" id="like" class="flex items-center text-green-600">
-                                <img src="/images/like.png" class="w-5 h-5 mr-1"><span> {{likes}} </span>
+                            <p>{{comment}}</p> 
+                            </div>
+                            <div class="flex items-center ml-2 mt-4">
+                            <button type="button" class="likeButton flex items-center text-gray-600" data-review-id="{{this._id}}">
+                                <img src="/images/like.png" class="w-5 h-5 mr-1">
+                                {{#if likesUserIds}}
+                                {{#each likesUserIds}}
+                                    {{#if (eq this.username ../../user.username)}}
+                                        <span class="text-green-600">Marked as Helpful</span>  
+                                    {{else}}
+                                        <span class="text-gray-600">Mark as Helpful</span>
+                                    {{/if}}
+                                    
+                                {{/each}}
+                                {{else}}
+                                <span class="text-gray-600">Mark as Helpful</span>
+                                {{/if}}                                 
                             </button>
-                            <button type="button" id="dislike" class="flex items-center text-red-600">
-                                <img src="/images/dislike.png" class="w-5 h-5 ml-4 mr-1"><span> {{dislikes}} </span>
-                            </button>
-                            <button type="button" id="openComment" class="flex items-center text-gray-600 ml-4">
-                                 <img src="/images/comments.png" class="w-5 h-5 ml-4 mr-1">Leave a comment
-                            </button>
-                            <button id="openEditBtn" data-review-id="{{_id}}" class="ml-auto px-3 py-1 bg-yellow-500 text-white rounded">Edit</button>
-                            <button id="deleteReviewBtn" data-review-id="{{_id}}" class="ml-auto px-3 py-1 bg-red-500 text-white rounded">Delete</button>
-                        </div>
-                    </div>
 
+                            <button type="button" class="flex items-center text-gray-600 ml-4" id="openComment-{{this._id}}">
+                                <img src="/images/comments.png" class="w-5 h-5 ml-4 mr-1">Leave a comment
+                            </button>
+                            {{#if (eq this.user.username ../user.username)}}
+                                <button class="openEditBtn ml-auto px-3 py-1 bg-yellow-500 text-white rounded">Edit</button>
+                                <button class="deleteReviewBtn ml-2 px-3 py-1 bg-red-500 text-white rounded">Delete</button>
+                            {{/if}}
+                            </div>
+                        <!-- Comment Form Modal -->
+                        <div id="commentModal-{{this._id}}" class="fixed inset-0 flex items-center flex-col justify-center bg-gray-800 bg-opacity-90 hidden">
+                            <h2 class="text-white italic">Leave a comment</h2>
+                            <form action="/reviews/{{this._id}}/comments" method="POST" class="bg-white rounded-lg shadow-lg p-6 w-96 flex flex-col items-center justify-center">
+                            <input type="hidden" name="establishmentId" value="{{../establishmentData._id}}">
+                            <textarea name="text" class="outline w-full focus:outline-white h-52" placeholder="Write your comment here..." style="resize: none;" required></textarea>
+                            <div class="flex justify-between gap-4 mt-4">
+                                <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded">Submit</button>
+                                <button type="button" class="px-4 py-2 bg-red-500 text-white rounded" onclick="closeCommentModal('{{this._id}}')">Close</button>
+                            </div>
+                            </form>
+                        </div>
+
+                        <!-- Comments Display -->
+                        <div class="mt-6">
+                            <h3 class="text-lg font-semibold">Comments:</h3>
+                            {{#each comments}}
+                            <div class="p-2 bg-gray-100 rounded-lg mb-2">
+                                <div class="flex items-center mb-1">
+                                <img src="/uploads/{{user.avatar}}" alt="User avatar" class="w-8 h-8 rounded-full mr-2">
+                                <p class="font-semibold">@{{user.username}}</p>
+                                </div>
+                                <p class="text-gray-700">{{text}}</p>
+                            </div>
+                            {{/each}}
+                        </div>
+                        </div>
                     {{/each}}
                 </div>
 
-            </div>
         </div>
     </div>
 

@@ -6,7 +6,7 @@
                 <h2 class="text-4xl font-bold mb-5 text-center">Taft Establishments</h2>
 
                 {{#each establishments}}
-                 <a href="/establishments/{{_id}}">
+                 <a href="/establishments/{{this._id}}">
                         <div class="flex rounded-lg shadow-lg transition transform hover:-translate-y-1 hover:bg-yellow-100">
                             <div class="w-1/2 h-64 rounded-lg flex justify-end bg-cover" style="background-image: url({{mainImage}});">
                                 <img src="/images/hrt.jpg" class="w-12 h-12 p-2 rounded-full transition-transform transform hover:-translate-y-1">

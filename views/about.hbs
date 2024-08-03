@@ -1,0 +1,28 @@
+<div id="main" class="flex items-center justify-center h-screen bg-cover bg-center" style="background-image: url(/images/agno1.jpg);">
+    <div class="w-full h-full flex flex-col items-center justify-center bg-black bg-opacity-50 text-center text-white p-10">
+        <h1 class="text-4xl font-bold mb-4">About This Project</h1>
+        <p class="text-lg mb-6">This project utilizes several NPM packages and third-party libraries to provide its functionality. Here is a list of the dependencies and libraries used:</p>
+        
+        <div class="w-full max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+            <div class="text-black">
+                <h2 class="text-2xl font-semibold mb-4">NPM Packages</h2>
+                <ul class="list-none mb-6">
+                    {{#each data.npmPackages}}
+                    <li class="mb-2">
+                        <strong>{{name}}</strong> (Version: {{version}}) - {{description}}
+                    </li>
+                    {{/each}}
+                </ul>
+
+                <h2 class="text-2xl font-semibold mb-4">Third-Party Libraries</h2>
+                <ul class="list-none">
+                    {{#each data.thirdPartyLibraries}}
+                    <li class="mb-2">
+                        <strong>{{name}}</strong> - {{description}}
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
