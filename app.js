@@ -104,7 +104,7 @@ app.get('/', async (req, res) => {
       .populate('establishment')
       .lean();
 
-    res.render('home', { title: 'Tafteria', establishments, reviews, layout: 'index' });
+    res.render('home', { title: 'Tafteria', establishments, reviews, user: req.session.user, layout: 'index' });
   } catch (error) {
     console.error('Error fetching data:', error);
     res.status(500).send('Internal Server Error');
@@ -209,7 +209,7 @@ app.post('/register', upload.single('avatar'), async (req, res) => {
       description: newUser.description
     };
 
-    res.redirect('/home-user');
+    res.redirect('/');
   } catch (error) {
     console.error(error);
     res.status(500).send('Error registering new user.');
@@ -231,7 +231,7 @@ app.post('/login', async (req, res) => {
         joinedDate: user.joinedDate
       };
       console.log('User logged in:', req.session.user);
-      res.redirect('/home-user');
+      res.redirect('/');
     } else {
       res.status(401).send('Invalid username or password.');
     }
@@ -298,39 +298,6 @@ app.post('/profile/edit', upload.single('avatar'), [
   }
 });
 
-
-// Define a route for the home page of user
-app.get('/home-user', async (req, res) => {
-  if (req.session.user) {
-    console.log('Session user:', req.session.user);
-
-    try {
-      // Fetch establishments
-      let establishments = await Establishment.find({}).lean();
-
-      // Fetch reviews for the logged-in user and sort them by date in descending order
-      let reviews = await Reviews.find({})
-        .sort({ date: -1 }) // Sort reviews by date in descending order
-        .populate('establishment')
-        .populate('user')
-        .lean();
-
-      console.log("Reviews",reviews);
-      res.render('home-user', {
-        title: 'User-Home | Tafteria',
-        user: req.session.user,
-        establishments: establishments,
-        reviews: reviews,
-        layout: 'index'
-      });
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      res.status(500).send('Error fetching data.');
-    }
-  } else {
-    res.redirect('/login');
-  }
-});
 
 // About
 app.get('/about', (req, res) => {

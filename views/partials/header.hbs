@@ -1,21 +1,21 @@
 <!-- Header Section -->
-    <header class="w-full bg-green-800 h-20 flex items-center justify-between px-5 text-white relative z-10">
-        <div class="flex items-center">
-            <!-- Logo -->
-            <a href="/">
-                <img class="w-64 h-auto" alt="Tafteria Logo" src="/images/tafteria-logo.png">
-            </a>
-        </div>
-        <!-- Search Bar -->
-        <div class="flex-grow max-w-md mx-5">
-            <form action="/search" method="GET" class="flex">
-                <input type="text" name="query" class="w-full h-10 rounded-l-lg border border-gray-300 px-4 text-black" placeholder="Search establishments or reviews...">
-                <button type="submit" class="h-10 px-4 rounded-r-lg bg-yellow-500 text-white hover:bg-yellow-400 transition-colors">Search</button>
-            </form>
-        </div>
-        <!-- Register and Login Buttons -->
-        <div class="flex items-center">
-            <a class="bg-yellow-500 w-32 h-9 flex items-center justify-center rounded-lg font-bold text-white hover:bg-white hover:text-yellow-500 transition-colors mx-2" href="/register">Register</a>
-            <a class="bg-yellow-500 w-32 h-9 flex items-center justify-center rounded-lg font-bold text-white hover:bg-white hover:text-yellow-500 transition-colors mx-2" href="/login">Login</a>
-        </div>
-    </header>
+<header class="w-full bg-green-800 h-20 flex items-center justify-between px-8 text-white shadow-md sticky top-0 z-30">
+    <div class="flex items-center">
+        <!-- Logo -->
+        <a href="/" class="flex items-center">
+            <img class="w-40 h-auto" alt="Tafteria Logo" src="/images/tafteria-logo.png">
+        </a>
+    </div>
+    <!-- Search Bar -->
+    <div class="flex-grow max-w-lg mx-8">
+        <form action="/search" method="GET" class="flex rounded-lg shadow-sm overflow-hidden">
+            <input type="text" name="q" class="w-full h-11 px-4 text-black focus:outline-none" placeholder="Search establishments or reviews...">
+            <button type="submit" class="h-11 px-6 bg-yellow-500 text-white font-semibold hover:bg-yellow-400 transition-colors">Search</button>
+        </form>
+    </div>
+    <!-- Register and Login Buttons -->
+    <div class="flex items-center space-x-4">
+        <a class="bg-yellow-500 px-5 py-2 rounded-lg font-bold text-white hover:bg-white hover:text-yellow-500 border-2 border-yellow-500 transition-colors" href="/register">Register</a>
+        <a class="bg-yellow-500 px-5 py-2 rounded-lg font-bold text-white hover:bg-white hover:text-yellow-500 border-2 border-yellow-500 transition-colors" href="/login">Login</a>
+    </div>
+</header>

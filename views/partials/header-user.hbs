@@ -1,29 +1,24 @@
 <!-- Header Section -->
-<header class="w-full bg-green-800 h-20 flex items-center justify-between px-5 text-white relative z-10">
-    <div class="flex items-center">
+<header class="w-full bg-green-800 h-20 flex items-center justify-between px-8 text-white shadow-md sticky top-0 z-30">
+    <div class="flex items-center space-x-4">
         <!-- Sidebar Toggle Button -->
-        <div class="w-7 h-6 bg-no-repeat bg-center cursor-pointer" onclick="toggleSidebar()" style="background-image: url('/images/nav-icon.png');"></div>
+        <button class="w-8 h-8 flex items-center justify-center rounded hover:bg-green-700 focus:outline-none mr-2" onclick="toggleSidebar()">
+            <img src="/images/nav-icon.png" alt="Menu" class="w-6 h-6" />
+        </button>
         <!-- Logo -->
-        <a href="/home-user">
-            <img class="w-64 h-auto ml-5" alt="Tafteria Logo" src="/images/tafteria-logo.png">
+        <a href="/" class="flex items-center">
+            <img class="w-40 h-auto" alt="Tafteria Logo" src="/images/tafteria-logo.png">
         </a>
     </div>
     <!-- Search Bar -->
-    <div class="flex-grow max-w-md mx-5">
-        <form action="/search" method="GET" class="flex">
-            <input type="text" name="query" class="w-full h-10 rounded-l-lg border border-gray-300 px-4 text-black" placeholder="Search establishments or reviews...">
-            <button type="submit" class="h-10 px-4 rounded-r-lg bg-yellow-500 text-white hover:bg-yellow-400 transition-colors">Search</button>
+    <div class="flex-grow max-w-lg mx-8">
+        <form action="/search" method="GET" class="flex rounded-lg shadow-sm overflow-hidden">
+            <input type="text" name="q" class="w-full h-11 px-4 text-black focus:outline-none" placeholder="Search establishments or reviews...">
+            <button type="submit" class="h-11 px-6 bg-yellow-500 text-white font-semibold hover:bg-yellow-400 transition-colors">Search</button>
         </form>
     </div>
-    <!-- Logout Button -->
-    <div class="flex items-center">
-            {{#if user}}
-            <span class="mr-4">Welcome, {{user.username}}!</span>
-            {{else}}
-               <span class="mr-4">Welcome, User!</span>
-            {{/if}}
-            
-        
-        <a class="bg-red-500 w-32 h-9 flex items-center justify-center rounded-lg font-bold text-white hover:bg-white hover:text-red-500 transition-colors mx-2" href="/logout">Logout</a>
+    <!-- User Actions -->
+    <div class="flex items-center space-x-4">
+        <span class="hidden md:inline-block font-medium">Welcome, {{#if user}}{{user.username}}{{else}}User{{/if}}!</span>
     </div>
 </header>

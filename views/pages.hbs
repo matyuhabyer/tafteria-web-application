@@ -1,149 +1,136 @@
 
-<div id="main" class="items-center justify-center h-full bg-cover bg-center text-black" style="background-image: url(/images/agno1.jpg);">
-        <div class="w-full h-full flex flex-col items-center justify-center bg-black bg-opacity-50 text-center text-white p-10">
-            <div class="container mx-auto my-8 p-4 bg-white rounded-lg shadow-md text-black">
-                <!-- Image Gallery -->
-                <div class="mb-8 overflow-x-auto whitespace-nowrap scrollbar-show">
-                    {{#each establishmentData.gallery}}
-                    <div class="inline-block mr-4">
-                        <img src="{{this}}" alt="Gallery image" class="w-64 h-40 object-cover rounded-lg">
+<div class="w-full bg-yellow-50 min-h-screen flex flex-col items-center py-16 px-4">
+    <div class="container mx-auto my-8 p-4 bg-white rounded-lg shadow-md text-black max-w-4xl">
+        <!-- Image Gallery -->
+        <div class="mb-8 overflow-x-auto whitespace-nowrap scrollbar-show">
+            {{#each establishmentData.gallery}}
+            <div class="inline-block mr-4">
+                <img src="{{this}}" alt="Gallery image" class="w-64 h-40 object-cover rounded-lg">
+            </div>
+            {{/each}}
+        </div>
+        <!-- Stars -->
+        <div class="container mx-auto my-8 p-4 bg-white">
+            <div class="text-center">
+                <h1 class="text-3xl font-bold mb-2 italic">{{establishmentData.name}}</h1>
+                <span class="text-3xl font-bold mb-2 italic">{{establishmentData.category}}</span>
+                <div class="flex justify-center items-center mb-4">
+                    <div id="starRating" class="text-yellow-400">
+                        <span class="fa fa-star"></span>
+                    </div>
+                    <span id="ratingText" class="text-gray-600 ml-2">{{establishmentData.rating}} out of 5</span>
+                </div>
+            </div>
+        </div>
+        <!-- Review Modal-->
+        <div id="ratingModal" class="fixed inset-0 flex items-center flex-col justify-center bg-gray-800 bg-opacity-90 hidden">
+        <h2 class="text-white italic">How was your experience?</h2>
+        <form action="/establishments/{{establishmentData._id}}/reviews" method="POST" class="bg-white rounded-lg shadow-lg p-6 w-96 flex flex-col items-center justify-center">
+            <div class="star-rating flex flex-row-reverse text-4xl ml-1.5 mb-4">
+            <input type="radio" id="5-stars" name="rating" value="5" class="hidden" />
+            <label for="5-stars" class="cursor-pointer text-gray-300">&#9733;</label>
+            <input type="radio" id="4-stars" name="rating" value="4" class="hidden" />
+            <label for="4-stars" class="cursor-pointer text-gray-300">&#9733;</label>
+            <input type="radio" id="3-stars" name="rating" value="3" class="hidden" />
+            <label for="3-stars" class="cursor-pointer text-gray-300">&#9733;</label>
+            <input type="radio" id="2-stars" name="rating" value="2" class="hidden" />
+            <label for="2-stars" class="cursor-pointer text-gray-300">&#9733;</label>
+            <input type="radio" id="1-star" name="rating" value="1" class="hidden" />
+            <label for="1-star" class="cursor-pointer text-gray-300">&#9733;</label>
+            </div>
+            <textarea name="comment" class="outline w-full focus:outline-white h-52" placeholder="Leave a comment..." style="resize: none;" required></textarea>
+            <div class="flex justify-between gap-4 mt-4">
+            <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded">Submit</button>
+            <button type="button" id="closeModalBtn" class="px-4 py-2 bg-red-500 text-white rounded">Close</button>
+            </div>
+        </form>
+        </div>
+        <!-- Edit Modal -->
+        <div id="editModal" class="fixed inset-0 flex items-center flex-col justify-center bg-gray-800 bg-opacity-90 hidden">
+        <h2 class="text-white italic">Edit Your Review</h2>
+        <form id="editForm" action="" method="POST" class="bg-white rounded-lg shadow-lg p-6 w-96 flex flex-col items-center justify-center">
+            <textarea id="editTextarea" name="comment" class="outline w-full focus:outline-white h-52" placeholder="Edit your review..." style="resize: none;" required></textarea>
+            <div class="flex justify-between gap-4 mt-4">
+            <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded">Update</button>
+            <button type="button" id="closeEditBtn" class="px-4 py-2 bg-red-500 text-white rounded">Cancel</button>
+            </div>
+        </form>
+        </div>
+        <!-- Interactive -->
+        <a id="openModalBtn" class="mb-4 mr-1 inline-flex items-center gap-x-2 rounded-md bg-yellow-300 px-3.5 py-2.5 text-sm font-semibold text-green-500 font-bold shadow-sm hover:bg-gray-400 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600">
+            <span class="">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.633 10.25c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904m10.598-9.75H14.25M5.904 18.5c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 9.953 4.167 9.5 5 9.5h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z" />
+                </svg>
+            </span>
+            <span class="text-green-500">Write a Review!</span>
+        </a>
+        <!-- Reviews -->
+        <div class="space-y-4">
+            {{#each reviews}}
+                <div class="review-container p-4 bg-gray-50 rounded-lg shadow-sm" data-review-id="{{this._id}}">
+                    <div class="flex items-center mb-2">
+                    <img src="/uploads/{{user.avatar}}" alt="User avatar" class="w-12 h-12 rounded-full mr-4">
+                    <div>
+                        <p class="font-semibold">@{{user.username}}</p>
+                        <p class="text-sm text-gray-500">{{date}}</p>
+                    </div>
+                    </div>
+                    <div class="review-content text-gray-800">
+                    <div class="text-yellow-400 mb-2">
+                        {{rating}}&#9733; 
+                    </div>
+                    <p>{{comment}}</p> 
+                    </div>
+                    <div class="flex items-center ml-2 mt-4">
+                        <!-- Like Button -->
+                        <button type="button" class="likeButton flex items-center text-green-600 mr-4" data-review-id="{{this._id}}">
+                            <img src="/images/like.png" class="w-5 h-5 mr-1">
+                            <span>{{this.likes}}</span>
+                        </button>
+                        <!-- Dislike Button -->
+                        <button type="button" class="dislikeButton flex items-center text-red-600" data-review-id="{{this._id}}">
+                            <img src="/images/dislike.png" class="w-5 h-5 mr-1">
+                            <span>{{this.dislikes}}</span>
+                        </button>
+                        <button type="button" class="flex items-center text-gray-600 ml-4" id="openComment-{{this._id}}">
+                            <img src="/images/comments.png" class="w-5 h-5 ml-4 mr-1">Leave a comment
+                        </button>
+                        {{#if (eq this.user.username ../user.username)}}
+                            <button class="openEditBtn ml-auto px-3 py-1 bg-yellow-500 text-white rounded">Edit</button>
+                            <button class="deleteReviewBtn ml-2 px-3 py-1 bg-red-500 text-white rounded">Delete</button>
+                        {{/if}}
+                    </div>
+                <!-- Comment Form Modal -->
+                <div id="commentModal-{{this._id}}" class="fixed inset-0 flex items-center flex-col justify-center bg-gray-800 bg-opacity-90 hidden">
+                    <h2 class="text-white italic">Leave a comment</h2>
+                    <form action="/reviews/{{this._id}}/comments" method="POST" class="bg-white rounded-lg shadow-lg p-6 w-96 flex flex-col items-center justify-center">
+                    <input type="hidden" name="establishmentId" value="{{../establishmentData._id}}">
+                    <textarea name="text" class="outline w-full focus:outline-white h-52" placeholder="Write your comment here..." style="resize: none;" required></textarea>
+                    <div class="flex justify-between gap-4 mt-4">
+                        <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded">Submit</button>
+                        <button type="button" class="px-4 py-2 bg-red-500 text-white rounded" onclick="closeCommentModal('{{this._id}}')">Close</button>
+                    </div>
+                    </form>
+                </div>
+                <!-- Comments Display -->
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold">Comments:</h3>
+                    {{#each comments}}
+                    <div class="p-2 bg-gray-100 rounded-lg mb-2">
+                        <div class="flex items-center mb-1">
+                        <img src="/uploads/{{user.avatar}}" alt="User avatar" class="w-8 h-8 rounded-full mr-2">
+                        <p class="font-semibold">@{{user.username}}</p>
+                        </div>
+                        <p class="text-gray-700">{{text}}</p>
                     </div>
                     {{/each}}
                 </div>
-
-                <!-- Stars -->
-                <div class="container mx-auto my-8 p-4 bg-white">
-                    <div class="text-center">
-                        <h1 class="text-3xl font-bold mb-2 italic">{{establishmentData.name}}</h1>
-                        <div class="flex justify-center items-center mb-4">
-                            <div id="starRating" class="text-yellow-400">
-                                <span class="fa fa-star"></span>
-                            </div>
-                            <span id="ratingText" class="text-gray-600 ml-2">{{establishmentData.rating}} out of 5</span>
-                        </div>
-                    </div>
                 </div>
-
-                <!-- Review Modal-->
-                <div id="ratingModal" class="fixed inset-0 flex items-center flex-col justify-center bg-gray-800 bg-opacity-90 hidden">
-                <h2 class="text-white italic">How was your experience?</h2>
-                <form action="/establishments/{{establishmentData._id}}/reviews" method="POST" class="bg-white rounded-lg shadow-lg p-6 w-96 flex flex-col items-center justify-center">
-                    <div class="star-rating flex flex-row-reverse text-4xl ml-1.5 mb-4">
-                    <input type="radio" id="5-stars" name="rating" value="5" class="hidden" />
-                    <label for="5-stars" class="cursor-pointer text-gray-300">&#9733;</label>
-                    <input type="radio" id="4-stars" name="rating" value="4" class="hidden" />
-                    <label for="4-stars" class="cursor-pointer text-gray-300">&#9733;</label>
-                    <input type="radio" id="3-stars" name="rating" value="3" class="hidden" />
-                    <label for="3-stars" class="cursor-pointer text-gray-300">&#9733;</label>
-                    <input type="radio" id="2-stars" name="rating" value="2" class="hidden" />
-                    <label for="2-stars" class="cursor-pointer text-gray-300">&#9733;</label>
-                    <input type="radio" id="1-star" name="rating" value="1" class="hidden" />
-                    <label for="1-star" class="cursor-pointer text-gray-300">&#9733;</label>
-                    </div>
-                    <textarea name="comment" class="outline w-full focus:outline-white h-52" placeholder="Leave a comment..." style="resize: none;" required></textarea>
-                    <div class="flex justify-between gap-4 mt-4">
-                    <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded">Submit</button>
-                    <button type="button" id="closeModalBtn" class="px-4 py-2 bg-red-500 text-white rounded">Close</button>
-                    </div>
-                </form>
-                </div>
-                
-                <!-- Edit Modal -->
-                <div id="editModal" class="fixed inset-0 flex items-center flex-col justify-center bg-gray-800 bg-opacity-90 hidden">
-                <h2 class="text-white italic">Edit Your Review</h2>
-                <form id="editForm" action="" method="POST" class="bg-white rounded-lg shadow-lg p-6 w-96 flex flex-col items-center justify-center">
-                    <textarea id="editTextarea" name="comment" class="outline w-full focus:outline-white h-52" placeholder="Edit your review..." style="resize: none;" required></textarea>
-                    <div class="flex justify-between gap-4 mt-4">
-                    <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded">Update</button>
-                    <button type="button" id="closeEditBtn" class="px-4 py-2 bg-red-500 text-white rounded">Cancel</button>
-                    </div>
-                </form>
-                </div>
-
-                <!-- Interactive -->
-                <a id="openModalBtn" class="mb-4 mr-1 inline-flex items-center gap-x-2 rounded-md bg-yellow-300 px-3.5 py-2.5 text-sm font-semibold text-green-500 font-bold shadow-sm hover:bg-gray-400 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600">
-                    <span class="">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.633 10.25c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904m10.598-9.75H14.25M5.904 18.5c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 9.953 4.167 9.5 5 9.5h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z" />
-                        </svg>
-                    </span>
-                    <span class="text-green-500">Write a Review!</span>
-                </a>
-                
-                <!-- Reviews -->
-                <div class="space-y-4">
-                    {{#each reviews}}
-                        <div class="review-container p-4 bg-gray-50 rounded-lg shadow-sm" data-review-id="{{this._id}}">
-                            <div class="flex items-center mb-2">
-                            <img src="/uploads/{{user.avatar}}" alt="User avatar" class="w-12 h-12 rounded-full mr-4">
-                            <div>
-                                <p class="font-semibold">@{{user.username}}</p>
-                                <p class="text-sm text-gray-500">{{date}}</p>
-                            </div>
-                            </div>
-                            <div class="review-content text-gray-800">
-                            <div class="text-yellow-400 mb-2">
-                                {{rating}}&#9733; 
-                            </div>
-                            <p>{{comment}}</p> 
-                            </div>
-                            <div class="flex items-center ml-2 mt-4">
-                            <button type="button" class="likeButton flex items-center text-gray-600" data-review-id="{{this._id}}">
-                                <img src="/images/like.png" class="w-5 h-5 mr-1">
-                                {{#if likesUserIds}}
-                                {{#each likesUserIds}}
-                                    {{#if (eq this.username ../../user.username)}}
-                                        <span class="text-green-600">Marked as Helpful</span>  
-                                    {{else}}
-                                        <span class="text-gray-600">Mark as Helpful</span>
-                                    {{/if}}
-                                    
-                                {{/each}}
-                                {{else}}
-                                <span class="text-gray-600">Mark as Helpful</span>
-                                {{/if}}                                 
-                            </button>
-
-                            <button type="button" class="flex items-center text-gray-600 ml-4" id="openComment-{{this._id}}">
-                                <img src="/images/comments.png" class="w-5 h-5 ml-4 mr-1">Leave a comment
-                            </button>
-                            {{#if (eq this.user.username ../user.username)}}
-                                <button class="openEditBtn ml-auto px-3 py-1 bg-yellow-500 text-white rounded">Edit</button>
-                                <button class="deleteReviewBtn ml-2 px-3 py-1 bg-red-500 text-white rounded">Delete</button>
-                            {{/if}}
-                            </div>
-                        <!-- Comment Form Modal -->
-                        <div id="commentModal-{{this._id}}" class="fixed inset-0 flex items-center flex-col justify-center bg-gray-800 bg-opacity-90 hidden">
-                            <h2 class="text-white italic">Leave a comment</h2>
-                            <form action="/reviews/{{this._id}}/comments" method="POST" class="bg-white rounded-lg shadow-lg p-6 w-96 flex flex-col items-center justify-center">
-                            <input type="hidden" name="establishmentId" value="{{../establishmentData._id}}">
-                            <textarea name="text" class="outline w-full focus:outline-white h-52" placeholder="Write your comment here..." style="resize: none;" required></textarea>
-                            <div class="flex justify-between gap-4 mt-4">
-                                <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded">Submit</button>
-                                <button type="button" class="px-4 py-2 bg-red-500 text-white rounded" onclick="closeCommentModal('{{this._id}}')">Close</button>
-                            </div>
-                            </form>
-                        </div>
-
-                        <!-- Comments Display -->
-                        <div class="mt-6">
-                            <h3 class="text-lg font-semibold">Comments:</h3>
-                            {{#each comments}}
-                            <div class="p-2 bg-gray-100 rounded-lg mb-2">
-                                <div class="flex items-center mb-1">
-                                <img src="/uploads/{{user.avatar}}" alt="User avatar" class="w-8 h-8 rounded-full mr-2">
-                                <p class="font-semibold">@{{user.username}}</p>
-                                </div>
-                                <p class="text-gray-700">{{text}}</p>
-                            </div>
-                            {{/each}}
-                        </div>
-                        </div>
-                    {{/each}}
-                </div>
-
+            {{/each}}
         </div>
     </div>
+</div>
 
  <style>
     .star-rating input:checked ~ label {

@@ -8,8 +8,8 @@ const establishmentSchema = new mongoose.Schema({
   rating: { type: Number, default: 0 },
   reviewsCount: { type: Number, default: 0 },
   description: { type: String },
-  gallery: [{ type: String }]  // for the page
-
+  gallery: [{ type: String }],  // for the page
+  category: { type: String, enum: ['Stall', 'Cafe', 'Restaurant', 'Fastfood'], required: false },
 },{ timestamps: true });
 
 // Method to calculate and update the average rating

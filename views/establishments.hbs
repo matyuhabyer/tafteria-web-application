@@ -1,35 +1,56 @@
 
-<div class="flex items-center justify-center h-full bg-cover bg-center text-black" style="background-image: url(/images/agno1.jpg);">
-    <div class="w-full h-full flex flex-col items-center justify-center bg-black bg-opacity-50 text-center text-black p-10">
-        <div id="establishments" class="bg-white-500 p-5 flex justify-center w-full">
-            <div id="reviews-box" class="w-screen bg-white p-5 rounded-lg grid grid-row gap-4">
-                <h2 class="text-4xl font-bold mb-5 text-center">Taft Establishments</h2>
-
-                {{#each establishments}}
-                 <a href="/establishments/{{this._id}}">
-                        <div class="flex rounded-lg shadow-lg transition transform hover:-translate-y-1 hover:bg-yellow-100">
-                            <div class="w-1/2 h-64 rounded-lg flex justify-end bg-cover" style="background-image: url({{mainImage}});">
-                                <img src="/images/hrt.jpg" class="w-12 h-12 p-2 rounded-full transition-transform transform hover:-translate-y-1">
+<div class="w-full bg-yellow-50 min-h-screen flex flex-col items-center py-16 px-4">
+    <h2 class="text-5xl font-bold mb-8 text-center text-gray-800">Taft Establishments</h2>
+    <div class="w-full max-w-7xl bg-white p-8 shadow-xl rounded-2xl">
+        <div class="flex flex-col md:flex-row gap-8">
+            <!-- Filters Sidebar -->
+            <aside class="w-full md:w-1/4 mb-8 md:mb-0">
+                <div class="bg-gray-100 rounded-xl shadow-md p-6 text-left">
+                    <h3 class="text-xl font-bold mb-4 text-gray-800">Filters</h3>
+                    <form>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-semibold mb-2">Rating</label>
+                            <select class="w-full rounded-lg border border-gray-300 px-3 py-2">
+                                <option value="all">All Ratings</option>
+                                <option value="4.5">4.5 & Up</option>
+                                <option value="4.0">4.0 & Up</option>
+                                <option value="3.5">3.5 & Up</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-semibold mb-2">Category</label>
+                            <select class="w-full rounded-lg border border-gray-300 px-3 py-2">
+                                <option value="all">All Categories</option>
+                                <option value="restaurant">Restaurant</option>
+                                <option value="cafe">Cafe</option>
+                                <option value="stall">Stall</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="w-full bg-green-800 text-white py-2 rounded-lg font-bold hover:bg-green-700 transition-colors">Apply Filters</button>
+                    </form>
+                </div>
+            </aside>
+            <!-- Establishments Vertical List -->
+            <section class="w-full md:w-3/4">
+                <div class="flex flex-col gap-6">
+                    {{#each establishments}}
+                    <a href="/establishments/{{this._id}}" class="bg-gray-50 rounded-xl shadow-md overflow-hidden transition-transform hover:-translate-y-1 hover:shadow-lg flex flex-col md:flex-row">
+                        <img src="{{mainImage}}" alt="{{name}}" class="w-full md:w-64 h-48 object-cover rounded-t-xl md:rounded-l-xl md:rounded-t-none" />
+                        <div class="p-6 flex flex-col justify-between flex-1">
+                            <div class="flex items-center text-sm text-gray-500 mb-2">
+                                <span class="text-yellow-400 text-2xl mr-2">&#9733;</span>
+                                <span class="mr-1 font-semibold">{{rating}}</span>
+                                <span>({{reviewsCount}} Reviews)</span>
                             </div>
-                            <div class="p-2 ml-4 w-full">
-                                <div class="flex justify-between font-bold">
-                                    <p class="text-3xl underline underline-offset-2">{{name}}</p>
-                                    <p class="text-l mt-5">{{phone}}</p>
-                                </div>
-                                <div class="flex items-center">
-                                    <div class="text-yellow-400 text-2xl mr-2">
-                                        &#9733
-                                    </div>
-                                    <p class="text-sm font-bold mr-1">{{rating}}</p>
-                                    <p class="text-sm text-gray-500">({{reviewsCount}} Reviews)</p>
-                                </div>
-                                <p class="text-sm text-gray-700 mt-14">{{description}}<span class="italic font-semibold">{{reviewer}}</span></p>
-                            </div>
+                            <h3 class="text-2xl font-bold mb-2 text-gray-800">{{name}}</h3>
+                            <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full mb-2 w-fit">{{category}}</span>
+                            <p class="text-gray-700">{{description}}</p>
+                            <p class="text-sm text-gray-500 mt-2">{{phone}}</p>
                         </div>
                     </a>
-                {{/each}}
-                
-            </div>  
+                    {{/each}}
+                </div>
+            </section>
         </div>
     </div>
 </div>

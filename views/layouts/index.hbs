@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Head Section -->
+    <meta charset="utf-8">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>{{title}}</title>
+</head>
+<body class="font-sans bg-gray-100">
+    {{#if user}}
+    {{> header-user }}
+    {{else}}
+    {{> header }}
+    {{/if}}
+    {{> sidebar }}
+    {{{body}}}
+    {{> footer }}
+    <script src="/js/script.js"></script>
+</body>
+</html>
