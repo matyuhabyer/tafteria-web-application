@@ -3,7 +3,7 @@
 1. Clone the GitHub repository using the command:
    - git clone https://github.com/matyuhabyer/tafteria-web-application.git
 
-2. cd CCAPDEV-ForumFriends
+2. cd tafteria-web-application
 
 
 3. Open terminal in current directory:
