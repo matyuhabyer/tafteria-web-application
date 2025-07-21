@@ -7,6 +7,7 @@ const reviewSchema = new mongoose.Schema({
   rating: { type: Number, required: true, min: 0, max: 5 },
   comment: { type: String, required: true },
   establishment: { type: mongoose.Schema.Types.ObjectId, ref: 'Establishment', required: true },
+  photos: [{ type: String }], // Array of photo filenames
   date: { type: Date, default: Date.now },
   likes: { type: Number, default: 0 },
   likesUserIds: { type: [mongoose.Schema.Types.ObjectId], ref: 'User' },
@@ -21,6 +22,12 @@ reviewSchema.post('save', async function(doc) {
   if (establishment) {
     await establishment.updateAverageRating();
   }
+  
+  // Update user's average rating
+  const user = await mongoose.model('User').findById(doc.user);
+  if (user) {
+    await user.updateAverageRating();
+  }
 });
 
 // Middleware to update establishment's average rating after removing a review
@@ -28,6 +35,12 @@ reviewSchema.post('remove', async function(doc) {
   const establishment = await mongoose.model('Establishment').findById(doc.establishment);
   if (establishment) {
     await establishment.updateAverageRating();
+  }
+  
+  // Update user's average rating
+  const user = await mongoose.model('User').findById(doc.user);
+  if (user) {
+    await user.updateAverageRating();
   }
 });
 
@@ -37,6 +50,12 @@ reviewSchema.post('findOneAndDelete', async function(doc) {
     const establishment = await mongoose.model('Establishment').findById(doc.establishment);
     if (establishment) {
       await establishment.updateAverageRating();
+    }
+    
+    // Update user's average rating
+    const user = await mongoose.model('User').findById(doc.user);
+    if (user) {
+      await user.updateAverageRating();
     }
   }
 });

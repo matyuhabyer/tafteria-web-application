@@ -15,7 +15,7 @@ const { check, validationResult } = require('express-validator');
 // Models
 const User = require('./models/User');
 const Establishment = require('./models/Establishment');
-const Reviews = require('./models/Review');
+const Review = require('./models/Review');
 
 // Middleware for parsing JSON and URL-encoded form data
 app.use(express.json());
@@ -98,7 +98,7 @@ const upload = multer({ storage: storage });
 app.get('/', async (req, res) => {
   try {
     const establishments = await Establishment.find({}).lean();
-    const reviews = await Reviews.find({})
+    const reviews = await Review.find({})
       .sort({ date: -1 }) // Sort reviews by date in descending order
       .populate('user')
       .populate('establishment')
@@ -137,7 +137,18 @@ app.get('/profile', async (req, res) => {
     const user = await User.findById(req.session.user.id).lean();
 
     // Find all reviews written by the logged-in user and populate the establishment field
-    const reviews = await Reviews.find({ user: req.session.user.id }).populate('establishment').lean();
+    const reviews = await Review.find({ user: req.session.user.id }).populate('establishment').lean();
+
+    // Calculate user's average rating if not already calculated
+    const userDoc = await User.findById(req.session.user.id);
+    if (userDoc) {
+      await userDoc.updateAverageRating();
+      // Update the user object with fresh data
+      Object.assign(user, {
+        averageRating: userDoc.averageRating,
+        reviewsCount: userDoc.reviewsCount
+      });
+    }
 
     res.render('profile', {
       title: 'Profile | Tafteria',
@@ -160,7 +171,7 @@ app.get('/establishments/:id', async (req, res) => {
   try {
     let establishmentData = await Establishment.findById(id).lean();
     // Find reviews related to the specific establishment
-    let reviews = await Reviews.find({ establishment: id })
+    let reviews = await Review.find({ establishment: id })
                                .populate('user')
                                .populate('comments.user')
                                .populate('likesUserIds')
@@ -252,7 +263,7 @@ app.post('/reviews/:id/comments', async (req, res) => {
   }
 
   try {
-    await Reviews.findByIdAndUpdate(reviewId, {
+    await Review.findByIdAndUpdate(reviewId, {
       $push: { comments: { user: user.id, text } }
     });
     res.redirect(`/establishments/${establishmentId}`);
@@ -278,18 +289,20 @@ app.post('/profile/edit', upload.single('avatar'), [
 
   try {
       const userId = req.session.user.id;
-      const { description } = req.body;
+      const { description, favorites } = req.body;
       const avatar = req.file ? req.file.filename : req.session.user.avatar;
 
       // Update the user profile
       await User.findByIdAndUpdate(userId, {
           avatar,
-          description
+          description,
+          favorites
       });
 
       // Update session data
       req.session.user.avatar = avatar;
       req.session.user.description = description;
+      req.session.user.favorites = favorites;
 
       res.redirect('/profile');
   } catch (error) {
@@ -350,24 +363,38 @@ app.get('/logout', (req, res) => {
 });
 
 // Handle review input
-app.post('/establishments/:id/reviews', async (req, res) => {
+app.post('/establishments/:id/reviews', upload.array('photos', 5), async (req, res) => {
   const establishmentId = req.params.id;
   const { rating, comment } = req.body;
   const user = req.session.user;
+
+  console.log('Review submission data:', { establishmentId, rating, comment, user: user?.id });
+  console.log('Files uploaded:', req.files);
 
   if (!user || !user.id) {
     return res.status(401).send('You must be logged in to post a review.');
   }
 
+  if (!rating || !comment) {
+    console.error('Missing required fields:', { rating, comment });
+    return res.status(400).send('Rating and comment are required.');
+  }
+
   try {
-    const newReview = new Reviews({
+    // Get uploaded photo filenames
+    const photos = req.files ? req.files.map(file => file.filename) : [];
+
+    const newReview = new Review({
       user: user.id,
-      rating,
+      rating: parseInt(rating),
       comment,
+      photos,
       establishment: establishmentId
     });
 
+    console.log('Creating review:', newReview);
     await newReview.save();
+    console.log('Review saved successfully');
     res.redirect(`/establishments/${establishmentId}`);
   } catch (error) {
     console.error('Error posting review:', error);
@@ -393,7 +420,7 @@ app.get('/search', async (req, res) => {
     console.log('Establishments Found:', establishments);
 
     // Search for reviews based on exact match of the query in comment
-    const reviews = await Reviews.find({
+    const reviews = await Review.find({
       $or: [
         { comment: { $regex: `\\b${query}\\b`, $options: 'i' } },
         { 'establishment.name': { $regex: `\\b${query}\\b`, $options: 'i' } }
@@ -421,7 +448,7 @@ app.delete('/reviews/:id', async (req, res) => {
   const userId = req.session.user.id;
 
   try {
-    const review = await Reviews.findById(reviewId);
+    const review = await Review.findById(reviewId);
 
     if (!review) {
       return res.status(404).send('Review not found');
@@ -431,7 +458,7 @@ app.delete('/reviews/:id', async (req, res) => {
       return res.status(403).send('Unauthorized');
     }
 
-    await Reviews.findByIdAndDelete(reviewId);
+    await Review.findByIdAndDelete(reviewId);
     res.status(200).send('Review deleted successfully');
   } catch (error) {
     console.error('Error deleting review:', error);
@@ -446,7 +473,7 @@ app.post('/reviews/:id/edit', async (req, res) => {
   const userId = req.session.user.id;
 
   try {
-    const review = await Reviews.findById(reviewId);
+    const review = await Review.findById(reviewId);
 
     if (!review) {
       return res.status(404).send('Review not found');
@@ -476,7 +503,7 @@ app.post('/reviews/:id/like', async (req, res) => {
   }
 
   try {
-    const review = await Reviews.findById(reviewId);
+    const review = await Review.findById(reviewId);
 
     if (!review) {
       return res.status(404).send('Review not found');
@@ -505,7 +532,7 @@ app.post('/profile/reviews/:id/edit', async (req, res) => {
   const userId = req.session.user.id;
 
   try {
-    const review = await Reviews.findById(reviewId);
+    const review = await Review.findById(reviewId);
 
     if (!review) {
       return res.status(404).send('Review not found');
@@ -531,7 +558,7 @@ app.post('/profile/reviews/:id/delete', async (req, res) => {
   const userId = req.session.user.id;
 
   try {
-    const review = await Reviews.findById(reviewId);
+    const review = await Review.findById(reviewId);
 
     if (!review) {
       return res.status(404).send('Review not found');
@@ -541,7 +568,7 @@ app.post('/profile/reviews/:id/delete', async (req, res) => {
       return res.status(403).send('Unauthorized');
     }
 
-    await Reviews.findByIdAndDelete(reviewId);
+    await Review.findByIdAndDelete(reviewId);
     res.redirect('/profile'); // Redirect back to profile
   } catch (error) {
     console.error('Error deleting review:', error);
