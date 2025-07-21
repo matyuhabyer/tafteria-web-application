@@ -2,11 +2,14 @@
     <div class="w-full max-w-4xl">
         <!-- Cover Photo Section -->
         <div class="relative h-64 bg-gradient-to-r from-green-400 to-green-600 rounded-t-xl overflow-hidden">
+            {{#if user.coverPhoto}}
+            <img src="/uploads/{{user.coverPhoto}}" alt="Cover Photo" class="absolute inset-0 w-full h-full object-cover z-0">
+            {{/if}}
             <div class="absolute inset-0 bg-black bg-opacity-20"></div>
-            <div class="absolute bottom-4 left-4">
+            <div class="absolute bottom-4 left-4 z-10">
                 <img src="/uploads/{{user.avatar}}" alt="Profile Picture" class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover">
             </div>
-            <div class="absolute bottom-4 right-4">
+            <div class="absolute bottom-4 right-4 z-10">
                 <button id="editProfileBtn" class="bg-white bg-opacity-90 text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-opacity-100 transition-all">
                     Edit Profile
                 </button>
@@ -25,6 +28,10 @@
                     <!-- Edit Profile Form (Hidden by default) -->
                     <div id="editProfileForm" class="hidden mt-6 p-4 bg-gray-50 rounded-lg">
                         <form action="/profile/edit" method="POST" enctype="multipart/form-data">
+                            <div class="mb-4">
+                                <label for="coverPhoto" class="block text-gray-700 text-sm font-bold mb-2">Cover Photo:</label>
+                                <input type="file" id="coverPhoto" name="coverPhoto" accept="image/*" class="block w-full text-sm text-gray-900 border border-gray-300 cursor-pointer bg-gray-50 rounded">
+                            </div>
                             <div class="mb-4">
                                 <label for="avatar" class="block text-gray-700 text-sm font-bold mb-2">Profile Photo:</label>
                                 <input type="file" id="avatar" name="avatar" accept="image/*" class="block w-full text-sm text-gray-900 border border-gray-300 cursor-pointer bg-gray-50 rounded">
