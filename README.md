@@ -1,11 +1,9 @@
-//Steps
+Installation
 
-Connect MongoDB using MongoDB Compass
+Clone the repository: Clone the GitHub repository using the command:
+git clone https://github.com/Alec718/CCAPDEV-ForumFriends.git
 
-Create a new database called "tafteria" and a collection name called users
-Import the included .json files with "tafteria" prefix and the according collection name.
-For example, establishments. import tafteria.establishments.json to establishment collection.
-Add new collections as necessary.
+cd CCAPDEV-ForumFriends
 
 
 Open terminal in current directory:
