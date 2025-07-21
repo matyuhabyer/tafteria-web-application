@@ -1,30 +1,33 @@
-Installation
+## Installation
 
-Clone the repository: Clone the GitHub repository using the command:
-git clone https://github.com/Alec718/CCAPDEV-ForumFriends.git
+1. Clone the GitHub repository using the command:
+   - git clone https://github.com/matyuhabyer/tafteria-web-application.git
 
-cd CCAPDEV-ForumFriends
-
-
-Open terminal in current directory:
-
-install these first:
-const express = require('express');
-const app = express();
-const path = require('path');
-const handlebars = require('express-handlebars');
-const mongoose = require('mongoose');
-const multer = require('multer');
-const session = require('express-session');
-const bcrypt = require('bcrypt');
-const bodyParser = require('body-parser');
-const { check, validationResult } = require('express-validator');
+2. cd CCAPDEV-ForumFriends
 
 
-npm init -y
+3. Open terminal in current directory:
 
-node app.js
+4. install these dependencies first:
+- bcrypt
+- body-parser
+- crypto
+- dotenv
+- express
+- express-handlebars
+- express-validator
+- hbs
+- moment
+- mongo
+- mongoose
+- multer
 
-Go to web browser and type: localhost:3000/
+6. Create an env file and write "SECRET_KEY=CCAPDEV"
 
-Enjoy!
+7. npm init -y
+
+8. node app.js
+
+9. Go to web browser and type: localhost:3000/
+
+10. Enjoy!
