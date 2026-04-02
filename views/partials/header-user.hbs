@@ -1,24 +1,21 @@
-<!-- Header Section -->
-<header class="w-full bg-green-800 h-20 flex items-center justify-between px-8 text-white shadow-md sticky top-0 z-30">
-    <div class="flex items-center space-x-4">
-        <!-- Sidebar Toggle Button -->
-        <button class="w-8 h-8 flex items-center justify-center rounded hover:bg-green-700 focus:outline-none mr-2" onclick="toggleSidebar()">
-            <img src="/images/nav-icon.png" alt="Menu" class="w-6 h-6" />
+<!-- Header (signed in) -->
+<header class="site-header w-full h-16 md:h-20 flex items-center justify-between px-4 md:px-8 text-white shadow-md sticky top-0 z-30 bg-green-900 bg-opacity-95 backdrop-blur-md border-b border-white border-opacity-10">
+    <div class="flex items-center space-x-2 md:space-x-4 min-w-0">
+        <button type="button" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white hover:bg-opacity-10 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 focus:ring-offset-green-900 transition-colors" onclick="toggleSidebar()" aria-label="Open menu">
+            <i data-lucide="menu" class="w-6 h-6 text-white opacity-90" aria-hidden="true"></i>
         </button>
-        <!-- Logo -->
-        <a href="/" class="flex items-center">
-            <img class="w-40 h-auto" alt="Tafteria Logo" src="/images/tafteria-logo.png">
+        <a href="/" class="flex items-center group flex-shrink-0">
+            <img class="h-44 md:h-48 w-auto transition-transform group-hover:scale-[1.02]" alt="Tafteria" src="/images/tafteria-logo.png">
         </a>
     </div>
-    <!-- Search Bar -->
-    <div class="flex-grow max-w-lg mx-8">
-        <form action="/search" method="GET" class="flex rounded-lg shadow-sm overflow-hidden">
-            <input type="text" name="q" class="w-full h-11 px-4 text-black focus:outline-none" placeholder="Search establishments or reviews...">
-            <button type="submit" class="h-11 px-6 bg-yellow-500 text-white font-semibold hover:bg-yellow-400 transition-colors">Search</button>
+    <div class="flex-grow max-w-lg mx-2 md:mx-8 min-w-0">
+        <form action="/search" method="GET" class="flex rounded-full shadow-inner overflow-hidden border border-white border-opacity-20 bg-white bg-opacity-95 focus-within:ring-2 focus-within:ring-yellow-400 focus-within:ring-opacity-70 transition-shadow">
+            <label class="sr-only" for="site-search-q-user">Search establishments or reviews</label>
+            <input id="site-search-q-user" type="search" name="q" autocomplete="off" class="w-full h-10 md:h-11 px-4 text-gray-900 placeholder-gray-500 bg-transparent focus:outline-none text-sm md:text-base" placeholder="Search places or reviews…">
+            <button type="submit" class="h-10 md:h-11 px-4 md:px-6 bg-yellow-600 text-white font-semibold text-sm md:text-base hover:bg-yellow-500 transition-colors whitespace-nowrap inline-flex items-center justify-center gap-2">
+                <i data-lucide="search" class="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" aria-hidden="true"></i>
+                Search
+            </button>
         </form>
-    </div>
-    <!-- User Actions -->
-    <div class="flex items-center space-x-4">
-        <span class="hidden md:inline-block font-medium">Welcome, {{#if user}}{{user.username}}{{else}}User{{/if}}!</span>
     </div>
 </header>

@@ -111,6 +111,11 @@ router.get('/profile', async (req, res) => {
     const Review = require('../models/Review');
     const reviews = await Review.find({ user: req.session.user.id }).populate('establishment').lean();
 
+    const photoCount = reviews.reduce(
+      (n, r) => n + (Array.isArray(r.photos) ? r.photos.length : 0),
+      0
+    );
+
     // Calculate user's average rating if not already calculated
     const userDoc = await User.findById(req.session.user.id);
     if (userDoc) {
@@ -126,7 +131,8 @@ router.get('/profile', async (req, res) => {
       title: 'Profile | Tafteria',
       layout: 'index',
       user: user,
-      reviews: reviews
+      reviews: reviews,
+      photoCount: photoCount,
     });
   } catch (error) {
     console.error('Error fetching profile data:', error);

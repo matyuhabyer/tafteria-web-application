@@ -1,223 +1,200 @@
-<div class="w-full bg-yellow-50 min-h-screen flex flex-col items-center py-8 px-4">
-    <div class="w-full max-w-4xl">
-        <!-- Cover Photo Section -->
-        <div class="relative h-64 bg-gradient-to-r from-green-400 to-green-600 rounded-t-xl overflow-hidden">
+<div class="profile-shell section-home">
+    <div class="max-w-6xl mx-auto px-3 sm:px-4">
+        <p class="page-establishments-eyebrow text-center lg:text-left mb-3">Account</p>
+
+        <!-- Banner -->
+        <div class="profile-cover mb-6 lg:mb-8">
             {{#if user.coverPhoto}}
-            <img src="/uploads/{{user.coverPhoto}}" alt="Cover Photo" class="absolute inset-0 w-full h-full object-cover z-0">
+            <img src="/uploads/{{user.coverPhoto}}" alt="" class="absolute inset-0 w-full h-full object-cover z-0">
             {{/if}}
-            <div class="absolute inset-0 bg-black bg-opacity-20"></div>
-            <div class="absolute bottom-4 left-4 z-10">
-                <img src="/uploads/{{user.avatar}}" alt="Profile Picture" class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover">
-            </div>
-            <div class="absolute bottom-4 right-4 z-10">
-                <button id="editProfileBtn" class="bg-white bg-opacity-90 text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-opacity-100 transition-all">
-                    Edit Profile
-                </button>
-            </div>
         </div>
 
-        <!-- Profile Info Section -->
-        <div class="bg-white rounded-b-xl shadow-lg p-6 mt-4">
-            <div class="flex flex-col md:flex-row gap-6">
-                <!-- Left Column - Basic Info -->
-                <div class="md:w-1/3">
-                    <h1 class="text-2xl font-bold text-gray-800 mb-2">{{user.username}}</h1>
-                    <p class="text-gray-600 mb-4">{{user.description}}</p>
-                    <p class="text-sm text-gray-500">Joined on {{user.joinedDate}}</p>
-                    
-                    <!-- Edit Profile Form (Hidden by default) -->
-                    <div id="editProfileForm" class="hidden mt-6 p-4 bg-gray-50 rounded-lg">
-                        <form action="/profile/edit" method="POST" enctype="multipart/form-data">
-                            <div class="mb-4">
-                                <label for="coverPhoto" class="block text-gray-700 text-sm font-bold mb-2">Cover Photo:</label>
-                                <input type="file" id="coverPhoto" name="coverPhoto" accept="image/*" class="block w-full text-sm text-gray-900 border border-gray-300 cursor-pointer bg-gray-50 rounded">
+        <div class="profile-page-grid">
+            <!-- Sidebar: identity & actions -->
+            <aside class="profile-sidebar order-1" aria-label="Profile summary">
+                <div class="profile-sidebar-card">
+                    <img src="/uploads/{{user.avatar}}" alt="" class="profile-sidebar-avatar" width="120" height="120">
+                    <h1 class="profile-sidebar-name">{{user.username}}</h1>
+                    <p class="profile-sidebar-meta">Member since {{user.joinedDate}}</p>
+
+                    <div class="profile-stat-rows" aria-label="Your stats">
+                        <div class="profile-stat-row">
+                            <span class="profile-stat-row__label">Reviews</span>
+                            <span class="profile-stat-row__value">{{reviews.length}}</span>
+                        </div>
+                        <div class="profile-stat-row">
+                            <span class="profile-stat-row__label">Avg rating</span>
+                            <span class="profile-stat-row__value">{{#if user.averageRating}}{{user.averageRating}}{{else}}—{{/if}}</span>
+                        </div>
+                        <div class="profile-stat-row">
+                            <span class="profile-stat-row__label">Photos</span>
+                            <span class="profile-stat-row__value">{{photoCount}}</span>
+                        </div>
+                    </div>
+
+                    <div class="profile-sidebar-actions">
+                        <button type="button" id="editProfileBtn" class="w-full rounded-full bg-green-800 text-white font-semibold text-sm py-2.5 hover:bg-green-700 transition-colors shadow-sm">
+                            Edit profile
+                        </button>
+                        <a href="/establishments" class="w-full inline-flex justify-center items-center rounded-full bg-yellow-500 text-white font-semibold text-sm py-2.5 hover:bg-yellow-400 transition-colors shadow-sm">
+                            Write a review
+                        </a>
+                        <a href="/establishments" class="w-full inline-flex justify-center items-center rounded-full border-2 border-green-800 text-green-900 font-semibold text-sm py-2.5 hover:bg-green-50 transition-colors">
+                            Explore places
+                        </a>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main: about, form, tabs -->
+            <div class="profile-main-column order-2">
+                <section class="profile-about-card" aria-labelledby="about-heading">
+                    <h2 id="about-heading" class="profile-section-title">About</h2>
+                    <p class="text-gray-700 leading-relaxed text-sm md:text-base">{{#if user.description}}{{user.description}}{{else}}Add a short bio so others know your taste.{{/if}}</p>
+
+                    <div id="editProfileForm" class="hidden mt-6 pt-6 border-t border-gray-200">
+                        <h3 class="text-base font-bold text-gray-900 mb-4" style="font-family: var(--font-display);">Edit your profile</h3>
+                        <form action="/profile/edit" method="POST" enctype="multipart/form-data" class="space-y-4">
+                            <div class="form-field-profile">
+                                <label for="coverPhoto">Cover photo</label>
+                                <input type="file" id="coverPhoto" name="coverPhoto" accept="image/*" class="text-sm">
                             </div>
-                            <div class="mb-4">
-                                <label for="avatar" class="block text-gray-700 text-sm font-bold mb-2">Profile Photo:</label>
-                                <input type="file" id="avatar" name="avatar" accept="image/*" class="block w-full text-sm text-gray-900 border border-gray-300 cursor-pointer bg-gray-50 rounded">
+                            <div class="form-field-profile">
+                                <label for="avatar">Profile photo</label>
+                                <input type="file" id="avatar" name="avatar" accept="image/*" class="text-sm">
                             </div>
-                            <div class="mb-4">
-                                <label for="description" class="block text-gray-700 text-sm font-bold mb-2">Bio:</label>
-                                <textarea id="description" name="description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:shadow-outline" rows="3">{{user.description}}</textarea>
+                            <div class="form-field-profile">
+                                <label for="description">Bio</label>
+                                <textarea id="description" name="description" rows="3">{{user.description}}</textarea>
                             </div>
-                            <div class="mb-4">
-                                <label for="favorites" class="block text-gray-700 text-sm font-bold mb-2">Favorite Foods:</label>
-                                <textarea id="favorites" name="favorites" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:shadow-outline" rows="2" placeholder="e.g., Pizza, Sushi, Burgers">{{user.favorites}}</textarea>
+                            <div class="form-field-profile">
+                                <label for="favorites">Favorite foods</label>
+                                <textarea id="favorites" name="favorites" rows="2" placeholder="e.g. silog, ramen, milk tea">{{user.favorites}}</textarea>
                             </div>
-                            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                                Save Changes
+                            <button type="submit" class="rounded-full bg-green-800 text-white font-semibold px-8 py-2.5 text-sm hover:bg-green-700 transition-colors shadow-sm">
+                                Save changes
                             </button>
                         </form>
                     </div>
-                </div>
+                </section>
 
-                <!-- Right Column - Stats & Actions -->
-                <div class="md:w-2/3">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                        <div class="bg-gray-50 p-4 rounded-lg text-center">
-                            <div class="text-2xl font-bold text-green-600">{{reviews.length}}</div>
-                            <div class="text-sm text-gray-600">Reviews</div>
-                        </div>
-                        <div class="bg-gray-50 p-4 rounded-lg text-center">
-                            <div class="text-2xl font-bold text-yellow-600">{{user.averageRating}}</div>
-                            <div class="text-sm text-gray-600">Avg Rating</div>
-                        </div>
-                        <div class="bg-gray-50 p-4 rounded-lg text-center">
-                            <div class="text-2xl font-bold text-blue-600">12</div>
-                            <div class="text-sm text-gray-600">Photos</div>
-                        </div>
+                <section class="profile-tabs-panel" aria-label="Profile content">
+                    <div class="p-3 md:p-4 border-b border-gray-100 bg-gray-50 bg-opacity-50">
+                        <nav class="profile-tabs" role="tablist" aria-label="Profile sections">
+                            <button type="button" role="tab" aria-selected="true" data-tab="reviews" class="profile-tab-btn is-active" onclick="showTab('reviews', this)">Reviews</button>
+                            <button type="button" role="tab" aria-selected="false" data-tab="favorites" class="profile-tab-btn" onclick="showTab('favorites', this)">Favorites</button>
+                            <button type="button" role="tab" aria-selected="false" data-tab="photos" class="profile-tab-btn" onclick="showTab('photos', this)">Photos</button>
+                        </nav>
                     </div>
 
-                    <!-- Quick Actions -->
-                    <div class="flex gap-2 mb-6">
-                        <a href="/establishments" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
-                            Write Review
-                        </a>
-                        <a href="/establishments" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
-                            Explore Places
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Content Tabs -->
-        <div class="bg-white rounded-xl shadow-lg mt-6">
-            <div class="border-b border-gray-200">
-                <nav class="flex space-x-8 px-6">
-                    <button class="py-4 px-1 border-b-2 border-green-500 font-medium text-sm text-green-600" onclick="showTab('reviews')">
-                        Reviews
-                    </button>
-                    <button class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700" onclick="showTab('favorites')">
-                        Favorites
-                    </button>
-                    <button class="py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700" onclick="showTab('photos')">
-                        Photos
-                    </button>
-                </nav>
-            </div>
-
-            <!-- Reviews Tab -->
-            <div id="reviews-tab" class="p-6">
-                <h2 class="text-xl font-bold mb-4">My Reviews</h2>
-                <div class="space-y-4">
-                    {{#each reviews}}
-                    <div class="bg-gray-50 rounded-lg p-4">
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="flex items-center">
-                                <img src="/uploads/{{../user.avatar}}" alt="User" class="w-10 h-10 rounded-full mr-3">
-                                <div>
-                                    <h3 class="font-semibold text-gray-800">{{this.establishment.name}}</h3>
-                                    <p class="text-sm text-gray-500">{{this.date}}</p>
+                    <div id="reviews-tab" class="p-5 md:p-7" role="tabpanel">
+                        <h2 class="text-lg font-bold text-gray-900 mb-5" style="font-family: var(--font-display);">Your reviews</h2>
+                        <div class="space-y-4">
+                            {{#each reviews}}
+                            <article class="profile-review-card">
+                                <div class="flex flex-wrap items-start justify-between gap-3 mb-3">
+                                    <div class="min-w-0">
+                                        <h3 class="font-bold text-gray-900" style="font-family: var(--font-display);">{{this.establishment.name}}</h3>
+                                        <p class="text-sm text-gray-500">{{this.date}}</p>
+                                    </div>
+                                    <div class="flex items-center gap-0.5 text-yellow-500 text-lg shrink-0" aria-label="Rating {{this.rating}} of 5">
+                                        {{#times 5}}
+                                        <i data-lucide="star" class="w-4 h-4 {{#if (gte ../rating this)}}fill-yellow-500 text-yellow-500{{else}}text-gray-300{{/if}}" aria-hidden="true"></i>
+                                        {{/times}}
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="flex items-center">
-                                {{#times this.rating}}
-                                <span class="text-yellow-500">★</span>
-                                {{/times}}
-                                {{#times (sub 5 this.rating)}}
-                                <span class="text-gray-300">★</span>
-                                {{/times}}
-                            </div>
-                        </div>
-                        <p class="text-gray-700">{{this.comment}}</p>
-                        {{#if this.photos}}
-                        <div class="mt-3">
-                            <div class="flex gap-2 overflow-x-auto">
-                                {{#each this.photos}}
-                                <img src="/uploads/{{this}}" alt="Review photo" class="w-20 h-20 object-cover rounded-lg">
-                                {{/each}}
-                            </div>
-                        </div>
-                        {{/if}}
-                        <div class="flex items-center mt-3 space-x-4">
-                            <button type="button" class="flex items-center text-green-600 text-sm">
-                                <span class="mr-1">👍</span>
-                                <span>{{this.likes}}</span>
-                            </button>
-                            <button type="button" class="flex items-center text-red-600 text-sm">
-                                <span class="mr-1">👎</span>
-                                <span>{{this.dislikes}}</span>
-                            </button>
-                        </div>
-                    </div>
-                    {{/each}}
-                </div>
-            </div>
-
-            <!-- Favorites Tab -->
-            <div id="favorites-tab" class="p-6 hidden">
-                <h2 class="text-xl font-bold mb-4">My Favorites</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-gray-50 rounded-lg p-4">
-                        <h3 class="font-semibold text-gray-800">Favorite Foods</h3>
-                        <p class="text-gray-600 mt-2">{{user.favorites}}</p>
-                    </div>
-                    <div class="bg-gray-50 rounded-lg p-4">
-                        <h3 class="font-semibold text-gray-800">Favorite Places</h3>
-                        <p class="text-gray-600 mt-2">Coming soon...</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Photos Tab -->
-            <div id="photos-tab" class="p-6 hidden">
-                <h2 class="text-xl font-bold mb-4">My Photos</h2>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {{#each reviews}}
-                        {{#if this.photos}}
-                            {{#each this.photos}}
-                            <div class="relative group">
-                                <img src="/uploads/{{this}}" alt="Review photo" class="w-full h-32 object-cover rounded-lg">
-                                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 rounded-lg flex items-center justify-center">
-                                    <span class="text-white opacity-0 group-hover:opacity-100 text-sm">Review for {{../establishment.name}}</span>
+                                <p class="text-gray-700 leading-relaxed">{{this.comment}}</p>
+                                {{#if this.photos}}
+                                <div class="mt-4 flex gap-2 overflow-x-auto pb-1">
+                                    {{#each this.photos}}
+                                    <img src="/uploads/{{this}}" alt="" class="w-20 h-20 object-cover rounded-lg flex-shrink-0 border border-gray-200">
+                                    {{/each}}
                                 </div>
+                                {{/if}}
+                                <div class="flex items-center gap-6 mt-4 text-sm text-gray-600">
+                                    <span class="inline-flex items-center gap-1.5"><i data-lucide="thumbs-up" class="w-4 h-4" aria-hidden="true"></i> {{this.likes}}</span>
+                                    <span class="inline-flex items-center gap-1.5"><i data-lucide="thumbs-down" class="w-4 h-4" aria-hidden="true"></i> {{this.dislikes}}</span>
+                                </div>
+                            </article>
+                            {{else}}
+                            <div class="empty-state py-12">
+                                <p class="font-semibold text-gray-800 mb-1">No reviews yet</p>
+                                <p class="text-sm">Visit <a href="/establishments" class="text-green-800 font-semibold hover:underline">establishments</a> and share your first take.</p>
                             </div>
                             {{/each}}
-                        {{/if}}
-                    {{/each}}
-                    {{#unless reviews}}
-                    <div class="bg-gray-200 rounded-lg h-32 flex items-center justify-center">
-                        <span class="text-gray-500">No photos yet</span>
+                        </div>
                     </div>
-                    {{/unless}}
-                </div>
+
+                    <div id="favorites-tab" class="p-5 md:p-7 hidden" role="tabpanel" hidden>
+                        <h2 class="text-lg font-bold text-gray-900 mb-5" style="font-family: var(--font-display);">Favorites</h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="profile-review-card">
+                                <h3 class="font-semibold text-gray-900 mb-2">Favorite foods</h3>
+                                <p class="text-gray-600 text-sm leading-relaxed">{{#if user.favorites}}{{user.favorites}}{{else}}Add favorites in your profile edit form.{{/if}}</p>
+                            </div>
+                            <div class="profile-review-card">
+                                <h3 class="font-semibold text-gray-900 mb-2">Favorite places</h3>
+                                <p class="text-gray-500 text-sm">Coming soon.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="photos-tab" class="p-5 md:p-7 hidden" role="tabpanel" hidden>
+                        <h2 class="text-lg font-bold text-gray-900 mb-5" style="font-family: var(--font-display);">Your photos</h2>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                            {{#each reviews}}
+                                {{#if this.photos}}
+                                    {{#each this.photos}}
+                                    <div class="group profile-photo-tile border border-gray-200 bg-gray-100">
+                                        <img src="/uploads/{{this}}" alt="">
+                                        <div class="absolute inset-0 z-10 bg-black opacity-0 group-hover:opacity-80 transition-opacity flex items-end p-2">
+                                            <span class="text-white text-xs leading-tight line-clamp-2">{{../establishment.name}}</span>
+                                        </div>
+                                    </div>
+                                    {{/each}}
+                                {{/if}}
+                            {{/each}}
+                        </div>
+                        {{#unless reviews}}
+                        <div class="empty-state py-10">
+                            <p class="text-sm text-gray-600">No photos yet—add some when you review a place.</p>
+                        </div>
+                        {{else}}
+                            {{#unless photoCount}}
+                            <p class="text-sm text-gray-500 mt-4">No photos in reviews yet.</p>
+                            {{/unless}}
+                        {{/unless}}
+                    </div>
+                </section>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const editProfileBtn = document.getElementById('editProfileBtn');
-        const editProfileForm = document.getElementById('editProfileForm');
-
+    document.addEventListener('DOMContentLoaded', function () {
+        var editProfileBtn = document.getElementById('editProfileBtn');
+        var editProfileForm = document.getElementById('editProfileForm');
         if (editProfileBtn && editProfileForm) {
-            editProfileBtn.addEventListener('click', () => {
+            editProfileBtn.addEventListener('click', function () {
                 editProfileForm.classList.toggle('hidden');
             });
         }
     });
 
-    function showTab(tabName) {
-        // Hide all tabs
-        document.getElementById('reviews-tab').classList.add('hidden');
-        document.getElementById('favorites-tab').classList.add('hidden');
-        document.getElementById('photos-tab').classList.add('hidden');
-        
-        // Show selected tab
-        document.getElementById(tabName + '-tab').classList.remove('hidden');
-        
-        // Update tab styling
-        const tabs = document.querySelectorAll('nav button');
-        tabs.forEach(tab => {
-            tab.classList.remove('border-green-500', 'text-green-600');
-            tab.classList.add('border-transparent', 'text-gray-500');
+    function showTab(tabName, btn) {
+        var tabs = ['reviews', 'favorites', 'photos'];
+        tabs.forEach(function (name) {
+            var pane = document.getElementById(name + '-tab');
+            if (!pane) return;
+            var show = name === tabName;
+            pane.classList.toggle('hidden', !show);
+            pane.toggleAttribute('hidden', !show);
         });
-        
-        // Highlight active tab
-        event.target.classList.remove('border-transparent', 'text-gray-500');
-        event.target.classList.add('border-green-500', 'text-green-600');
+        document.querySelectorAll('.profile-tab-btn').forEach(function (b) {
+            var active = b.getAttribute('data-tab') === tabName;
+            b.classList.toggle('is-active', active);
+            b.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
     }
 </script>
-

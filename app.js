@@ -48,18 +48,30 @@ app.engine('hbs', handlebars.engine({
     gt: function (a, b) {
       return a > b;
     },
+    gte: function (a, b) {
+      return a >= b;
+    },
     eq: function (a, b) {
       return a === b;
     },
-    times: function (n, block) {
+    /** Repeats n times; inner context is 1-based index (1..n) — used for 5-star rows. */
+    times: function (n, options) {
       let accum = '';
-      for (let i = 0; i < n; ++i) {
-        accum += block.fn(i);
+      const count = Math.max(0, Math.floor(Number(n) || 0));
+      for (let i = 0; i < count; ++i) {
+        accum += options.fn(i + 1);
       }
       return accum;
     },
     sub: function (a, b) {
       return a - b;
+    },
+    add: function (a, b) {
+      return a + b;
+    },
+    /** 0-based index + 1 (carousel dots, etc.) */
+    inc: function (n) {
+      return Number(n) + 1;
     }
   }
 }));

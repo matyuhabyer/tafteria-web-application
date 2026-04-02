@@ -22,7 +22,7 @@
               <h1 class="text-2xl font-semibold mb-2">{{name}}</h1>
             </a>
             <div class="flex items-center mb-2">
-              <span class="mb-5 text-yellow-400">&#9733</span>
+              <i data-lucide="star" class="w-5 h-5 mb-5 text-yellow-400 fill-yellow-400 flex-shrink-0" aria-hidden="true"></i>
               <p class="text-gray-600 text-sm mb-5 ml-1">Rating: {{rating}} ({{reviewsCount}} reviews)</p>
             </div>
             <p class="text-gray-700">{{description}}</p>
@@ -38,8 +38,8 @@
           <div class="bg-white rounded-lg shadow-lg p-6 mb-4">
             <h1 class="text-2xl font-semibold mb-2">{{establishment.name}}</h1>
             <h3 class="text-base font-semibold mb-2">{{title}}</h3>
-            <div class="flex items-center mb-2">
-              <span class="text-yellow-400">&#9733</span>
+            <div class="flex items-center mb-2 gap-1">
+              <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400 flex-shrink-0" aria-hidden="true"></i>
               <p class="text-gray-600 text-sm ml-1">: {{rating}}</p>
             </div>
             <p class="text-gray-700">{{comment}}</p>
@@ -75,33 +75,38 @@
       updateResults('establishment-results', filteredEstablishments, false);
       updateResults('review-results', filteredReviews, true);
     }
+    function starRowHtml(rating) {
+      const r = Number(rating) || 0;
+      return Array.from({ length: 5 }, (_, i) => {
+        const filled = r >= i + 1;
+        const cls = filled ? 'text-yellow-500 fill-yellow-500' : 'text-gray-400';
+        return `<i data-lucide="star" class="w-4 h-4 inline-block ${cls}" aria-hidden="true"></i>`;
+      }).join('');
+    }
     function updateResults(containerId, data, isReview) {
       const container = document.getElementById(containerId);
       container.innerHTML = '';
       data.forEach(item => {
         const card = document.createElement('div');
         card.className = 'bg-white rounded-lg shadow-lg p-6 mb-4';
+        const estHref = item._id ? `/establishments/${item._id}` : '#';
         if (isReview) {
           card.innerHTML = `
             <h1 class="text-2xl font-semibold mb-2">${item.establishment.name}</h1>
             <h3 class="text-base font-semibold mb-2">${item.title}</h3>
-            <div class="flex items-center mb-2">
-              ${Array.from({ length: 5 }, (_, i) => `
-                <span class="${i < item.rating ? 'text-yellow-500' : 'text-gray-400'}">&#9733;</span>
-              `).join('')}
+            <div class="flex items-center gap-0.5 mb-2">
+              ${starRowHtml(item.rating)}
             </div>
             <p class="text-gray-700">${item.comment}</p>
             <p class="text-gray-600 text-sm mt-2 mb-5">Profile: ${item.user.username}</p>
           `;
         } else {
           card.innerHTML = `
-            <a href="${item.link}">
+            <a href="${estHref}">
               <h1 class="text-2xl font-semibold mb-2">${item.name}</h1>
             </a>
-            <div class="flex items-center mb-2">
-              ${Array.from({ length: 5 }, (_, i) => `
-                <span class="${i < item.rating ? 'text-yellow-500' : 'text-gray-400'}">&#9733;</span>
-              `).join('')}
+            <div class="flex items-center gap-0.5 mb-2">
+              ${starRowHtml(item.rating)}
             </div>
             <p class="text-gray-700">${item.description}</p>
             <p class="text-gray-600 text-sm mt-2 mb-5">Rating: ${item.rating} (${item.reviewsCount} reviews)</p>
@@ -109,6 +114,9 @@
         }
         container.appendChild(card);
       });
+      if (typeof window.refreshLucideIcons === 'function') {
+        window.refreshLucideIcons();
+      }
     }
     filterResults(query);
   });

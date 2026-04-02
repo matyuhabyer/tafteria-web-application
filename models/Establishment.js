@@ -10,6 +10,9 @@ const establishmentSchema = new mongoose.Schema({
   description: { type: String },
   gallery: [{ type: String }],  // for the page
   category: { type: String, enum: ['Stall', 'Cafe', 'Restaurant', 'Fastfood'], required: false },
+  /** WGS84 coordinates for maps (Taft / Manila area) */
+  lat: { type: Number },
+  lng: { type: Number },
 },{ timestamps: true });
 
 // Method to calculate and update the average rating

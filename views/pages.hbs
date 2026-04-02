@@ -1,216 +1,233 @@
+<div class="establishment-detail section-home min-h-screen pb-16 md:pb-20">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-10">
 
-<div class="w-full bg-yellow-50 min-h-screen flex flex-col items-center py-16 px-4">
-    <div class="container mx-auto my-8 p-4 bg-white rounded-lg shadow-md text-black max-w-4xl">
-        <!-- Image Gallery -->
-        <div class="mb-8 overflow-x-auto whitespace-nowrap scrollbar-show">
-            {{#each establishmentData.gallery}}
-            <div class="inline-block mr-4">
-                <img src="{{this}}" alt="Gallery image" class="w-64 h-40 object-cover rounded-lg">
-            </div>
-            {{/each}}
-        </div>
-        <!-- Stars -->
-        <div class="container mx-auto my-8 p-4 bg-white">
-            <div class="text-center">
-                <h1 class="text-3xl font-bold mb-2 italic">{{establishmentData.name}}</h1>
-                <span class="text-3xl font-bold mb-2 italic">{{establishmentData.category}}</span>
-                <div class="flex justify-center items-center mb-4">
-                    <div id="starRating" class="text-yellow-400">
-                        <span class="fa fa-star"></span>
-                    </div>
-                    <span id="ratingText" class="text-gray-600 ml-2">{{establishmentData.rating}} out of 5</span>
-                </div>
-            </div>
-        </div>
-        <!-- Review Modal-->
-        <div id="ratingModal" class="fixed inset-0 flex items-center flex-col justify-center bg-gray-800 bg-opacity-90 hidden">
-        <h2 class="text-white italic">How was your experience?</h2>
-        <form action="/establishments/{{establishmentData._id}}/reviews" method="POST" enctype="multipart/form-data" class="bg-white rounded-lg shadow-lg p-6 w-96 flex flex-col items-center justify-center">
-            <div class="star-rating flex flex-row-reverse text-4xl ml-1.5 mb-4">
-            <input type="radio" id="5-stars" name="rating" value="5" class="hidden" />
-            <label for="5-stars" class="cursor-pointer text-gray-300">&#9733;</label>
-            <input type="radio" id="4-stars" name="rating" value="4" class="hidden" />
-            <label for="4-stars" class="cursor-pointer text-gray-300">&#9733;</label>
-            <input type="radio" id="3-stars" name="rating" value="3" class="hidden" />
-            <label for="3-stars" class="cursor-pointer text-gray-300">&#9733;</label>
-            <input type="radio" id="2-stars" name="rating" value="2" class="hidden" />
-            <label for="2-stars" class="cursor-pointer text-gray-300">&#9733;</label>
-            <input type="radio" id="1-star" name="rating" value="1" class="hidden" />
-            <label for="1-star" class="cursor-pointer text-gray-300">&#9733;</label>
-            </div>
-            <textarea name="comment" class="outline w-full focus:outline-white h-52" placeholder="Leave a comment..." style="resize: none;" required></textarea>
-            <div class="mb-4 w-full">
-                <label for="photos" class="block text-sm font-medium text-gray-700 mb-2">Add Photos (optional):</label>
-                <input type="file" id="photos" name="photos" accept="image/*" multiple class="block w-full text-sm text-gray-900 border border-gray-300 cursor-pointer bg-gray-50 rounded">
-            </div>
-            <div class="flex justify-between gap-4 mt-4">
-            <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded">Submit</button>
-            <button type="button" id="closeModalBtn" class="px-4 py-2 bg-red-500 text-white rounded">Close</button>
-            </div>
-        </form>
-        </div>
-        <!-- Edit Modal -->
-        <div id="editModal" class="fixed inset-0 flex items-center flex-col justify-center bg-gray-800 bg-opacity-90 hidden">
-        <h2 class="text-white italic">Edit Your Review</h2>
-        <form id="editForm" action="" method="POST" class="bg-white rounded-lg shadow-lg p-6 w-96 flex flex-col items-center justify-center">
-            <textarea id="editTextarea" name="comment" class="outline w-full focus:outline-white h-52" placeholder="Edit your review..." style="resize: none;" required></textarea>
-            <div class="flex justify-between gap-4 mt-4">
-            <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded">Update</button>
-            <button type="button" id="closeEditBtn" class="px-4 py-2 bg-red-500 text-white rounded">Cancel</button>
-            </div>
-        </form>
-        </div>
-        <!-- Interactive -->
-        <a id="openModalBtn" class="mb-4 mr-1 inline-flex items-center gap-x-2 rounded-md bg-yellow-300 px-3.5 py-2.5 text-sm font-semibold text-green-500 font-bold shadow-sm hover:bg-gray-400 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600">
-            <span class="">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.633 10.25c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904m10.598-9.75H14.25M5.904 18.5c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 9.953 4.167 9.5 5 9.5h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z" />
-                </svg>
-            </span>
-            <span class="text-green-500">Write a Review!</span>
+        <a href="/establishments" class="establishment-detail__back">
+            <i data-lucide="arrow-left" class="w-4 h-4 flex-shrink-0" aria-hidden="true"></i>
+            All establishments
         </a>
-        <!-- Reviews -->
-        <div class="space-y-4">
-            {{#each reviews}}
-                <div class="review-container p-4 bg-gray-50 rounded-lg shadow-sm" data-review-id="{{this._id}}">
-                    <div class="flex items-center mb-2">
-                    <img src="/uploads/{{user.avatar}}" alt="User avatar" class="w-12 h-12 rounded-full mr-4">
-                    <div>
-                        <p class="font-semibold">@{{user.username}}</p>
-                        <p class="text-sm text-gray-500">{{date}}</p>
-                    </div>
-                    </div>
-                    <div class="review-content text-gray-800">
-                    <div class="text-yellow-400 mb-2">
-                        {{rating}}&#9733; 
-                    </div>
-                    <p>{{comment}}</p>
-                    {{#if this.photos}}
-                    <div class="mt-3">
-                        <div class="flex gap-2 overflow-x-auto">
-                            {{#each this.photos}}
-                            <img src="/uploads/{{this}}" alt="Review photo" class="w-24 h-24 object-cover rounded-lg">
-                            {{/each}}
-                        </div>
-                    </div>
-                    {{/if}}
-                    </div>
-                    <div class="flex items-center ml-2 mt-4">
-                        <!-- Like Button -->
-                        <button type="button" class="likeButton flex items-center text-green-600 mr-4" data-review-id="{{this._id}}">
-                            <img src="/images/like.png" class="w-5 h-5 mr-1">
-                            <span>{{this.likes}}</span>
-                        </button>
-                        <!-- Dislike Button -->
-                        <button type="button" class="dislikeButton flex items-center text-red-600" data-review-id="{{this._id}}">
-                            <img src="/images/dislike.png" class="w-5 h-5 mr-1">
-                            <span>{{this.dislikes}}</span>
-                        </button>
-                        <button type="button" class="flex items-center text-gray-600 ml-4" id="openComment-{{this._id}}">
-                            <img src="/images/comments.png" class="w-5 h-5 ml-4 mr-1">Leave a comment
-                        </button>
-                        {{#if (eq this.user.username ../user.username)}}
-                            <button class="openEditBtn ml-auto px-3 py-1 bg-yellow-500 text-white rounded">Edit</button>
-                            <button class="deleteReviewBtn ml-2 px-3 py-1 bg-red-500 text-white rounded">Delete</button>
+
+        <!-- Hero -->
+        <div class="establishment-detail__shell">
+            <div class="establishment-detail__hero-grid">
+                <div class="establishment-detail__hero-media">
+                    <img src="{{establishmentData.mainImage}}" alt="" class="block" data-establishment-img data-establishment-id="{{establishmentData._id}}">
+                </div>
+                <div class="establishment-detail__hero-body">
+                    <p class="establishment-detail__eyebrow">Establishment</p>
+                    <h1 class="establishment-detail__title">{{establishmentData.name}}</h1>
+                    <div class="establishment-detail__badges">
+                        {{#if establishmentData.category}}
+                        <span class="establishment-detail__category">{{establishmentData.category}}</span>
                         {{/if}}
                     </div>
-                <!-- Comment Form Modal -->
-                <div id="commentModal-{{this._id}}" class="fixed inset-0 flex items-center flex-col justify-center bg-gray-800 bg-opacity-90 hidden">
-                    <h2 class="text-white italic">Leave a comment</h2>
-                    <form action="/reviews/{{this._id}}/comments" method="POST" class="bg-white rounded-lg shadow-lg p-6 w-96 flex flex-col items-center justify-center">
-                    <input type="hidden" name="establishmentId" value="{{../establishmentData._id}}">
-                    <textarea name="text" class="outline w-full focus:outline-white h-52" placeholder="Write your comment here..." style="resize: none;" required></textarea>
-                    <div class="flex justify-between gap-4 mt-4">
-                        <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded">Submit</button>
-                        <button type="button" class="px-4 py-2 bg-red-500 text-white rounded" onclick="closeCommentModal('{{this._id}}')">Close</button>
-                    </div>
-                    </form>
-                </div>
-                <!-- Comments Display -->
-                <div class="mt-6">
-                    <h3 class="text-lg font-semibold">Comments:</h3>
-                    {{#each comments}}
-                    <div class="p-2 bg-gray-100 rounded-lg mb-2">
-                        <div class="flex items-center mb-1">
-                        <img src="/uploads/{{user.avatar}}" alt="User avatar" class="w-8 h-8 rounded-full mr-2">
-                        <p class="font-semibold">@{{user.username}}</p>
+                    <div class="establishment-detail__rating-row" aria-label="Average rating {{establishmentData.rating}} out of 5">
+                        <div id="starRating" class="flex gap-0.5 items-center text-yellow-400">
+                            {{#times 5}}
+                            <i data-lucide="star" class="w-7 h-7 {{#if (gte @root.establishmentData.rating this)}}fill-yellow-400 text-yellow-400{{else}}text-gray-300{{/if}}" aria-hidden="true"></i>
+                            {{/times}}
                         </div>
-                        <p class="text-gray-700">{{text}}</p>
+                        <span id="ratingText" class="text-gray-600 text-sm md:text-base font-medium">{{establishmentData.rating}} out of 5</span>
+                        {{#if establishmentData.reviewsCount}}
+                        <span class="text-gray-500 text-sm">· {{establishmentData.reviewsCount}} reviews</span>
+                        {{/if}}
                     </div>
-                    {{/each}}
+                    {{#if establishmentData.description}}
+                    <p class="establishment-detail__desc">{{establishmentData.description}}</p>
+                    {{/if}}
+                    {{#if establishmentData.phone}}
+                    <p class="establishment-detail__meta">
+                        <span class="text-gray-500">Phone · </span>
+                        <a href="tel:{{establishmentData.phone}}">{{establishmentData.phone}}</a>
+                    </p>
+                    {{/if}}
+                    <div class="establishment-detail__actions">
+                        {{#if user}}
+                        <button type="button" id="openModalBtn" class="establishment-detail__btn-primary">
+                            <i data-lucide="pen-line" class="w-5 h-5 flex-shrink-0" aria-hidden="true"></i>
+                            Write a review
+                        </button>
+                        {{else}}
+                        <a href="/login" class="establishment-detail__btn-primary">
+                            <i data-lucide="log-in" class="w-5 h-5 flex-shrink-0" aria-hidden="true"></i>
+                            Sign in to review
+                        </a>
+                        {{/if}}
+                        <a href="/establishments" class="establishment-detail__btn-ghost">More places</a>
+                    </div>
                 </div>
-                </div>
-            {{/each}}
+            </div>
         </div>
+
+        {{#if establishmentData.gallery}}
+        <section class="establishment-detail__section" aria-labelledby="est-gallery-heading">
+            <div class="establishment-detail__section-head">
+                <h2 id="est-gallery-heading" class="establishment-detail__section-title">Photos</h2>
+                <p class="establishment-detail__section-desc">Gallery from the listing.</p>
+            </div>
+            <div class="establishment-detail__gallery">
+                {{#each establishmentData.gallery}}
+                <img src="{{this}}" alt="">
+                {{/each}}
+            </div>
+        </section>
+        {{/if}}
+
+        {{#if establishmentGeoJson}}
+        <section class="establishment-detail__section" aria-labelledby="est-map-heading">
+            <div class="establishment-detail__section-head map-card-header">
+                <div>
+                    <h2 id="est-map-heading" class="establishment-detail__section-title">Location</h2>
+                    <p class="establishment-detail__section-desc">OpenStreetMap · Leaflet</p>
+                </div>
+            </div>
+            <div id="establishment-map" class="w-full" role="application" aria-label="Establishment location map"></div>
+            <script type="application/json" id="establishment-geo-json">{{{establishmentGeoJson}}}</script>
+        </section>
+        {{/if}}
+
+        <!-- Review modal (signed in) -->
+        {{#if user}}
+        <div id="ratingModal" class="establishment-modal-overlay hidden" aria-modal="true" role="dialog" aria-labelledby="rating-modal-title">
+            <div class="establishment-modal-panel establishment-modal-panel--wide">
+                <h2 id="rating-modal-title" class="text-xl font-bold text-gray-900 mb-1" style="font-family: var(--font-display);">How was your experience?</h2>
+                <p class="text-sm text-gray-500 mb-4">Your rating and comment help classmates decide.</p>
+                <form action="/establishments/{{establishmentData._id}}/reviews" method="POST" enctype="multipart/form-data" class="flex flex-col gap-4">
+                    <div class="star-rating flex flex-row-reverse justify-center gap-1 text-4xl py-2">
+                        <input type="radio" id="5-stars" name="rating" value="5" class="hidden" />
+                        <label for="5-stars" class="cursor-pointer text-gray-300 inline-flex items-center justify-center"><i data-lucide="star" class="w-10 h-10" aria-hidden="true"></i></label>
+                        <input type="radio" id="4-stars" name="rating" value="4" class="hidden" />
+                        <label for="4-stars" class="cursor-pointer text-gray-300 inline-flex items-center justify-center"><i data-lucide="star" class="w-10 h-10" aria-hidden="true"></i></label>
+                        <input type="radio" id="3-stars" name="rating" value="3" class="hidden" />
+                        <label for="3-stars" class="cursor-pointer text-gray-300 inline-flex items-center justify-center"><i data-lucide="star" class="w-10 h-10" aria-hidden="true"></i></label>
+                        <input type="radio" id="2-stars" name="rating" value="2" class="hidden" />
+                        <label for="2-stars" class="cursor-pointer text-gray-300 inline-flex items-center justify-center"><i data-lucide="star" class="w-10 h-10" aria-hidden="true"></i></label>
+                        <input type="radio" id="1-star" name="rating" value="1" class="hidden" />
+                        <label for="1-star" class="cursor-pointer text-gray-300 inline-flex items-center justify-center"><i data-lucide="star" class="w-10 h-10" aria-hidden="true"></i></label>
+                    </div>
+                    <div>
+                        <label for="review-comment" class="sr-only">Comment</label>
+                        <textarea id="review-comment" name="comment" class="w-full rounded-xl border border-gray-200 px-3 py-2 text-gray-900 focus:ring-2 focus:ring-yellow-400 focus:border-transparent focus:outline-none" placeholder="Share details—food, price, vibe…" rows="6" style="resize: none;" required></textarea>
+                    </div>
+                    <div>
+                        <label for="photos" class="block text-sm font-medium text-gray-700 mb-2">Photos (optional)</label>
+                        <input type="file" id="photos" name="photos" accept="image/*" multiple class="block w-full text-sm text-gray-900 border border-gray-200 rounded-lg cursor-pointer bg-gray-50 px-2 py-2">
+                    </div>
+                    <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-2">
+                        <button type="button" id="closeModalBtn" class="establishment-detail__btn-ghost w-full sm:w-auto">Cancel</button>
+                        <button type="submit" class="establishment-detail__btn-primary w-full sm:w-auto border-0">Submit review</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {{/if}}
+
+        {{#if user}}
+        <div id="editModal" class="establishment-modal-overlay hidden" aria-modal="true" role="dialog" aria-labelledby="edit-modal-title">
+            <div class="establishment-modal-panel">
+                <h2 id="edit-modal-title" class="text-xl font-bold text-gray-900 mb-4" style="font-family: var(--font-display);">Edit your review</h2>
+                <form id="editForm" action="" method="POST" class="flex flex-col gap-4">
+                    <textarea id="editTextarea" name="comment" class="w-full rounded-xl border border-gray-200 px-3 py-2 text-gray-900 focus:ring-2 focus:ring-yellow-400 focus:border-transparent focus:outline-none" placeholder="Edit your review…" rows="6" style="resize: none;" required></textarea>
+                    <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+                        <button type="button" id="closeEditBtn" class="establishment-detail__btn-ghost w-full sm:w-auto">Cancel</button>
+                        <button type="submit" class="establishment-detail__btn-primary w-full sm:w-auto border-0">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {{/if}}
+
+        <!-- Reviews -->
+        <section class="establishment-detail__section" aria-labelledby="est-reviews-heading">
+            <div class="establishment-detail__section-head">
+                <h2 id="est-reviews-heading" class="establishment-detail__section-title">Community reviews</h2>
+                <p class="establishment-detail__section-desc">Ratings and comments from people who’ve been here.</p>
+            </div>
+
+            {{#if reviews}}
+            <div class="space-y-4">
+                {{#each reviews}}
+                <article class="establishment-review-card review-container" data-review-id="{{this._id}}">
+                    <div class="flex items-start justify-between gap-3 mb-3 flex-wrap">
+                        <div class="flex items-center min-w-0">
+                            <img src="/uploads/{{user.avatar}}" alt="" class="w-12 h-12 rounded-full mr-3 border-2 border-yellow-400 object-cover flex-shrink-0">
+                            <div class="min-w-0">
+                                <p class="font-semibold text-gray-900">@{{user.username}}</p>
+                                <p class="text-sm text-gray-500">{{date}}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-0.5 text-yellow-400 flex-shrink-0" aria-label="Rating {{rating}} of 5">
+                            {{#times 5}}
+                            <i data-lucide="star" class="w-5 h-5 {{#if (gte ../rating this)}}fill-yellow-400 text-yellow-400{{else}}text-gray-300{{/if}}" aria-hidden="true"></i>
+                            {{/times}}
+                        </div>
+                    </div>
+                    <div class="review-content text-gray-800">
+                        <p class="text-base leading-relaxed">{{comment}}</p>
+                        {{#if this.photos}}
+                        <div class="flex gap-2 overflow-x-auto mt-3 pb-1">
+                            {{#each this.photos}}
+                            <img src="/uploads/{{this}}" alt="Review photo" class="w-24 h-24 object-cover rounded-lg flex-shrink-0 border border-gray-200">
+                            {{/each}}
+                        </div>
+                        {{/if}}
+                    </div>
+
+                    <div class="establishment-review-card__toolbar">
+                        <button type="button" class="likeButton establishment-review-card__btn" data-review-id="{{this._id}}">
+                            <i data-lucide="thumbs-up" class="w-5 h-5 flex-shrink-0" aria-hidden="true"></i>
+                            <span>{{this.likes}}</span>
+                        </button>
+                        <button type="button" class="establishment-review-card__comment-btn establishment-review-card__btn js-open-comment-modal" data-review-id="{{this._id}}">
+                            <i data-lucide="message-circle" class="w-5 h-5 flex-shrink-0" aria-hidden="true"></i>
+                            Comment
+                        </button>
+                        {{#if (eq this.user.username ../user.username)}}
+                        <div class="establishment-review-card__owner-actions">
+                            <button type="button" class="openEditBtn">Edit</button>
+                            <button type="button" class="deleteReviewBtn">Delete</button>
+                        </div>
+                        {{/if}}
+                    </div>
+
+                    <div id="commentModal-{{this._id}}" class="establishment-modal-overlay hidden" aria-modal="true" role="dialog">
+                        <div class="establishment-modal-panel">
+                            <h3 class="text-lg font-bold text-gray-900 mb-3" style="font-family: var(--font-display);">Reply to this review</h3>
+                            <form action="/reviews/{{this._id}}/comments" method="POST" class="flex flex-col gap-4">
+                                <input type="hidden" name="establishmentId" value="{{../establishmentData._id}}">
+                                <textarea name="text" class="w-full rounded-xl border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-yellow-400 focus:outline-none" placeholder="Write your comment…" rows="5" style="resize: none;" required></textarea>
+                                <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+                                    <button type="button" class="establishment-detail__btn-ghost w-full sm:w-auto" onclick="closeCommentModal('{{this._id}}')">Cancel</button>
+                                    <button type="submit" class="establishment-detail__btn-primary w-full sm:w-auto border-0">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    {{#if comments}}
+                    <div class="establishment-detail__comments-block">
+                        <h4 class="establishment-detail__comments-title">Comments</h4>
+                        {{#each comments}}
+                        <div class="establishment-detail__comment-bubble">
+                            <div class="flex items-center gap-2 mb-1">
+                                <img src="/uploads/{{user.avatar}}" alt="" class="w-8 h-8 rounded-full object-cover">
+                                <p class="font-semibold text-sm text-gray-900">@{{user.username}}</p>
+                            </div>
+                            <p class="text-gray-700 text-sm leading-relaxed">{{text}}</p>
+                        </div>
+                        {{/each}}
+                    </div>
+                    {{/if}}
+                </article>
+                {{/each}}
+            </div>
+            {{else}}
+            <p class="text-gray-600 text-center py-10 px-4 rounded-xl bg-stone-50 border border-stone-100">No reviews yet. {{#if user}}Be the first to share your experience.{{else}}Sign in to write the first review.{{/if}}</p>
+            {{/if}}
+        </section>
     </div>
 </div>
 
- <style>
-    .star-rating input:checked ~ label {
-      color: #fc0;
-    }
-    .star-rating label:hover,
-    .star-rating label:hover ~ label {
-      color: #fc0;
-    }
-
-    .star-rating label {
-      color: #ccc;
-    }
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const openModalBtn = document.getElementById('openModalBtn');
-    const ratingModal = document.getElementById('ratingModal');
-    const closeModalBtn = document.getElementById('closeModalBtn');
-    const reviewForm = ratingModal.querySelector('form');
-
-    // Open modal
-    openModalBtn.addEventListener('click', function() {
-        ratingModal.classList.remove('hidden');
-    });
-
-    // Close modal
-    closeModalBtn.addEventListener('click', function() {
-        ratingModal.classList.add('hidden');
-    });
-
-    // Form submission validation
-    reviewForm.addEventListener('submit', function(e) {
-        const rating = document.querySelector('input[name="rating"]:checked');
-        const comment = document.querySelector('textarea[name="comment"]').value.trim();
-
-        if (!rating) {
-            e.preventDefault();
-            alert('Please select a rating before submitting.');
-            return;
-        }
-
-        if (!comment) {
-            e.preventDefault();
-            alert('Please write a comment before submitting.');
-            return;
-        }
-
-        console.log('Form submitted with:', {
-            rating: rating.value,
-            comment: comment,
-            files: document.querySelector('input[name="photos"]').files
-        });
-    });
-
-    // Star rating interaction
-    const starLabels = document.querySelectorAll('.star-rating label');
-    starLabels.forEach((label, index) => {
-        label.addEventListener('click', function() {
-            // Reset all stars
-            starLabels.forEach(l => l.style.color = '#ccc');
-            // Color stars up to clicked one
-            for (let i = 0; i <= index; i++) {
-                starLabels[i].style.color = '#fc0';
-            }
-        });
-    });
-});
-</script>
+{{#if establishmentGeoJson}}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="/js/establishment-detail-map.js"></script>
+{{/if}}

@@ -20,7 +20,9 @@
     "$date": "2024-08-03T12:07:56.132Z"
   },
   "__v": 0,
-  "category": "Stall"
+  "category": "Stall",
+  "lat": 14.56525,
+  "lng": 120.99345
 },
 {
   "_id": {
@@ -44,7 +46,9 @@
     "$date": "2024-08-02T17:09:52.521Z"
   },
   "__v": 0,
-  "category": "Cafe"
+  "category": "Cafe",
+  "lat": 14.56455,
+  "lng": 120.99285
 },
 {
   "_id": {
@@ -68,7 +72,9 @@
     "$date": "2024-08-02T16:26:25.575Z"
   },
   "__v": 0,
-  "category": "Stall"
+  "category": "Stall",
+  "lat": 14.56495,
+  "lng": 120.99315
 },
 {
   "_id": {
@@ -92,7 +98,9 @@
     "$date": "2024-07-10T07:19:25.530Z"
   },
   "__v": 0,
-  "category": "Stall"
+  "category": "Stall",
+  "lat": 14.56505,
+  "lng": 120.99215
 },
 {
   "_id": {
@@ -116,7 +124,9 @@
     "$date": "2024-07-10T07:19:25.530Z"
   },
   "__v": 0,
-  "category": "Restaurant"
+  "category": "Restaurant",
+  "lat": 14.56435,
+  "lng": 120.99355
 },
 {
   "_id": {
@@ -140,5 +150,163 @@
     "$date": "2024-07-13T12:40:45.466Z"
   },
   "__v": 0,
-  "category": "Fastfood"
+  "category": "Fastfood",
+  "lat": 14.56515,
+  "lng": 120.99405
+},
+{
+  "_id": {
+    "$oid": "678e35fd0b62edb05ce2f390"
+  },
+  "name": "Tapa King",
+  "mainImage": "/images/brothers.jpg",
+  "phone": "(02) 8524-1100",
+  "rating": 0,
+  "reviewsCount": 0,
+  "description": "Classic tapsilog and silog plates—quick, filling, and perfect between classes.",
+  "gallery": [
+    "/images/brothers.jpg",
+    "/images/brothers.jpg",
+    "/images/brothers.jpg"
+  ],
+  "createdAt": {
+    "$date": "2026-04-03T08:00:00.000Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-03T08:00:00.000Z"
+  },
+  "__v": 0,
+  "category": "Stall",
+  "lat": 14.5642,
+  "lng": 120.9938
+},
+{
+  "_id": {
+    "$oid": "678e35fd0b62edb05ce2f391"
+  },
+  "name": "Jollibee Taft",
+  "mainImage": "/images/subway.jpeg",
+  "phone": "(02) 8524-2200",
+  "rating": 0,
+  "reviewsCount": 0,
+  "description": "Fried chicken, Jolly Spaghetti, and burgers—the Taft crowd favorite for a reason.",
+  "gallery": [
+    "/images/subway.jpg",
+    "/images/subway.jpg",
+    "/images/subway.jpg"
+  ],
+  "createdAt": {
+    "$date": "2026-04-03T08:00:00.000Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-03T08:00:00.000Z"
+  },
+  "__v": 0,
+  "category": "Fastfood",
+  "lat": 14.566,
+  "lng": 120.993
+},
+{
+  "_id": {
+    "$oid": "678e35fd0b62edb05ce2f392"
+  },
+  "name": "Starbucks Taft",
+  "mainImage": "/images/prelude.jpg",
+  "phone": "(02) 8524-3300",
+  "rating": 0,
+  "reviewsCount": 0,
+  "description": "Coffee, study sessions, and air-conditioned comfort along Taft Avenue.",
+  "gallery": [
+    "/images/prelude.jpg",
+    "/images/prelude.jpg",
+    "/images/prelude.jpg"
+  ],
+  "createdAt": {
+    "$date": "2026-04-03T08:00:00.000Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-03T08:00:00.000Z"
+  },
+  "__v": 0,
+  "category": "Cafe",
+  "lat": 14.5647,
+  "lng": 120.9936
+},
+{
+  "_id": {
+    "$oid": "678e35fd0b62edb05ce2f393"
+  },
+  "name": "BonChon Taft",
+  "mainImage": "/images/24chk.jpg",
+  "phone": "(02) 8524-4400",
+  "rating": 0,
+  "reviewsCount": 0,
+  "description": "Korean-style crispy chicken with soy garlic glaze—great for sharing after group work.",
+  "gallery": [
+    "/images/24chk.jpg",
+    "/images/24chk.jpg",
+    "/images/24chk.jpg"
+  ],
+  "createdAt": {
+    "$date": "2026-04-03T08:00:00.000Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-03T08:00:00.000Z"
+  },
+  "__v": 0,
+  "category": "Fastfood",
+  "lat": 14.5658,
+  "lng": 120.9925
+},
+{
+  "_id": {
+    "$oid": "678e35fd0b62edb05ce2f394"
+  },
+  "name": "KFC Taft",
+  "mainImage": "/images/mongolian.jpg",
+  "phone": "(02) 8524-5500",
+  "rating": 0,
+  "reviewsCount": 0,
+  "description": "Buckets, zingers, and rice meals when you need something familiar and fast.",
+  "gallery": [
+    "/images/mongolian.jpg",
+    "/images/mongolian.jpg",
+    "/images/mongolian.jpg"
+  ],
+  "createdAt": {
+    "$date": "2026-04-03T08:00:00.000Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-03T08:00:00.000Z"
+  },
+  "__v": 0,
+  "category": "Fastfood",
+  "lat": 14.564,
+  "lng": 120.9928
+},
+{
+  "_id": {
+    "$oid": "678e35fd0b62edb05ce2f395"
+  },
+  "name": "Manang's Chicken",
+  "mainImage": "/images/bcs.png",
+  "phone": "(02) 8524-6600",
+  "rating": 0,
+  "reviewsCount": 0,
+  "description": "Crispy chicken with signature sauces—stall vibes with big flavor.",
+  "gallery": [
+    "/images/bcs.jpg",
+    "/images/bcs.jpg",
+    "/images/bcs.jpg"
+  ],
+  "createdAt": {
+    "$date": "2026-04-03T08:00:00.000Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-03T08:00:00.000Z"
+  },
+  "__v": 0,
+  "category": "Stall",
+  "lat": 14.5654,
+  "lng": 120.9942
 }]

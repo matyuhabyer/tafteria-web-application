@@ -15,7 +15,18 @@ router.get('/', async (req, res) => {
       .populate('establishment')
       .lean();
 
-    res.render('home', { title: 'Tafteria', establishments, reviews, user: req.session.user, layout: 'index' });
+    const view = req.session.user ? 'home-user' : 'home';
+    const heroCarousel = Array.isArray(establishments)
+      ? establishments.slice(0, 8)
+      : [];
+    res.render(view, {
+      title: 'Tafteria',
+      establishments,
+      reviews,
+      user: req.session.user,
+      heroCarousel,
+      layout: 'index',
+    });
   } catch (error) {
     console.error('Error fetching data:', error);
     res.status(500).send('Internal Server Error');

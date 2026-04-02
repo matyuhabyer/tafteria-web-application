@@ -1,0 +1,69 @@
+{{!-- Right column: image carousel (expects heroCarousel from route) --}}
+<div class="hero-carousel-col">
+    {{#if heroCarousel.length}}
+    <div
+        class="hero-carousel hero-enter hero-enter-delay-2"
+        data-hero-carousel
+        role="region"
+        aria-roledescription="carousel"
+        aria-label="Featured places"
+    >
+        <div class="hero-carousel__viewport">
+            <div class="hero-carousel__track">
+                {{#each heroCarousel}}
+                <a
+                    href="/establishments/{{this._id}}"
+                    class="hero-carousel__slide"
+                    aria-label="{{this.name}} — view place"
+                >
+                    <img
+                        src="{{this.mainImage}}"
+                        alt=""
+                        loading="{{#if @first}}eager{{else}}lazy{{/if}}"
+                        data-establishment-img
+                        data-establishment-id="{{this._id}}"
+                    />
+                    <div class="hero-carousel__caption">
+                        <span class="hero-carousel__name">{{this.name}}</span>
+                        {{#if this.rating}}
+                        <span class="hero-carousel__rating" aria-hidden="true">
+                            <i data-lucide="star" class="hero-carousel__star" aria-hidden="true"></i>
+                            {{this.rating}}
+                        </span>
+                        {{/if}}
+                    </div>
+                </a>
+                {{/each}}
+            </div>
+        </div>
+        {{#if (gt heroCarousel.length 1)}}
+        <button type="button" class="hero-carousel__btn hero-carousel__btn--prev" aria-label="Previous slide">
+            <i data-lucide="chevron-left" class="hero-carousel__btn-icon" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="hero-carousel__btn hero-carousel__btn--next" aria-label="Next slide">
+            <i data-lucide="chevron-right" class="hero-carousel__btn-icon" aria-hidden="true"></i>
+        </button>
+        <div class="hero-carousel__dots" role="tablist" aria-label="Slide markers">
+            {{#each heroCarousel}}
+            <button
+                type="button"
+                class="hero-carousel__dot{{#if @first}} is-active{{/if}}"
+                role="tab"
+                aria-selected="{{#if @first}}true{{else}}false{{/if}}"
+                aria-label="Go to slide {{inc @index}}"
+                data-carousel-dot="{{@index}}"
+            ></button>
+            {{/each}}
+        </div>
+        {{/if}}
+    </div>
+    {{else}}
+    <div class="hero-carousel hero-carousel--empty hero-enter hero-enter-delay-2" aria-hidden="true">
+        <div class="hero-carousel__placeholder">
+            <p class="hero-carousel__placeholder-title">Your campus food map</p>
+            <p class="hero-carousel__placeholder-text">Listings will appear here as spots are added.</p>
+            <a class="btn-hero-primary inline-flex mt-4" href="/establishments">Browse establishments</a>
+        </div>
+    </div>
+    {{/if}}
+</div>
