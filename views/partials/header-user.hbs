@@ -1,21 +1,24 @@
 <!-- Header (signed in) -->
-<header class="site-header w-full h-16 md:h-20 flex items-center justify-between px-4 md:px-8 text-white shadow-md sticky top-0 z-30 bg-green-900 bg-opacity-95 backdrop-blur-md border-b border-white border-opacity-10">
+<header class="site-header w-full h-16 md:h-20 flex items-center justify-between gap-3 px-4 md:px-8 text-white sticky top-0 z-30 backdrop-blur-xl border-b border-white border-opacity-10">
     <div class="flex items-center space-x-2 md:space-x-4 min-w-0">
-        <button type="button" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white hover:bg-opacity-10 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 focus:ring-offset-green-900 transition-colors" onclick="toggleSidebar()" aria-label="Open menu">
+        <button type="button" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white hover:bg-opacity-10 focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:ring-offset-2 focus:ring-offset-green-900 transition-colors" onclick="toggleSidebar()" aria-label="Open menu">
             <i data-lucide="menu" class="w-6 h-6 text-white opacity-90" aria-hidden="true"></i>
         </button>
         <a href="/" class="flex items-center group flex-shrink-0">
-            <img class="h-44 md:h-48 w-auto transition-transform group-hover:scale-[1.02]" alt="Tafteria" src="/images/tafteria-logo.png">
+            <img class="site-logo transition-transform group-hover:scale-[1.02]" alt="Tafteria" src="/images/tafteria-logo.png">
         </a>
     </div>
-    <div class="flex-grow max-w-lg mx-2 md:mx-8 min-w-0">
-        <form action="/search" method="GET" class="flex rounded-full shadow-inner overflow-hidden border border-white border-opacity-20 bg-white bg-opacity-95 focus-within:ring-2 focus-within:ring-yellow-400 focus-within:ring-opacity-70 transition-shadow">
+    <div class="flex-grow max-w-xl mx-0 md:mx-8 min-w-0 hidden sm:block">
+        <form action="/search" method="GET" class="site-search-form flex rounded-full overflow-hidden border border-white border-opacity-20 bg-white bg-opacity-95 focus-within:ring-2 focus-within:ring-yellow-300 focus-within:ring-opacity-80 transition-shadow">
             <label class="sr-only" for="site-search-q-user">Search establishments or reviews</label>
-            <input id="site-search-q-user" type="search" name="q" autocomplete="off" class="w-full h-10 md:h-11 px-4 text-gray-900 placeholder-gray-500 bg-transparent focus:outline-none text-sm md:text-base" placeholder="Search places or reviews…">
-            <button type="submit" class="h-10 md:h-11 px-4 md:px-6 bg-yellow-600 text-white font-semibold text-sm md:text-base hover:bg-yellow-500 transition-colors whitespace-nowrap inline-flex items-center justify-center gap-2">
+            <input id="site-search-q-user" type="search" name="q" autocomplete="off" class="w-full h-10 md:h-11 px-4 text-gray-900 placeholder-gray-500 bg-transparent focus:outline-none text-sm md:text-base" placeholder="Search places or reviews...">
+            <button type="submit" class="h-10 md:h-11 px-4 md:px-5 bg-yellow-500 text-green-950 font-bold text-sm md:text-base hover:bg-yellow-300 transition-colors whitespace-nowrap inline-flex items-center justify-center gap-2">
                 <i data-lucide="search" class="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" aria-hidden="true"></i>
-                Search
+                <span class="hidden md:inline">Search</span>
             </button>
         </form>
     </div>
+    <a href="/profile" class="w-10 h-10 hidden sm:inline-flex items-center justify-center rounded-full bg-white bg-opacity-10 border border-white border-opacity-15 hover:bg-opacity-20 transition-colors" aria-label="Open profile">
+        <i data-lucide="user" class="w-5 h-5" aria-hidden="true"></i>
+    </a>
 </header>

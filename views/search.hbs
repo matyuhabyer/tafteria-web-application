@@ -1,123 +1,147 @@
-<div class="w-full bg-yellow-50 min-h-screen flex flex-col items-center py-16 px-4">
-  <div class="w-full max-w-5xl flex flex-col items-center justify-center">
-    <h1 class="text-5xl font-bold mb-5 text-gray-800">Search Results</h1>
-    <p class="text-2xl mb-10 font-bold text-gray-700">Results for "<span id="search-query" class="font-semibold">{{query}}</span>"</p>
-    <!-- Filters -->
-    <div class="w-full flex justify-end mb-5">
-      <select id="rating-filter" class="h-10 px-4 rounded-lg border border-gray-300 text-black">
-        <option value="all">All Ratings</option>
-        <option value="4.5">4.5 & Up</option>
-        <option value="4.0">4.0 & Up</option>
-        <option value="3.5">3.5 & Up</option>
+<div class="search-page">
+  <div class="search-shell">
+    <header class="search-hero">
+      <p class="home-featured-eyebrow">Search</p>
+      <h1 class="search-title">Results for "<span id="search-query">{{query}}</span>"</h1>
+      <p class="search-subtitle">Filter by rating, then jump into a place or review that matches your craving.</p>
+    </header>
+
+    <div class="search-toolbar">
+      <label for="rating-filter">Minimum rating</label>
+      <select id="rating-filter">
+        <option value="all">All ratings</option>
+        <option value="4.5">4.5 and up</option>
+        <option value="4.0">4.0 and up</option>
+        <option value="3.5">3.5 and up</option>
       </select>
     </div>
-    <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-10 px-5">
-      <!-- Establishment Results -->
-      <div id="establishment-results" class="col-span-1 md:col-span-2">
-        <h2 class="text-3xl font-bold mb-5 text-gray-800">Establishments</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 text-black">
-          {{#each establishments}}
-          <div class="bg-white rounded-lg shadow-lg p-6 mb-4">
-            <a href="/establishments/{{_id}}">
-              <h1 class="text-2xl font-semibold mb-2">{{name}}</h1>
-            </a>
-            <div class="flex items-center mb-2">
-              <i data-lucide="star" class="w-5 h-5 mb-5 text-yellow-400 fill-yellow-400 flex-shrink-0" aria-hidden="true"></i>
-              <p class="text-gray-600 text-sm mb-5 ml-1">Rating: {{rating}} ({{reviewsCount}} reviews)</p>
-            </div>
-            <p class="text-gray-700">{{description}}</p>
-          </div>
-          {{/each}}
-        </div>
+
+    <section id="establishment-results" class="search-section" aria-labelledby="establishment-results-heading">
+      <div class="search-section__head">
+        <h2 id="establishment-results-heading">Establishments</h2>
       </div>
-      <!-- Review Results -->
-      <div id="review-results" class="col-span-1 md:col-span-2">
-        <h2 class="text-3xl font-bold mb-5 text-gray-800">Reviews</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 text-black">
-          {{#each reviews}}
-          <div class="bg-white rounded-lg shadow-lg p-6 mb-4">
-            <h1 class="text-2xl font-semibold mb-2">{{establishment.name}}</h1>
-            <h3 class="text-base font-semibold mb-2">{{title}}</h3>
-            <div class="flex items-center mb-2 gap-1">
-              <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400 flex-shrink-0" aria-hidden="true"></i>
-              <p class="text-gray-600 text-sm ml-1">: {{rating}}</p>
-            </div>
-            <p class="text-gray-700">{{comment}}</p>
-            <p class="text-gray-600 text-sm mt-2 mb-5">Profile: {{user.username}}</p>
+      <div class="search-result-grid">
+        {{#each establishments}}
+        <article class="search-result-card">
+          <a href="/establishments/{{_id}}" class="search-result-card__title">{{name}}</a>
+          <div class="search-result-card__meta">
+            <i data-lucide="star" class="w-4 h-4 text-yellow-500 fill-yellow-500 flex-shrink-0" aria-hidden="true"></i>
+            <span>{{rating}} ({{reviewsCount}} reviews)</span>
           </div>
-          {{/each}}
-        </div>
+          <p>{{description}}</p>
+        </article>
+        {{else}}
+        <div class="empty-state">No establishments matched this search.</div>
+        {{/each}}
       </div>
-    </div>
+    </section>
+
+    <section id="review-results" class="search-section" aria-labelledby="review-results-heading">
+      <div class="search-section__head">
+        <h2 id="review-results-heading">Reviews</h2>
+      </div>
+      <div class="search-result-grid">
+        {{#each reviews}}
+        <article class="search-result-card">
+          <h3 class="search-result-card__title">{{establishment.name}}</h3>
+          {{#if title}}<p class="search-result-card__kicker">{{title}}</p>{{/if}}
+          <div class="search-result-card__meta">
+            <i data-lucide="star" class="w-4 h-4 text-yellow-500 fill-yellow-500 flex-shrink-0" aria-hidden="true"></i>
+            <span>{{rating}}</span>
+          </div>
+          <p>{{comment}}</p>
+          <p class="search-result-card__author">By {{user.username}}</p>
+        </article>
+        {{else}}
+        <div class="empty-state">No reviews matched this search.</div>
+        {{/each}}
+      </div>
+    </section>
   </div>
 </div>
+
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const query = "{{query}}";
     const ratingFilter = document.getElementById('rating-filter');
-    // Data initialization from Handlebars context
-    const establishments = {{jsonify establishments}};
-    const reviews = {{jsonify reviews}};
+    const establishments = {{{jsonify establishments}}};
+    const reviews = {{{jsonify reviews}}};
     ratingFilter.addEventListener('change', () => filterResults(query));
-    function filterResults(query) {
-      const ratingFilterValue = parseFloat(ratingFilter.value) || 0;
-      const filteredEstablishments = establishments.filter(establishment => {
-        const lowerCaseQuery = query.toLowerCase();
-        return (establishment.name.toLowerCase().includes(lowerCaseQuery) || 
-                establishment.description.toLowerCase().includes(lowerCaseQuery)) &&
-               (ratingFilterValue === 0 || establishment.rating >= ratingFilterValue);
+
+    function escapeHtml(value) {
+      return String(value || '').replace(/[&<>"']/g, function (char) {
+        return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[char];
       });
-      const filteredReviews = reviews.filter(review => {
-        const lowerCaseQuery = query.toLowerCase();
-        return review.comment.toLowerCase().includes(lowerCaseQuery) ||
-               review.establishment.name.toLowerCase().includes(lowerCaseQuery);
-      });
-      updateResults('establishment-results', filteredEstablishments, false);
-      updateResults('review-results', filteredReviews, true);
     }
+
     function starRowHtml(rating) {
       const r = Number(rating) || 0;
       return Array.from({ length: 5 }, (_, i) => {
         const filled = r >= i + 1;
-        const cls = filled ? 'text-yellow-500 fill-yellow-500' : 'text-gray-400';
+        const cls = filled ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300';
         return `<i data-lucide="star" class="w-4 h-4 inline-block ${cls}" aria-hidden="true"></i>`;
       }).join('');
     }
+
+    function emptyHtml(message) {
+      return `<div class="empty-state">${escapeHtml(message)}</div>`;
+    }
+
     function updateResults(containerId, data, isReview) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = '';
+      const section = document.getElementById(containerId);
+      const grid = section.querySelector('.search-result-grid');
+      grid.innerHTML = '';
+
+      if (!data.length) {
+        grid.innerHTML = emptyHtml(isReview ? 'No reviews matched this filter.' : 'No establishments matched this filter.');
+        return;
+      }
+
       data.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'bg-white rounded-lg shadow-lg p-6 mb-4';
+        const card = document.createElement('article');
+        card.className = 'search-result-card';
         const estHref = item._id ? `/establishments/${item._id}` : '#';
         if (isReview) {
           card.innerHTML = `
-            <h1 class="text-2xl font-semibold mb-2">${item.establishment.name}</h1>
-            <h3 class="text-base font-semibold mb-2">${item.title}</h3>
-            <div class="flex items-center gap-0.5 mb-2">
-              ${starRowHtml(item.rating)}
-            </div>
-            <p class="text-gray-700">${item.comment}</p>
-            <p class="text-gray-600 text-sm mt-2 mb-5">Profile: ${item.user.username}</p>
+            <h3 class="search-result-card__title">${escapeHtml(item.establishment && item.establishment.name)}</h3>
+            ${item.title ? `<p class="search-result-card__kicker">${escapeHtml(item.title)}</p>` : ''}
+            <div class="search-result-card__meta">${starRowHtml(item.rating)}<span>${escapeHtml(item.rating)}</span></div>
+            <p>${escapeHtml(item.comment)}</p>
+            <p class="search-result-card__author">By ${escapeHtml(item.user && item.user.username)}</p>
           `;
         } else {
           card.innerHTML = `
-            <a href="${estHref}">
-              <h1 class="text-2xl font-semibold mb-2">${item.name}</h1>
-            </a>
-            <div class="flex items-center gap-0.5 mb-2">
-              ${starRowHtml(item.rating)}
-            </div>
-            <p class="text-gray-700">${item.description}</p>
-            <p class="text-gray-600 text-sm mt-2 mb-5">Rating: ${item.rating} (${item.reviewsCount} reviews)</p>
+            <a href="${estHref}" class="search-result-card__title">${escapeHtml(item.name)}</a>
+            <div class="search-result-card__meta">${starRowHtml(item.rating)}<span>${escapeHtml(item.rating)} (${escapeHtml(item.reviewsCount)} reviews)</span></div>
+            <p>${escapeHtml(item.description)}</p>
           `;
         }
-        container.appendChild(card);
+        grid.appendChild(card);
       });
+
       if (typeof window.refreshLucideIcons === 'function') {
         window.refreshLucideIcons();
       }
     }
-    filterResults(query);
+
+    function filterResults(query) {
+      const ratingFilterValue = parseFloat(ratingFilter.value) || 0;
+      const lowerCaseQuery = query.toLowerCase();
+      const filteredEstablishments = establishments.filter(establishment => {
+        const name = String(establishment.name || '').toLowerCase();
+        const description = String(establishment.description || '').toLowerCase();
+        return (name.includes(lowerCaseQuery) ||
+                description.includes(lowerCaseQuery)) &&
+               (ratingFilterValue === 0 || establishment.rating >= ratingFilterValue);
+      });
+      const filteredReviews = reviews.filter(review => {
+        const comment = String(review.comment || '').toLowerCase();
+        const establishmentName = String(review.establishment && review.establishment.name || '').toLowerCase();
+        return comment.includes(lowerCaseQuery) ||
+               establishmentName.includes(lowerCaseQuery);
+      });
+      updateResults('establishment-results', filteredEstablishments, false);
+      updateResults('review-results', filteredReviews, true);
+    }
   });
 </script>
