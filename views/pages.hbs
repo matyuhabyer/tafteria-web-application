@@ -1,19 +1,30 @@
 <div class="establishment-detail section-home min-h-screen pb-16 md:pb-20">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-10">
 
         <a href="/establishments" class="establishment-detail__back">
             <i data-lucide="arrow-left" class="w-4 h-4 flex-shrink-0" aria-hidden="true"></i>
             All establishments
         </a>
 
-        <!-- Hero -->
+        <!-- Establishment overview -->
         <div class="establishment-detail__shell">
-            <div class="establishment-detail__hero-grid">
-                <div class="establishment-detail__hero-media">
-                    <img src="{{establishmentData.mainImage}}" alt="" class="block" data-establishment-img data-establishment-id="{{establishmentData._id}}">
-                </div>
+            <div class="establishment-detail__hero-media">
+                <img src="{{establishmentData.mainImage}}" alt="{{#if establishmentData.coverPhotoSource}}Community cover photo of {{establishmentData.name}}{{else}}{{#if (eq establishmentData.mapillaryMatchType 'nearby')}}Nearby Mapillary street view near {{establishmentData.name}}{{else}}{{establishmentData.name}}{{/if}}{{/if}}" class="block" data-establishment-img data-establishment-id="{{establishmentData._id}}">
+                {{#if establishmentData.coverPhotoSource}}
+                <span class="establishment-detail__image-credit">
+                    <i data-lucide="badge-check" aria-hidden="true"></i>
+                    {{#if (eq establishmentData.coverPhotoSource "owner")}}Owner-provided{{else}}Community cover{{/if}}{{#if establishmentData.coverPhotoCreditUser.username}} · @{{establishmentData.coverPhotoCreditUser.username}}{{/if}}
+                </span>
+                {{else}}{{#if establishmentData.mapillaryUrl}}
+                <a class="establishment-detail__image-credit" href="{{establishmentData.mapillaryUrl}}" target="_blank" rel="noopener noreferrer">
+                    <i data-lucide="camera" aria-hidden="true"></i>
+                    {{#if (eq establishmentData.mapillaryMatchType "nearby")}}Nearby street view · {{establishmentData.mapillaryDistanceMeters}}m away{{else}}Photo linked from OpenStreetMap{{/if}} · Mapillary ↗
+                </a>
+                {{/if}}{{/if}}
+            </div>
+            <div class="establishment-detail__content-grid">
                 <div class="establishment-detail__hero-body">
-                    <p class="establishment-detail__eyebrow">Establishment</p>
+                    <p class="establishment-detail__eyebrow">Taft food guide</p>
                     <h1 class="establishment-detail__title">{{establishmentData.name}}</h1>
                     <div class="establishment-detail__badges">
                         {{#if establishmentData.category}}
@@ -40,7 +51,41 @@
                         <a href="tel:{{establishmentData.phone}}">{{establishmentData.phone}}</a>
                     </p>
                     {{/if}}
+                </div>
+                <aside class="establishment-detail__sidebar" aria-label="Establishment information and actions">
+                    <div class="establishment-detail__sidebar-heading">
+                        <p>At a glance</p>
+                        <i data-lucide="map-pinned" aria-hidden="true"></i>
+                    </div>
+                    <div class="establishment-detail__facts">
+                        {{#if establishmentData.address}}
+                        <p><i data-lucide="map-pin" aria-hidden="true"></i><span><strong>Address</strong>{{establishmentData.address}}</span></p>
+                        {{/if}}
+                        {{#if establishmentData.openingHours}}
+                        <p><i data-lucide="clock-3" aria-hidden="true"></i><span><strong>Opening hours</strong>{{establishmentData.openingHours}}</span></p>
+                        {{/if}}
+                        {{#if establishmentData.cuisine.length}}
+                        <p><i data-lucide="utensils" aria-hidden="true"></i><span><strong>Cuisine</strong>{{#each establishmentData.cuisine}}{{#unless @first}} · {{/unless}}{{this}}{{/each}}</span></p>
+                        {{/if}}
+                        {{#if establishmentData.website}}
+                        <p><i data-lucide="globe-2" aria-hidden="true"></i><span><strong>Website</strong><a href="{{establishmentData.website}}" target="_blank" rel="noopener noreferrer">Visit establishment ↗</a></span></p>
+                        {{/if}}
+                        {{#if establishmentData.coverPhotoSource}}
+                        <p><i data-lucide="badge-check" aria-hidden="true"></i><span><strong>Cover photo</strong>{{#if (eq establishmentData.coverPhotoSource "owner")}}Owner-provided{{else}}Community-submitted and approved{{/if}}{{#if establishmentData.coverPhotoCreditUser.username}} · @{{establishmentData.coverPhotoCreditUser.username}}{{/if}}</span></p>
+                        {{/if}}
+                    </div>
                     <div class="establishment-detail__actions">
+                        {{#if user}}
+                        <button type="button" class="establishment-detail__btn-favorite favorite-button {{#if establishmentData.isFavorite}}is-favorite{{/if}}" data-favorite-button data-establishment-id="{{establishmentData._id}}" data-place-name="{{establishmentData.name}}" aria-pressed="{{#if establishmentData.isFavorite}}true{{else}}false{{/if}}">
+                            <i data-lucide="heart" aria-hidden="true"></i>
+                            <span data-favorite-label>{{#if establishmentData.isFavorite}}Saved to favorites{{else}}Save to favorites{{/if}}</span>
+                        </button>
+                        {{else}}
+                        <a href="/login" class="establishment-detail__btn-favorite favorite-button">
+                            <i data-lucide="heart" aria-hidden="true"></i>
+                            <span>Sign in to save</span>
+                        </a>
+                        {{/if}}
                         {{#if user}}
                         <button type="button" id="openModalBtn" class="establishment-detail__btn-primary">
                             <i data-lucide="pen-line" class="w-5 h-5 flex-shrink-0" aria-hidden="true"></i>
@@ -53,37 +98,82 @@
                         </a>
                         {{/if}}
                         <a href="/establishments" class="establishment-detail__btn-ghost">More places</a>
+                        <button type="button" class="establishment-detail__btn-ghost" data-share-place data-place-name="{{establishmentData.name}}">
+                            <i data-lucide="share-2" class="w-4 h-4" aria-hidden="true"></i>Share
+                        </button>
                     </div>
-                </div>
+                </aside>
             </div>
         </div>
 
-        {{#if establishmentData.gallery}}
-        <section class="establishment-detail__section" aria-labelledby="est-gallery-heading">
-            <div class="establishment-detail__section-head">
-                <h2 id="est-gallery-heading" class="establishment-detail__section-title">Photos</h2>
-                <p class="establishment-detail__section-desc">Gallery from the listing.</p>
+        <div id="coverPhotoModal" class="establishment-modal-overlay hidden" aria-modal="true" role="dialog" aria-labelledby="cover-photo-heading" data-auto-open="{{#if coverPhotoNotice}}true{{else}}false{{/if}}">
+        <div class="establishment-modal-panel cover-photo-modal-panel">
+        <button type="button" id="closeCoverPhotoModalBtn" class="establishment-modal-close" aria-label="Close cover photo dialog" data-modal-initial-focus>
+            <i data-lucide="x" aria-hidden="true"></i>
+        </button>
+        <section class="cover-photo-panel cover-photo-panel--modal" aria-labelledby="cover-photo-heading">
+            <div class="cover-photo-panel__header">
+                <div>
+                    <p class="section-kicker">Keep listings recognizable</p>
+                    <h2 id="cover-photo-heading">Suggest a better cover photo</h2>
+                    <p>Share a clear, recent storefront or interior photo that helps students identify this place.</p>
+                </div>
+                <i data-lucide="image-plus" aria-hidden="true"></i>
             </div>
-            <div class="establishment-detail__gallery">
-                {{#each establishmentData.gallery}}
-                <img src="{{this}}" alt="">
+
+            {{#if coverPhotoNotice}}
+            <p class="cover-photo-notice" role="status"><i data-lucide="circle-check" aria-hidden="true"></i>{{coverPhotoNotice}}</p>
+            {{/if}}
+
+            {{#if user}}
+                {{#if currentUserCoverSubmission}}
+                <div class="cover-photo-status">
+                    <img src="/uploads/{{currentUserCoverSubmission.filename}}" alt="Your pending cover photo submission">
+                    <div><strong>Awaiting review</strong><p>Your submission is private until a listing owner or moderator approves it.</p></div>
+                </div>
+                {{else}}
+                <form action="/establishments/{{establishmentData._id}}/cover-photo" method="POST" enctype="multipart/form-data" class="cover-photo-form">
+                    <label class="cover-photo-form__file" for="cover-photo-file">
+                        <i data-lucide="upload-cloud" aria-hidden="true"></i>
+                        <span><strong>Choose a photo</strong><small>JPEG, PNG, or WebP · up to 5 MB</small></span>
+                        <input id="cover-photo-file" type="file" name="coverPhoto" accept="image/jpeg,image/png,image/webp" required>
+                    </label>
+                    <label class="cover-photo-form__note" for="cover-photo-note">Optional note
+                        <textarea id="cover-photo-note" name="note" maxlength="240" rows="3" placeholder="Example: Current Taft Avenue storefront, taken this week."></textarea>
+                    </label>
+                    <div class="cover-photo-form__footer">
+                        <p>By uploading, you confirm that you can share this photo and that it depicts this establishment.</p>
+                        <button type="submit">{{#if canManageCoverPhoto}}Publish cover{{else}}Submit for review{{/if}}</button>
+                    </div>
+                </form>
+                {{/if}}
+            {{else}}
+            <div class="cover-photo-signin"><p>Community photos are reviewed before they appear publicly.</p><a href="/login">Sign in to contribute <i data-lucide="arrow-right" aria-hidden="true"></i></a></div>
+            {{/if}}
+
+            {{#if pendingCoverSubmissions.length}}
+            <div class="cover-photo-queue">
+                <div class="cover-photo-queue__heading"><h3>Pending submissions</h3><span>{{pendingCoverSubmissions.length}}</span></div>
+                {{#each pendingCoverSubmissions}}
+                <article class="cover-photo-candidate">
+                    <img src="/uploads/{{filename}}" alt="Cover photo submitted by {{submittedBy.username}}">
+                    <div>
+                        <strong>@{{submittedBy.username}}</strong>
+                        {{#if note}}<p>{{note}}</p>{{else}}<p>No note provided.</p>{{/if}}
+                    </div>
+                    <div class="cover-photo-candidate__actions">
+                        <form action="/establishments/{{../establishmentData._id}}/cover-photo-submissions/{{_id}}/reject" method="POST"><button type="submit" class="is-quiet">Reject</button></form>
+                        <form action="/establishments/{{../establishmentData._id}}/cover-photo-submissions/{{_id}}/approve" method="POST"><button type="submit">Approve cover</button></form>
+                    </div>
+                </article>
                 {{/each}}
             </div>
+            {{/if}}
         </section>
-        {{/if}}
+        </div>
+        </div>
 
-        {{#if establishmentGeoJson}}
-        <section class="establishment-detail__section" aria-labelledby="est-map-heading">
-            <div class="establishment-detail__section-head map-card-header">
-                <div>
-                    <h2 id="est-map-heading" class="establishment-detail__section-title">Location</h2>
-                    <p class="establishment-detail__section-desc">OpenStreetMap · Leaflet</p>
-                </div>
-            </div>
-            <div id="establishment-map" class="w-full" role="application" aria-label="Establishment location map"></div>
-            <script type="application/json" id="establishment-geo-json">{{{establishmentGeoJson}}}</script>
-        </section>
-        {{/if}}
+        <div class="establishment-detail__lower-layout">
 
         <!-- Review modal (signed in) -->
         {{#if user}}
@@ -92,18 +182,22 @@
                 <h2 id="rating-modal-title" class="text-xl font-bold text-gray-900 mb-1" style="font-family: var(--font-display);">How was your experience?</h2>
                 <p class="text-sm text-gray-500 mb-4">Your rating and comment help classmates decide.</p>
                 <form action="/establishments/{{establishmentData._id}}/reviews" method="POST" enctype="multipart/form-data" class="flex flex-col gap-4">
-                    <div class="star-rating flex flex-row-reverse justify-center gap-1 text-4xl py-2">
-                        <input type="radio" id="5-stars" name="rating" value="5" class="hidden" />
-                        <label for="5-stars" class="cursor-pointer text-gray-300 inline-flex items-center justify-center"><i data-lucide="star" class="w-10 h-10" aria-hidden="true"></i></label>
-                        <input type="radio" id="4-stars" name="rating" value="4" class="hidden" />
-                        <label for="4-stars" class="cursor-pointer text-gray-300 inline-flex items-center justify-center"><i data-lucide="star" class="w-10 h-10" aria-hidden="true"></i></label>
-                        <input type="radio" id="3-stars" name="rating" value="3" class="hidden" />
-                        <label for="3-stars" class="cursor-pointer text-gray-300 inline-flex items-center justify-center"><i data-lucide="star" class="w-10 h-10" aria-hidden="true"></i></label>
-                        <input type="radio" id="2-stars" name="rating" value="2" class="hidden" />
-                        <label for="2-stars" class="cursor-pointer text-gray-300 inline-flex items-center justify-center"><i data-lucide="star" class="w-10 h-10" aria-hidden="true"></i></label>
-                        <input type="radio" id="1-star" name="rating" value="1" class="hidden" />
-                        <label for="1-star" class="cursor-pointer text-gray-300 inline-flex items-center justify-center"><i data-lucide="star" class="w-10 h-10" aria-hidden="true"></i></label>
-                    </div>
+                    <fieldset class="rating-picker">
+                        <legend>Your rating</legend>
+                        <div class="star-rating" aria-describedby="rating-scale-help">
+                            <input type="radio" id="1-star" name="rating" value="1" class="sr-only" aria-label="1 star" />
+                            <label for="1-star" title="1 star"><i data-lucide="star" aria-hidden="true"></i></label>
+                            <input type="radio" id="2-stars" name="rating" value="2" class="sr-only" aria-label="2 stars" />
+                            <label for="2-stars" title="2 stars"><i data-lucide="star" aria-hidden="true"></i></label>
+                            <input type="radio" id="3-stars" name="rating" value="3" class="sr-only" aria-label="3 stars" />
+                            <label for="3-stars" title="3 stars"><i data-lucide="star" aria-hidden="true"></i></label>
+                            <input type="radio" id="4-stars" name="rating" value="4" class="sr-only" aria-label="4 stars" />
+                            <label for="4-stars" title="4 stars"><i data-lucide="star" aria-hidden="true"></i></label>
+                            <input type="radio" id="5-stars" name="rating" value="5" class="sr-only" aria-label="5 stars" />
+                            <label for="5-stars" title="5 stars"><i data-lucide="star" aria-hidden="true"></i></label>
+                        </div>
+                        <div id="rating-scale-help" class="rating-picker__scale"><span>1 · Not for me</span><span>5 · Excellent</span></div>
+                    </fieldset>
                     <div>
                         <label for="review-comment" class="sr-only">Comment</label>
                         <textarea id="review-comment" name="comment" class="w-full rounded-xl border border-gray-200 px-3 py-2 text-gray-900 focus:ring-2 focus:ring-yellow-400 focus:border-transparent focus:outline-none" placeholder="Share details—food, price, vibe…" rows="6" style="resize: none;" required></textarea>
@@ -111,6 +205,7 @@
                     <div>
                         <label for="photos" class="block text-sm font-medium text-gray-700 mb-2">Photos (optional)</label>
                         <input type="file" id="photos" name="photos" accept="image/*" multiple class="block w-full text-sm text-gray-900 border border-gray-200 rounded-lg cursor-pointer bg-gray-50 px-2 py-2">
+                        <div class="upload-preview" data-upload-preview aria-live="polite"></div>
                     </div>
                     <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-2">
                         <button type="button" id="closeModalBtn" class="establishment-detail__btn-ghost w-full sm:w-auto">Cancel</button>
@@ -137,16 +232,28 @@
         {{/if}}
 
         <!-- Reviews -->
-        <section class="establishment-detail__section" aria-labelledby="est-reviews-heading">
+        <section class="establishment-detail__section establishment-detail__reviews-section" aria-labelledby="est-reviews-heading">
             <div class="establishment-detail__section-head">
                 <h2 id="est-reviews-heading" class="establishment-detail__section-title">Community reviews</h2>
                 <p class="establishment-detail__section-desc">Ratings and comments from people who’ve been here.</p>
             </div>
 
             {{#if reviews}}
-            <div class="space-y-4">
+            <div class="rating-summary">
+                <div class="rating-summary__score"><strong>{{establishmentData.rating}}</strong><span>out of 5</span><small>{{establishmentData.reviewsCount}} reviews</small></div>
+                <div class="rating-summary__bars">
+                    {{#each ratingBreakdown}}
+                    <div><span>{{rating}} <i data-lucide="star" aria-hidden="true"></i></span><div><b style="width: {{percent}}%"></b></div><small>{{count}}</small></div>
+                    {{/each}}
+                </div>
+                <label class="review-sort">Sort reviews<select data-review-sort><option value="newest">Newest</option><option value="highest">Highest rated</option><option value="helpful">Most helpful</option></select></label>
+            </div>
+            {{/if}}
+
+            {{#if reviews}}
+            <div class="space-y-4" data-review-list>
                 {{#each reviews}}
-                <article class="establishment-review-card review-container" data-review-id="{{this._id}}">
+                <article class="establishment-review-card review-container" data-review-id="{{this._id}}" data-review-rating="{{rating}}" data-review-likes="{{likes}}" data-review-date="{{date}}">
                     <div class="flex items-start justify-between gap-3 mb-3 flex-wrap">
                         <div class="flex items-center min-w-0">
                             <img src="/uploads/{{user.avatar}}" alt="" class="w-12 h-12 rounded-full mr-3 border-2 border-yellow-400 object-cover flex-shrink-0">
@@ -224,6 +331,55 @@
             <p class="text-gray-600 text-center py-10 px-4 rounded-xl bg-stone-50 border border-stone-100">No reviews yet. {{#if user}}Be the first to share your experience.{{else}}Sign in to write the first review.{{/if}}</p>
             {{/if}}
         </section>
+
+        <aside class="establishment-detail__side-column" aria-label="Location and listing contributions">
+        {{#if establishmentGeoJson}}
+        <section class="establishment-detail__section establishment-detail__location-card" aria-labelledby="est-map-heading">
+            <div class="establishment-detail__section-head map-card-header">
+                <div>
+                    <h2 id="est-map-heading" class="establishment-detail__section-title">Location</h2>
+                    <p class="establishment-detail__section-desc">OpenStreetMap · Leaflet</p>
+                </div>
+            </div>
+            <div id="establishment-map" class="w-full" role="application" aria-label="Establishment location map"></div>
+            <script type="application/json" id="establishment-geo-json">{{{establishmentGeoJson}}}</script>
+        </section>
+        {{/if}}
+
+        <section class="establishment-detail__cover-cta" aria-labelledby="cover-photo-cta-heading">
+            <div class="establishment-detail__cover-cta-icon"><i data-lucide="image-plus" aria-hidden="true"></i></div>
+            <div>
+                <p class="section-kicker">Community powered</p>
+                <h2 id="cover-photo-cta-heading">Improve this listing</h2>
+                <p>Help students recognize this place with a clear, recent cover photo.</p>
+            </div>
+            {{#if currentUserCoverSubmission}}
+            <p class="establishment-detail__cover-status"><i data-lucide="clock-3" aria-hidden="true"></i> Your photo is awaiting review</p>
+            {{/if}}
+            {{#if pendingCoverSubmissions.length}}
+            <p class="establishment-detail__cover-status"><i data-lucide="inbox" aria-hidden="true"></i> {{pendingCoverSubmissions.length}} pending submission{{#unless (eq pendingCoverSubmissions.length 1)}}s{{/unless}}</p>
+            {{/if}}
+            <button type="button" id="openCoverPhotoModalBtn" aria-haspopup="dialog" aria-controls="coverPhotoModal">
+                <i data-lucide="camera" aria-hidden="true"></i>
+                {{#if user}}Suggest a cover photo{{else}}Learn how to contribute{{/if}}
+            </button>
+        </section>
+        </aside>
+
+        {{#if establishmentData.gallery}}
+        <section class="establishment-detail__section establishment-detail__gallery-section" aria-labelledby="est-gallery-heading">
+            <div class="establishment-detail__section-head">
+                <h2 id="est-gallery-heading" class="establishment-detail__section-title">Photos</h2>
+                <p class="establishment-detail__section-desc">Gallery from the listing.</p>
+            </div>
+            <div class="establishment-detail__gallery">
+                {{#each establishmentData.gallery}}
+                <img src="{{this}}" alt="Photo of {{../establishmentData.name}}" data-lightbox-image onerror="this.hidden=true">
+                {{/each}}
+            </div>
+        </section>
+        {{/if}}
+        </div>
     </div>
 </div>
 

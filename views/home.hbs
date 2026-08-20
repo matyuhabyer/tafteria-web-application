@@ -1,198 +1,84 @@
-<!-- Hero: editorial search format -->
-<section class="hero-shell hero-shell--fresh" aria-label="Welcome">
-    <div class="hero-bg" aria-hidden="true"></div>
-    <div class="hero-noise" aria-hidden="true"></div>
-
-    <div class="hero-inner">
-        <div class="hero-col hero-col--copy">
-            <div class="hero-content">
-                <p class="hero-badge hero-enter">Taft food guide</p>
-                <h1 class="hero-title hero-enter hero-enter-delay-1">
-                    Find the next spot before the next class starts.
-                </h1>
-                <p class="hero-lede hero-enter hero-enter-delay-2">
-                    Search student-reviewed restaurants, cafes, stalls, and quick bites around De La Salle University.
-                </p>
-
-                <div class="hero-search-panel hero-enter hero-enter-delay-3">
-                    <form action="/search" method="GET" class="hero-search-form">
-                        <label class="sr-only" for="hero-search-q">Search places or reviews</label>
-                        <i data-lucide="search" class="hero-search-icon" aria-hidden="true"></i>
-                        <input id="hero-search-q" type="search" name="q" autocomplete="off" placeholder="Try chicken, coffee, silog, milk tea...">
-                        <button type="submit">Search</button>
-                    </form>
-                    <div class="hero-quick-links" aria-label="Quick filters">
-                        <a href="/establishments?category=Restaurant">Restaurants</a>
-                        <a href="/establishments?category=Cafe">Cafes</a>
-                        <a href="/establishments?category=Stall">Stalls</a>
-                        <a href="/establishments?rating=4.5">Top rated</a>
-                    </div>
-                </div>
-
-                <div class="hero-actions hero-actions--split hero-enter hero-enter-delay-3">
-                    <a class="btn-hero-primary" href="/establishments">Explore the map</a>
-                    {{#if user}}
-                    <a class="btn-hero-secondary" href="/establishments">Write a review</a>
-                    {{else}}
-                    <a class="btn-hero-secondary" href="/register">Join to review</a>
-                    {{/if}}
-                </div>
-
-                <div class="hero-stats hero-stats--inline hero-enter hero-enter-delay-3">
-                    <div class="hero-stat">
-                        <div class="hero-stat-value">Live</div>
-                        <div class="hero-stat-label">Listings</div>
-                    </div>
-                    <div class="hero-stat">
-                        <div class="hero-stat-value">Real</div>
-                        <div class="hero-stat-label">Reviews</div>
-                    </div>
-                    <div class="hero-stat">
-                        <div class="hero-stat-value">Taft</div>
-                        <div class="hero-stat-label">Focused</div>
-                    </div>
-                </div>
+<section class="discovery-hero">
+    <div class="discovery-hero__glow" aria-hidden="true"></div>
+    <div class="discovery-hero__inner">
+        <div class="discovery-hero__copy">
+            <p class="hero-eyebrow">The student food guide for Taft</p>
+            <h1>What are you craving <em>around Taft?</em></h1>
+            <p>Find honest student reviews, campus favorites, and quick bites worth the walk.</p>
+            <form action="/search" method="GET" class="discovery-search">
+                <i data-lucide="search" aria-hidden="true"></i>
+                <label class="sr-only" for="home-search">Search food spots</label>
+                <input id="home-search" type="search" name="q" autocomplete="off" placeholder="Chicken, coffee, silog, milk tea…">
+                <button type="submit">Find a spot</button>
+            </form>
+            <div class="craving-chips" aria-label="Popular filters">
+                <a href="/establishments?category=Cafe"><i data-lucide="coffee" aria-hidden="true"></i>Cafés</a>
+                <a href="/establishments?category=Fastfood"><i data-lucide="utensils" aria-hidden="true"></i>Quick bites</a>
+                <a href="/establishments?category=Restaurant"><i data-lucide="soup" aria-hidden="true"></i>Restaurants</a>
+                <a href="/establishments?rating=4.5"><i data-lucide="sparkles" aria-hidden="true"></i>Top rated</a>
             </div>
         </div>
-
-        {{> hero-carousel}}
-    </div>
-
-    <a href="#featured" class="hero-scroll-hint hidden sm:flex" aria-label="Scroll to featured content">
-        Scroll
-        <span></span>
-    </a>
-</section>
-
-<!-- Hero: copy left, carousel gallery right (lg+) -->
-<section class="hero-shell hero-shell--legacy-hidden" aria-label="Welcome">
-    <div class="hero-bg" aria-hidden="true"></div>
-    <div class="hero-noise" aria-hidden="true"></div>
-
-    <div class="hero-inner">
-        <div class="hero-col hero-col--copy">
-            <div class="hero-content">
-                <p class="hero-badge hero-enter">Taft · Food &amp; community</p>
-                <h1 class="hero-title hero-enter hero-enter-delay-1">
-                    <span class="hero-gradient-text">Discover</span> where Taft eats next!
-                </h1>
-                <p class="hero-lede hero-enter hero-enter-delay-2">
-                    Curated spots near De La Salle, honest reviews, and your next favorite meal—whether you are grabbing silog between classes or winding down with friends.
-                </p>
-
-                <div class="hero-panel hero-enter hero-enter-delay-3">
-                    <div class="hero-actions">
-                        <a class="btn-hero-primary w-full sm:w-auto min-w-[200px]" href="/establishments">Explore establishments</a>
-                        {{#if user}}
-                        <a class="btn-hero-secondary w-full sm:w-auto min-w-[200px]" href="/establishments">Write a review</a>
-                        {{else}}
-                        <a class="btn-hero-secondary w-full sm:w-auto min-w-[200px]" href="/register">Join to review</a>
-                        {{/if}}
-                    </div>
-                    <div class="hero-stats">
-                        <div class="hero-stat">
-                            <div class="hero-stat-value">Live</div>
-                            <div class="hero-stat-label">Updated listings</div>
-                        </div>
-                        <div class="hero-stat">
-                            <div class="hero-stat-value">Reviews</div>
-                            <div class="hero-stat-label">From real students</div>
-                        </div>
-                        <div class="hero-stat">
-                            <div class="hero-stat-value">Taft</div>
-                            <div class="hero-stat-label">Your campus food map</div>
-                        </div>
-                    </div>
+        <aside class="campus-pulse" aria-label="Tafteria community overview">
+            {{#if heroCarousel.[0]}}
+            <a class="campus-pulse__feature" href="/establishments/{{heroCarousel.[0]._id}}">
+                <img src="{{heroCarousel.[0].mainImage}}" alt="{{heroCarousel.[0].name}}">
+                <div class="campus-pulse__overlay">
+                    <span>{{heroCarousel.[0].category}}</span><h2>{{heroCarousel.[0].name}}</h2>
+                    <p><i data-lucide="star" aria-hidden="true"></i>{{heroCarousel.[0].rating}} · {{heroCarousel.[0].reviewsCount}} reviews</p>
                 </div>
+            </a>
+            {{/if}}
+            <div class="campus-pulse__stats">
+                <div><strong>{{establishmentCount}}</strong><span>places mapped</span></div>
+                <div><strong>{{reviewCount}}</strong><span>community reviews</span></div>
             </div>
-        </div>
-
-        {{> hero-carousel}}
+        </aside>
     </div>
-
-    <a href="#featured" class="hero-scroll-hint hidden sm:flex" aria-label="Scroll to featured content">
-        Scroll
-        <span></span>
-    </a>
 </section>
 
-<!-- Featured: same layout as signed-in home (two columns + scroll animations) -->
-<div id="featured" class="section-home home-featured-page py-12 md:py-20 px-4">
-    <div class="max-w-7xl mx-auto">
-        <header class="home-featured-page-heading home-featured-animate text-center mb-10 md:mb-14">
-            <p class="home-featured-eyebrow">Discover</p>
-            <h2 class="home-featured-title">Featured &amp; fresh</h2>
-            <p class="home-featured-subtitle">Places worth a stop and voices from the community—updated as classmates review.</p>
-        </header>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
-            <section class="home-featured-panel" aria-labelledby="home-feat-est">
-                <div class="home-featured-panel-head">
-                    <h3 id="home-feat-est" class="home-featured-panel-title">Featured establishments</h3>
-                    <p class="home-featured-panel-desc">Hand-picked spots near campus. Tap a card for full details.</p>
-                </div>
-                <div class="home-card-stagger flex flex-col gap-4 md:gap-5">
-                    {{#each establishments}}
-                    <a href="/establishments/{{this._id}}" class="home-stagger-item home-establishment-card">
-                        <div class="home-establishment-card__media">
-                            <img src="{{this.mainImage}}" alt="" class="w-full h-full object-cover" data-establishment-img data-establishment-id="{{this._id}}">
-                        </div>
-                        <div class="home-establishment-card__body">
-                            <div class="home-establishment-card__meta">
-                                <span class="inline-flex items-center gap-1.5 font-semibold text-gray-800">
-                                    <i data-lucide="star" class="w-4 h-4 text-yellow-500 flex-shrink-0 fill-yellow-500" aria-hidden="true"></i>
-                                    {{this.rating}}
-                                </span>
-                                <span>({{this.reviewsCount}} reviews)</span>
-                            </div>
-                            <h4 class="home-establishment-card__name">{{this.name}}</h4>
-                            <p class="home-establishment-card__desc">{{this.description}}</p>
-                        </div>
-                    </a>
-                    {{/each}}
-                </div>
-            </section>
-
-            <section class="home-featured-panel" aria-labelledby="home-feat-rev">
-                <div class="home-featured-panel-head">
-                    <h3 id="home-feat-rev" class="home-featured-panel-title">Recent reviews</h3>
-                    <p class="home-featured-panel-desc">What classmates are saying right now.</p>
-                </div>
-                <div class="home-card-stagger flex flex-col gap-4 md:gap-5">
-                    {{#each reviews}}
-                    <article class="home-stagger-item home-review-card">
-                        <div class="home-review-card__header">
-                            <div class="flex items-center min-w-0">
-                                <img src="/uploads/{{this.user.avatar}}" alt="" class="w-12 h-12 md:w-14 md:h-14 rounded-full mr-3 border-2 border-yellow-400 object-cover flex-shrink-0">
-                                <div class="min-w-0">
-                                    <p class="text-base font-semibold text-gray-800 truncate">{{this.user.username}}</p>
-                                    <p class="text-sm text-gray-500">{{this.date}}</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-1.5 flex-shrink-0">
-                                <i data-lucide="star" class="w-6 h-6 text-yellow-500 fill-yellow-500" aria-hidden="true"></i>
-                                <span class="text-lg font-semibold text-gray-800">{{this.rating}}</span>
-                            </div>
-                        </div>
-                        <h4 class="home-review-card__place">{{this.establishment.name}}</h4>
-                        <p class="home-review-card__text">{{this.comment}}</p>
-                        {{#if this.photos}}
-                        <div class="home-review-card__photos">
-                            {{#each this.photos}}
-                            <img src="/uploads/{{this}}" alt="Review photo">
-                            {{/each}}
-                        </div>
-                        {{/if}}
-                    </article>
-                    {{/each}}
-                </div>
-            </section>
-        </div>
+<section class="modern-section" aria-labelledby="trending-title">
+    <div class="section-heading-row">
+        <div><p class="section-kicker">Discover nearby</p><h2 id="trending-title">Trending around campus</h2><p>Start with places students are already talking about.</p></div>
+        <a class="text-link" href="/establishments">See all places <i data-lucide="arrow-right" aria-hidden="true"></i></a>
     </div>
-</div>
+    <div class="place-card-grid">
+        {{#each featuredEstablishments}}
+        <a href="/establishments/{{_id}}" class="modern-place-card" data-establishment-card data-establishment-id="{{_id}}">
+            <div class="modern-place-card__media">
+                <img src="{{mainImage}}" alt="{{#if coverPhotoSource}}Community cover photo of {{name}}{{else}}{{#if (eq mapillaryMatchType 'nearby')}}Nearby Mapillary street view near {{name}}{{else}}{{name}}{{/if}}{{/if}}" data-establishment-img data-establishment-id="{{_id}}">
+                {{#if category}}<span class="modern-place-card__category">{{category}}</span>{{/if}}
+                <span class="modern-place-card__rating"><i data-lucide="star" aria-hidden="true"></i>{{rating}}</span>
+                {{#if coverPhotoSource}}<span class="community-photo-label"><i data-lucide="badge-check" aria-hidden="true"></i>{{#if (eq coverPhotoSource "owner")}}Owner photo{{else}}Community cover{{/if}}</span>{{else}}{{#if (eq mapillaryMatchType "nearby")}}<span class="mapillary-photo-label"><i data-lucide="camera" aria-hidden="true"></i>Nearby street view</span>{{/if}}{{/if}}
+            </div>
+            <div class="modern-place-card__body">
+                <h3>{{name}}</h3><p>{{description}}</p>
+                <div><span>{{reviewsCount}} reviews</span><span>View place <i data-lucide="arrow-up-right" aria-hidden="true"></i></span></div>
+            </div>
+        </a>
+        {{else}}<div class="modern-empty-state">No places have been added yet.</div>{{/each}}
+    </div>
+    <p class="mapillary-grid-attribution">Street-level imagery © <a href="https://www.mapillary.com/" target="_blank" rel="noopener noreferrer">Mapillary</a></p>
+</section>
+
+<section class="modern-section modern-section--reviews" aria-labelledby="reviews-title">
+    <div class="section-heading-row">
+        <div><p class="section-kicker">Fresh takes</p><h2 id="reviews-title">What students are saying</h2></div>
+        <a class="text-link" href="/register">Join the community <i data-lucide="arrow-right" aria-hidden="true"></i></a>
+    </div>
+    <div class="modern-review-grid">
+        {{#each recentReviews}}
+        <article class="modern-review-card">
+            <div class="modern-review-card__header"><img src="/uploads/{{user.avatar}}" alt=""><div><strong>@{{user.username}}</strong><span>{{establishment.name}}</span></div><div class="modern-review-card__rating"><i data-lucide="star" aria-hidden="true"></i>{{rating}}</div></div>
+            <p>“{{comment}}”</p>
+        </article>
+        {{else}}<div class="modern-empty-state">The community is just getting started. Be the first to review a place.</div>{{/each}}
+    </div>
+</section>
+
+<section class="community-cta">
+    <div><p class="section-kicker">Built by the community</p><h2>Know a spot worth sharing?</h2><p>Join Tafteria and help classmates find their next favorite meal.</p></div>
+    <a href="/register">Create your account <i data-lucide="arrow-right" aria-hidden="true"></i></a>
+</section>
 
 <script src="/js/establishment-images-from-geo-api.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" crossorigin="anonymous"></script>
 <script src="/js/home-animations.js"></script>
-<script src="/js/home-hero-carousel.js"></script>

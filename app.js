@@ -8,6 +8,7 @@ const handlebars = require('express-handlebars');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const { safeJson } = require('./utils/text');
 
 // Middleware for parsing JSON and URL-encoded form data
 app.use(express.json());
@@ -21,8 +22,13 @@ app.use(bodyParser.json());
 app.use(session({
   secret: process.env.SECRET_KEY,
   resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false } // Set to true if using HTTPS
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+  }
 }));
 
 // Set up Handlebars as the view engine
@@ -41,6 +47,9 @@ app.engine('hbs', handlebars.engine({
     },
     jsonify: function (context) {
       return JSON.stringify(context);
+    },
+    safeJson: function (context) {
+      return safeJson(context);
     },
     range: function (n) {
       return Array.from({ length: n }, (_, i) => i);
@@ -83,7 +92,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Set up MongoDB connection
-mongoose.connect('mongodb://localhost:27017/tafteria')
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/tafteria')
   .then(() => console.log("Connected to MongoDB."))
   .catch((err) => console.error("Error connecting to MongoDB:", err));
 
@@ -101,7 +110,23 @@ app.use('/', reviewRoutes);
 
 // Error handling for 404
 app.use((req, res, next) => {
-  res.status(404).send('Page not found');
+  res.status(404).render('404', {
+    title: 'Page not found | Tafteria',
+    layout: 'index',
+    user: req.session.user,
+  });
+});
+
+app.use((err, req, res, next) => {
+  console.error('Request error:', err);
+  const status = err?.name === 'MulterError' || err?.message?.startsWith('Only ') ? 400 : 500;
+  res.status(status).render('error', {
+    title: status === 400 ? 'Upload problem | Tafteria' : 'Something went wrong | Tafteria',
+    layout: 'index',
+    user: req.session.user,
+    status,
+    message: status === 400 ? err.message : 'We could not finish that request. Please try again.',
+  });
 });
 
 // Close MongoDB connection

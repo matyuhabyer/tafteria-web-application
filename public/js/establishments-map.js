@@ -79,6 +79,8 @@
 
         var bounds = [];
         var group = L.featureGroup();
+        var markersById = {};
+        var openPlacesLayer = L.layerGroup().addTo(map);
 
         data.features.forEach(function (f) {
           if (!f.geometry || f.geometry.type !== 'Point') return;
@@ -88,11 +90,29 @@
           var props = f.properties || {};
           var m = L.marker([lat, lng]);
           m.bindPopup(popupHtml(props), { maxWidth: 280 });
+          if (props.id) markersById[String(props.id)] = m;
+          m.on('click', function () {
+            document.querySelectorAll('[data-establishment-card]').forEach(function (card) {
+              card.classList.toggle('is-map-active', card.getAttribute('data-establishment-id') === String(props.id));
+            });
+          });
           group.addLayer(m);
           bounds.push([lat, lng]);
         });
 
         group.addTo(map);
+
+        document.querySelectorAll('[data-establishment-card][data-establishment-id]').forEach(function (card) {
+          function activate() {
+            var marker = markersById[card.getAttribute('data-establishment-id')];
+            if (!marker) return;
+            document.querySelectorAll('[data-establishment-card]').forEach(function (item) { item.classList.remove('is-map-active'); });
+            card.classList.add('is-map-active');
+            marker.openPopup();
+          }
+          card.addEventListener('mouseenter', activate);
+          card.addEventListener('focus', activate);
+        });
 
         if (bounds.length === 0) {
           map.setView(TAFT_CENTER, DEFAULT_ZOOM);
@@ -103,6 +123,33 @@
         }
 
         window.__tafteriaEstablishmentsMap = map;
+        window.addOpenStreetMapPlacesToMap = function (places) {
+          openPlacesLayer.clearLayers();
+          (Array.isArray(places) ? places : []).forEach(function (place) {
+            if (!Number.isFinite(Number(place.lat)) || !Number.isFinite(Number(place.lng))) return;
+            var marker = L.circleMarker([Number(place.lat), Number(place.lng)], {
+              radius: 6,
+              weight: 2,
+              color: '#123c2c',
+              fillColor: '#f2b84b',
+              fillOpacity: 0.9,
+            });
+            var name = String(place.name || 'OpenStreetMap place').replace(/[&<>"']/g, function (char) {
+              return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[char];
+            });
+            var category = String(place.category || 'Food spot').replace(/[&<>]/g, '');
+            var url = String(place.osmUrl || 'https://www.openstreetmap.org/').replace(/"/g, '&quot;');
+            marker.bindPopup(
+              '<div class="osm-map-popup"><span>OpenStreetMap · ' + category + '</span><strong>' + name + '</strong>' +
+              '<small>' + (Number(place.distanceMeters) || 0) + ' m from DLSU</small>' +
+              '<a href="' + url + '" target="_blank" rel="noopener">View source ↗</a></div>'
+            );
+            marker.addTo(openPlacesLayer);
+          });
+        };
+        if (Array.isArray(window.__tafteriaPendingOsmPlaces)) {
+          window.addOpenStreetMapPlacesToMap(window.__tafteriaPendingOsmPlaces);
+        }
         window.invalidateEstablishmentsMap = function () {
           if (window.__tafteriaEstablishmentsMap) {
             window.__tafteriaEstablishmentsMap.invalidateSize();

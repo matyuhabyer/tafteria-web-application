@@ -17,12 +17,15 @@
   },
   "name": "tafteria-app",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "dev": "node --watch app.js",
+    "test": "node --test",
+    "mapillary:backfill": "node scripts/backfill-mapillary-images.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "1. Clone the GitHub repository using the command:\r    - git clone https://github.com/matyuhabyer/tafteria-web-application.git"
+  "description": "A student-powered food discovery and review map for the Taft community."
 }

@@ -6,10 +6,14 @@
             <p class="auth-subtitle">Keep track of your favorite Taft spots and share reviews with classmates.</p>
         </div>
 
+        {{#if error}}
+        <div class="form-alert" role="alert"><i data-lucide="circle-alert" aria-hidden="true"></i><p>{{error}}</p></div>
+        {{/if}}
+
         <form action="/login" method="POST" class="auth-form">
             <div class="form-field">
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" autocomplete="username" required>
+                <input type="text" id="username" name="username" autocomplete="username" value="{{form.username}}" required>
             </div>
             <div class="form-field">
                 <label for="password">Password</label>

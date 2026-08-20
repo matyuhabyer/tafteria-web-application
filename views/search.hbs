@@ -62,10 +62,10 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const query = "{{query}}";
+    const query = {{{safeJson query}}};
     const ratingFilter = document.getElementById('rating-filter');
-    const establishments = {{{jsonify establishments}}};
-    const reviews = {{{jsonify reviews}}};
+    const establishments = {{{safeJson establishments}}};
+    const reviews = {{{safeJson reviews}}};
     ratingFilter.addEventListener('change', () => filterResults(query));
 
     function escapeHtml(value) {

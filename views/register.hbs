@@ -6,22 +6,29 @@
             <p class="auth-subtitle">Add your profile, rate campus eats, and help the next hungry person choose well.</p>
         </div>
 
+        {{#if errors}}
+        <div class="form-alert" role="alert">
+            <i data-lucide="circle-alert" aria-hidden="true"></i>
+            <div>{{#each errors}}<p>{{msg}}</p>{{/each}}</div>
+        </div>
+        {{/if}}
+
         <form action="/register" method="POST" enctype="multipart/form-data" class="auth-form">
             <div class="form-field">
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" autocomplete="username" required>
+                <input type="text" id="username" name="username" autocomplete="username" minlength="3" maxlength="30" value="{{form.username}}" required>
             </div>
             <div class="form-field">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" autocomplete="new-password" required>
+                <input type="password" id="password" name="password" autocomplete="new-password" minlength="8" maxlength="72" required>
             </div>
             <div class="form-field">
                 <label for="avatar">Avatar</label>
-                <input type="file" id="avatar" name="avatar" accept="image/*" required>
+                <input type="file" id="avatar" name="avatar" accept="image/jpeg,image/png,image/webp,image/gif" required>
             </div>
             <div class="form-field">
                 <label for="description">Short description <span>Optional</span></label>
-                <textarea id="description" name="description" rows="3" placeholder="Tell people what kind of food you usually look for."></textarea>
+                <textarea id="description" name="description" rows="3" maxlength="200" placeholder="Tell people what kind of food you usually look for.">{{form.description}}</textarea>
             </div>
             <button type="submit" class="btn-modern btn-modern--primary">Create account</button>
             <p class="auth-switch">

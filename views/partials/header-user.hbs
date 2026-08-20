@@ -1,24 +1,42 @@
-<!-- Header (signed in) -->
-<header class="site-header w-full h-16 md:h-20 flex items-center justify-between gap-3 px-4 md:px-8 text-white sticky top-0 z-30 backdrop-blur-xl border-b border-white border-opacity-10">
-    <div class="flex items-center space-x-2 md:space-x-4 min-w-0">
-        <button type="button" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white hover:bg-opacity-10 focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:ring-offset-2 focus:ring-offset-green-900 transition-colors" onclick="toggleSidebar()" aria-label="Open menu">
-            <i data-lucide="menu" class="w-6 h-6 text-white opacity-90" aria-hidden="true"></i>
-        </button>
-        <a href="/" class="flex items-center group flex-shrink-0">
-            <img class="site-logo transition-transform group-hover:scale-[1.02]" alt="Tafteria" src="/images/tafteria-logo.png">
+<header class="site-header">
+    <div class="site-header__inner">
+        <a href="/" class="site-brand" aria-label="Tafteria home">
+            <img src="/images/tafteria-logo.png" alt="Tafteria" class="site-brand-logo">
         </a>
-    </div>
-    <div class="flex-grow max-w-xl mx-0 md:mx-8 min-w-0 hidden sm:block">
-        <form action="/search" method="GET" class="site-search-form flex rounded-full overflow-hidden border border-white border-opacity-20 bg-white bg-opacity-95 focus-within:ring-2 focus-within:ring-yellow-300 focus-within:ring-opacity-80 transition-shadow">
+        <nav class="site-desktop-nav" aria-label="Primary navigation">
+            <a href="/establishments">Explore</a>
+            <a href="/establishments?rating=4.5">Top rated</a>
+        </nav>
+        <form action="/search" method="GET" class="site-search-form">
             <label class="sr-only" for="site-search-q-user">Search establishments or reviews</label>
-            <input id="site-search-q-user" type="search" name="q" autocomplete="off" class="w-full h-10 md:h-11 px-4 text-gray-900 placeholder-gray-500 bg-transparent focus:outline-none text-sm md:text-base" placeholder="Search places or reviews...">
-            <button type="submit" class="h-10 md:h-11 px-4 md:px-5 bg-yellow-500 text-green-950 font-bold text-sm md:text-base hover:bg-yellow-300 transition-colors whitespace-nowrap inline-flex items-center justify-center gap-2">
-                <i data-lucide="search" class="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" aria-hidden="true"></i>
-                <span class="hidden md:inline">Search</span>
-            </button>
+            <i data-lucide="search" aria-hidden="true"></i>
+            <input id="site-search-q-user" type="search" name="q" autocomplete="off" placeholder="Search Taft food spots">
         </form>
+        <div class="site-header__actions">
+            <a href="/profile" class="site-profile-link" aria-label="Open profile">
+                {{#if user.avatar}}
+                <img src="/uploads/{{user.avatar}}" alt="">
+                {{else}}
+                <i data-lucide="user" aria-hidden="true"></i>
+                {{/if}}
+                <span>{{user.username}}</span>
+            </a>
+            <div class="site-menu" data-site-menu>
+                <button type="button" id="site-menu-button" class="site-icon-button site-header__menu-button" aria-label="Open menu" aria-haspopup="menu" aria-controls="site-menu-dropdown" aria-expanded="false">
+                    <i data-lucide="menu" aria-hidden="true"></i>
+                </button>
+                <nav id="site-menu-dropdown" class="site-menu-dropdown" role="menu" aria-label="Account navigation" aria-labelledby="site-menu-button" hidden>
+                    <div class="site-menu-dropdown__account">
+                        <span>Signed in as</span>
+                        <strong>{{user.username}}</strong>
+                    </div>
+                    <a href="/" role="menuitem"><i data-lucide="house" aria-hidden="true"></i>Home</a>
+                    <a href="/profile" role="menuitem"><i data-lucide="user-round" aria-hidden="true"></i>Profile</a>
+                    <a href="/establishments" role="menuitem"><i data-lucide="map-pinned" aria-hidden="true"></i>Establishments</a>
+                    <div class="site-menu-dropdown__divider"></div>
+                    <a href="/logout" role="menuitem" class="site-menu-dropdown__logout"><i data-lucide="log-out" aria-hidden="true"></i>Log out</a>
+                </nav>
+            </div>
+        </div>
     </div>
-    <a href="/profile" class="w-10 h-10 hidden sm:inline-flex items-center justify-center rounded-full bg-white bg-opacity-10 border border-white border-opacity-15 hover:bg-opacity-20 transition-colors" aria-label="Open profile">
-        <i data-lucide="user" class="w-5 h-5" aria-hidden="true"></i>
-    </a>
 </header>

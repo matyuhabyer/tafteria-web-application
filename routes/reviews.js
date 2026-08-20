@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
+const mongoose = require('mongoose');
+const crypto = require('crypto');
 
 // Models
 const Review = require('../models/Review');
@@ -12,27 +14,47 @@ const storage = multer.diskStorage({
     cb(null, 'public/uploads/');
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
+    cb(null, `${Date.now()}-${crypto.randomBytes(8).toString('hex')}${path.extname(file.originalname).toLowerCase()}`);
   }
 });
-const upload = multer({ storage: storage });
+const upload = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024, files: 5 },
+  fileFilter: function (req, file, cb) {
+    if (!/^image\/(jpeg|png|webp|gif)$/i.test(file.mimetype)) {
+      return cb(new Error('Only JPEG, PNG, WebP, and GIF images are allowed.'));
+    }
+    cb(null, true);
+  },
+});
+
+function requireUser(req, res, next) {
+  if (!req.session.user?.id) {
+    return res.status(401).send('You must be logged in to continue.');
+  }
+  next();
+}
+
+function validId(value) {
+  return mongoose.isValidObjectId(value);
+}
 
 // Handle review input
-router.post('/establishments/:id/reviews', upload.array('photos', 5), async (req, res) => {
+router.post('/establishments/:id/reviews', requireUser, upload.array('photos', 5), async (req, res) => {
   const establishmentId = req.params.id;
   const { rating, comment } = req.body;
   const user = req.session.user;
 
-  console.log('Review submission data:', { establishmentId, rating, comment, user: user?.id });
-  console.log('Files uploaded:', req.files);
-
-  if (!user || !user.id) {
-    return res.status(401).send('You must be logged in to post a review.');
+  if (!validId(establishmentId)) {
+    return res.status(400).send('Invalid establishment.');
   }
-
-  if (!rating || !comment) {
-    console.error('Missing required fields:', { rating, comment });
+  const parsedRating = Number(rating);
+  const cleanComment = String(comment || '').trim();
+  if (!Number.isInteger(parsedRating) || parsedRating < 1 || parsedRating > 5 || !cleanComment) {
     return res.status(400).send('Rating and comment are required.');
+  }
+  if (cleanComment.length > 2000) {
+    return res.status(400).send('Review comments must be 2,000 characters or fewer.');
   }
 
   try {
@@ -41,16 +63,17 @@ router.post('/establishments/:id/reviews', upload.array('photos', 5), async (req
 
     const newReview = new Review({
       user: user.id,
-      rating: parseInt(rating),
-      comment,
+      rating: parsedRating,
+      comment: cleanComment,
       photos,
       establishment: establishmentId
     });
 
-    console.log('Creating review:', newReview);
     await newReview.save();
-    console.log('Review saved successfully');
-    res.redirect(`/establishments/${establishmentId}`);
+    const redirectTarget = req.body.returnTo === 'profile'
+      ? '/profile?review=submitted'
+      : `/establishments/${establishmentId}`;
+    res.redirect(redirectTarget);
   } catch (error) {
     console.error('Error posting review:', error);
     res.status(500).send('Error posting review.');
@@ -58,18 +81,19 @@ router.post('/establishments/:id/reviews', upload.array('photos', 5), async (req
 });
 
 // Add comment to review
-router.post('/reviews/:id/comments', async (req, res) => {
+router.post('/reviews/:id/comments', requireUser, async (req, res) => {
   const reviewId = req.params.id;
   const { text } = req.body;
   const user = req.session.user;
-
-  if (!user || !user.id) {
-    return res.status(401).send('You must be logged in to comment.');
+  const cleanText = String(text || '').trim();
+  if (!validId(reviewId)) return res.status(400).send('Invalid review.');
+  if (!cleanText || cleanText.length > 1000) {
+    return res.status(400).send('Comments must be between 1 and 1,000 characters.');
   }
 
   try {
     await Review.findByIdAndUpdate(reviewId, {
-      $push: { comments: { user: user.id, text } }
+      $push: { comments: { user: user.id, text: cleanText } }
     });
 
     res.redirect(`/establishments/${req.body.establishmentId}`);
@@ -80,9 +104,10 @@ router.post('/reviews/:id/comments', async (req, res) => {
 });
 
 // Delete review route
-router.delete('/reviews/:id', async (req, res) => {
+router.delete('/reviews/:id', requireUser, async (req, res) => {
   const reviewId = req.params.id;
   const userId = req.session.user.id;
+  if (!validId(reviewId)) return res.status(400).send('Invalid review.');
 
   try {
     const review = await Review.findById(reviewId);
@@ -91,7 +116,7 @@ router.delete('/reviews/:id', async (req, res) => {
       return res.status(404).send('Review not found');
     }
 
-    if (review.user.toString() !== userId) {
+    if (String(review.user) !== String(userId)) {
       return res.status(403).send('Unauthorized');
     }
 
@@ -104,10 +129,15 @@ router.delete('/reviews/:id', async (req, res) => {
 });
 
 // Edit review route
-router.post('/reviews/:id/edit', async (req, res) => {
+router.post('/reviews/:id/edit', requireUser, async (req, res) => {
   const reviewId = req.params.id;
   const { comment } = req.body;
   const userId = req.session.user.id;
+  const cleanComment = String(comment || '').trim();
+  if (!validId(reviewId)) return res.status(400).send('Invalid review.');
+  if (!cleanComment || cleanComment.length > 2000) {
+    return res.status(400).send('Review comments must be between 1 and 2,000 characters.');
+  }
 
   try {
     const review = await Review.findById(reviewId);
@@ -116,11 +146,11 @@ router.post('/reviews/:id/edit', async (req, res) => {
       return res.status(404).send('Review not found');
     }
 
-    if (review.user.toString() !== userId) {
+    if (String(review.user) !== String(userId)) {
       return res.status(403).send('Unauthorized');
     }
 
-    review.comment = comment;
+    review.comment = cleanComment;
     await review.save();
 
     res.redirect(`/establishments/${review.establishment}`);
@@ -131,13 +161,11 @@ router.post('/reviews/:id/edit', async (req, res) => {
 });
 
 // Mark review as helpful (like)
-router.post('/reviews/:id/like', async (req, res) => {
+router.post('/reviews/:id/like', requireUser, async (req, res) => {
   const reviewId = req.params.id;
   const userId = req.session.user?.id;
 
-  if (!userId) {
-    return res.status(401).send('You must be logged in to like a review.');
-  }
+  if (!validId(reviewId)) return res.status(400).send('Invalid review.');
 
   try {
     const review = await Review.findById(reviewId);
@@ -147,7 +175,7 @@ router.post('/reviews/:id/like', async (req, res) => {
     }
 
     // Check if the user has already liked the review
-    if (review.likesUserIds.includes(userId)) {
+    if (review.likesUserIds.some((id) => String(id) === String(userId))) {
       return res.status(400).send('You have already liked this review.');
     }
 
@@ -163,10 +191,15 @@ router.post('/reviews/:id/like', async (req, res) => {
 });
 
 // Edit review route (profile)
-router.post('/profile/reviews/:id/edit', async (req, res) => {
+router.post('/profile/reviews/:id/edit', requireUser, async (req, res) => {
   const reviewId = req.params.id;
   const { comment } = req.body;
   const userId = req.session.user.id;
+  const cleanComment = String(comment || '').trim();
+  if (!validId(reviewId)) return res.status(400).send('Invalid review.');
+  if (!cleanComment || cleanComment.length > 2000) {
+    return res.status(400).send('Review comments must be between 1 and 2,000 characters.');
+  }
 
   try {
     const review = await Review.findById(reviewId);
@@ -175,11 +208,11 @@ router.post('/profile/reviews/:id/edit', async (req, res) => {
       return res.status(404).send('Review not found');
     }
 
-    if (review.user.toString() !== userId) {
+    if (String(review.user) !== String(userId)) {
       return res.status(403).send('Unauthorized');
     }
 
-    review.comment = comment;
+    review.comment = cleanComment;
     await review.save();
 
     res.redirect('/profile'); // Redirect back to profile
@@ -190,9 +223,10 @@ router.post('/profile/reviews/:id/edit', async (req, res) => {
 });
 
 // Delete review route (profile)
-router.post('/profile/reviews/:id/delete', async (req, res) => {
+router.post('/profile/reviews/:id/delete', requireUser, async (req, res) => {
   const reviewId = req.params.id;
   const userId = req.session.user.id;
+  if (!validId(reviewId)) return res.status(400).send('Invalid review.');
 
   try {
     const review = await Review.findById(reviewId);
@@ -201,7 +235,7 @@ router.post('/profile/reviews/:id/delete', async (req, res) => {
       return res.status(404).send('Review not found');
     }
 
-    if (review.user.toString() !== userId) {
+    if (String(review.user) !== String(userId)) {
       return res.status(403).send('Unauthorized');
     }
 
@@ -213,4 +247,4 @@ router.post('/profile/reviews/:id/delete', async (req, res) => {
   }
 });
 
-module.exports = router; 
+module.exports = router;

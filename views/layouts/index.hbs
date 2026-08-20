@@ -3,28 +3,33 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#14532d">
+    <meta name="theme-color" content="#123c2c">
+    <meta name="description" content="Discover student-reviewed food spots, cafés, and quick bites around Taft.">
+    <link rel="icon" type="image/png" href="/images/tafteria-logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/app.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <title>{{title}}</title>
 </head>
 <body class="taferia-app min-h-screen flex flex-col">
+    <a class="skip-link" href="#main-content">Skip to content</a>
     {{#if user}}
     {{> header-user }}
     {{else}}
     {{> header }}
     {{/if}}
-    {{> sidebar }}
-    <main class="flex-grow">
+    <main id="main-content" class="flex-grow">
     {{{body}}}
     </main>
     {{> footer }}
+    {{> mobile-nav }}
+    <div id="toast-region" class="toast-region" aria-live="polite" aria-atomic="true"></div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://cdn.jsdelivr.net/npm/lucide@0.460.0/dist/umd/lucide.min.js" crossorigin="anonymous"></script>
+    <script src="/js/ui-modern.js"></script>
     <script src="/js/script.js"></script>
 </body>
 </html>

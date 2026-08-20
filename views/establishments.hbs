@@ -1,114 +1,94 @@
-<div class="w-full section-home min-h-screen flex flex-col items-center py-8 md:py-12 px-3 sm:px-4">
-    <div class="w-full max-w-[1600px]">
-        <header class="page-establishments-hero mb-8">
-            <p class="page-establishments-eyebrow">Explore · Taft</p>
-            <h1 class="text-3xl md:text-5xl font-bold text-gray-900 mb-2" style="font-family: var(--font-display);">Establishments</h1>
-            <p class="text-gray-600 max-w-2xl mx-auto leading-relaxed text-sm md:text-base">Explore the establishments near De La Salle University - Taft!</p>
-        </header>
-
-        <div class="establishments-page-grid" id="establishments-layout-grid">
-            <!-- Column 1: Filters -->
-            <aside class="establishments-col-filters order-1" aria-label="Filters">
-                <div class="bg-white rounded-2xl border border-gray-200 border-opacity-60 p-5 md:p-6 h-full" style="box-shadow: var(--shadow-soft);">
-                    <h2 class="text-lg font-bold text-gray-900 mb-1" style="font-family: var(--font-display);">Filters</h2>
-                    <p class="text-sm text-gray-500 mb-5">Rating &amp; category</p>
-                    <form action="/establishments" method="GET" class="space-y-4">
-                        <div>
-                            <label for="filter-rating" class="block text-sm font-semibold text-gray-700 mb-1.5">Minimum rating</label>
-                            <select id="filter-rating" name="rating" class="w-full rounded-xl border border-gray-200 px-3 py-2.5 bg-white text-gray-900 text-sm focus:ring-2 focus:ring-yellow-400 focus:border-transparent focus:outline-none">
-                                <option value="all" {{#if (eq selectedRating "all")}}selected{{/if}}>All ratings</option>
-                                <option value="4.5" {{#if (eq selectedRating "4.5")}}selected{{/if}}>4.5 &amp; up</option>
-                                <option value="4.0" {{#if (eq selectedRating "4.0")}}selected{{/if}}>4.0 &amp; up</option>
-                                <option value="3.5" {{#if (eq selectedRating "3.5")}}selected{{/if}}>3.5 &amp; up</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="filter-category" class="block text-sm font-semibold text-gray-700 mb-1.5">Category</label>
-                            <select id="filter-category" name="category" class="w-full rounded-xl border border-gray-200 px-3 py-2.5 bg-white text-gray-900 text-sm focus:ring-2 focus:ring-yellow-400 focus:border-transparent focus:outline-none">
-                                <option value="all" {{#if (eq selectedCategory "all")}}selected{{/if}}>All categories</option>
-                                <option value="Restaurant" {{#if (eq selectedCategory "Restaurant")}}selected{{/if}}>Restaurant</option>
-                                <option value="Cafe" {{#if (eq selectedCategory "Cafe")}}selected{{/if}}>Cafe</option>
-                                <option value="Stall" {{#if (eq selectedCategory "Stall")}}selected{{/if}}>Stall</option>
-                                <option value="Fastfood" {{#if (eq selectedCategory "Fastfood")}}selected{{/if}}>Fast food</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="w-full rounded-full bg-green-800 text-white font-semibold py-3 text-sm hover:bg-green-700 transition-colors shadow-sm">
-                            Apply filters
-                        </button>
-                    </form>
-                </div>
-            </aside>
-
-            <!-- Column 2: Places -->
-            <section class="establishments-col-places order-2 min-w-0" aria-labelledby="list-heading">
-                <div class="bg-white rounded-2xl border border-gray-200 border-opacity-60 p-5 md:p-6" style="box-shadow: var(--shadow-soft);">
-                    <div class="mb-5">
-                        <h2 id="list-heading" class="text-xl md:text-2xl font-bold text-gray-900" style="font-family: var(--font-display);">Places</h2>
-                        <p class="text-sm text-gray-500 mt-1">Open a card for full details and reviews.</p>
-                    </div>
-
-                    <div class="flex flex-col gap-4">
-                        {{#each establishments}}
-                        <a href="/establishments/{{this._id}}" class="establishment-card-ui group">
-                            <img src="{{mainImage}}" alt="" class="establishment-card-ui__media" data-establishment-img data-establishment-id="{{this._id}}" />
-                            <div class="p-4 md:p-5 flex flex-col justify-center flex-1 min-w-0">
-                                <div class="flex flex-wrap items-center gap-2 mb-2">
-                                    <span class="inline-flex items-center text-sm font-semibold text-gray-800">
-                                        <i data-lucide="star" class="w-4 h-4 md:w-5 md:h-5 text-yellow-500 mr-1 flex-shrink-0 fill-yellow-500" aria-hidden="true"></i>
-                                        {{rating}}
-                                        <span class="font-normal text-gray-500 ml-1">({{reviewsCount}})</span>
-                                    </span>
-                                    {{#if category}}
-                                    <span class="inline-block bg-green-50 text-green-900 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-green-100">{{category}}</span>
-                                    {{/if}}
-                                </div>
-                                <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-1.5 group-hover:text-green-900 transition-colors" style="font-family: var(--font-display);">{{name}}</h3>
-                                <p class="text-gray-600 text-sm leading-relaxed line-clamp-3">{{description}}</p>
-                                {{#if phone}}
-                                <p class="text-xs text-gray-500 mt-2 font-medium">{{phone}}</p>
-                                {{/if}}
-                                <span class="mt-3 inline-flex items-center text-sm font-semibold text-green-800">
-                                    View place <span class="ml-1 group-hover:translate-x-0.5 transition-transform" aria-hidden="true">→</span>
-                                </span>
-                            </div>
-                        </a>
-                        {{else}}
-                        <div class="empty-state py-10">
-                            <p class="text-lg font-semibold text-gray-800 mb-1" style="font-family: var(--font-display);">No matches</p>
-                            <p class="text-sm max-w-md mx-auto">Try loosening filters or <a href="/establishments" class="text-green-800 font-semibold hover:underline">reset</a>.</p>
-                        </div>
-                        {{/each}}
-                    </div>
-                </div>
-            </section>
-
-            <!-- Resize handle (xl+ only) -->
-            <div
-                class="establishments-resize-handle order-3"
-                role="separator"
-                aria-orientation="vertical"
-                aria-label="Drag to resize map"
-                title="Drag to resize map. Double-click to reset."
-            ></div>
-
-            <!-- Column 4: Map -->
-            <aside class="establishments-col-map order-4 min-w-0" aria-labelledby="map-heading">
-                <div class="bg-white rounded-2xl border border-gray-200 border-opacity-60 p-4 md:p-5 h-full flex flex-col" style="box-shadow: var(--shadow-soft);">
-                    <div class="map-card-header mb-3">
-                        <div>
-                            <h2 id="map-heading" class="text-lg font-bold text-gray-900" style="font-family: var(--font-display);">Map</h2>
-                            <p class="text-xs text-gray-500 mt-0.5">Pins follow your filters.</p>
-                        </div>
-                        <a href="/api/establishments/geo" class="text-xs text-green-800 font-semibold hover:underline shrink-0">GeoJSON</a>
-                    </div>
-                    <div id="establishments-map" class="establishments-map-in-grid w-full rounded-xl" role="application" aria-label="Establishments map"></div>
-                    <script type="application/json" id="establishments-geo-json">{{{establishmentsGeoJson}}}</script>
-                </div>
-            </aside>
+<div class="explore-page">
+    <header class="explore-intro">
+        <div>
+            <p class="page-establishments-eyebrow">Your campus food map</p>
+            <h1>Explore Taft</h1>
+            <p>Filter {{resultCount}} community-mapped food places, compare options, and see exactly where to go.</p>
         </div>
+        <div class="establishments-mobile-switch" role="group" aria-label="Choose list or map view">
+            <button type="button" class="is-active" data-establishments-view="list"><i data-lucide="list" aria-hidden="true"></i>List</button>
+            <button type="button" data-establishments-view="map"><i data-lucide="map" aria-hidden="true"></i>Map</button>
+        </div>
+    </header>
+
+    <form action="/establishments" method="GET" class="explore-filter-bar">
+        <div class="explore-filter-bar__label"><i data-lucide="sliders-horizontal" aria-hidden="true"></i><div><strong>Filter places</strong><span>Find a better match</span></div></div>
+        <label for="filter-rating">Minimum rating
+            <select id="filter-rating" name="rating">
+                <option value="all" {{#if (eq selectedRating "all")}}selected{{/if}}>Any rating</option>
+                <option value="4.5" {{#if (eq selectedRating "4.5")}}selected{{/if}}>4.5 &amp; up</option>
+                <option value="4.0" {{#if (eq selectedRating "4.0")}}selected{{/if}}>4.0 &amp; up</option>
+                <option value="3.5" {{#if (eq selectedRating "3.5")}}selected{{/if}}>3.5 &amp; up</option>
+            </select>
+        </label>
+        <label for="filter-category">Category
+            <select id="filter-category" name="category">
+                <option value="all" {{#if (eq selectedCategory "all")}}selected{{/if}}>All categories</option>
+                <option value="Restaurant" {{#if (eq selectedCategory "Restaurant")}}selected{{/if}}>Restaurant</option>
+                <option value="Cafe" {{#if (eq selectedCategory "Cafe")}}selected{{/if}}>Café</option>
+                <option value="Stall" {{#if (eq selectedCategory "Stall")}}selected{{/if}}>Stall</option>
+                <option value="Fastfood" {{#if (eq selectedCategory "Fastfood")}}selected{{/if}}>Fast food</option>
+                <option value="Foodcourt" {{#if (eq selectedCategory "Foodcourt")}}selected{{/if}}>Food court</option>
+                <option value="Dessert" {{#if (eq selectedCategory "Dessert")}}selected{{/if}}>Dessert</option>
+            </select>
+        </label>
+        <div class="explore-filter-bar__actions">
+            <a href="/establishments">Reset</a>
+            <button type="submit">Apply filters</button>
+        </div>
+    </form>
+
+    <div class="explore-layout" id="establishments-layout-grid">
+        <section class="explore-results" aria-labelledby="list-heading" data-establishments-panel="list">
+            <div class="explore-panel-heading">
+                <div><h2 id="list-heading">Places</h2><p>Hover a card to locate its pin.</p></div>
+                <span>{{resultCount}} results</span>
+            </div>
+            <div class="explore-card-list">
+                {{#each establishments}}
+                <article class="explore-place-card" data-establishment-card data-establishment-id="{{_id}}">
+                    <a href="/establishments/{{_id}}" class="explore-place-card__media" aria-label="View {{name}}">
+                        <img src="{{mainImage}}" alt="{{#if coverPhotoSource}}Community cover photo of {{name}}{{else}}{{#if (eq mapillaryMatchType 'nearby')}}Nearby Mapillary street view near {{name}}{{else}}{{name}}{{/if}}{{/if}}" data-establishment-img data-establishment-id="{{_id}}">
+                        {{#if category}}<span class="explore-place-card__category">{{category}}</span>{{/if}}
+                        {{#if coverPhotoSource}}<span class="community-photo-label"><i data-lucide="badge-check" aria-hidden="true"></i>{{#if (eq coverPhotoSource "owner")}}Owner photo{{else}}Community cover{{/if}}</span>{{else}}{{#if (eq mapillaryMatchType "nearby")}}<span class="mapillary-photo-label"><i data-lucide="camera" aria-hidden="true"></i>Nearby street view</span>{{/if}}{{/if}}
+                    </a>
+                    {{#if ../user}}
+                    <button type="button" class="favorite-button favorite-button--card {{#if isFavorite}}is-favorite{{/if}}" data-favorite-button data-establishment-id="{{_id}}" data-place-name="{{name}}" aria-pressed="{{#if isFavorite}}true{{else}}false{{/if}}" aria-label="{{#if isFavorite}}Remove {{name}} from favorites{{else}}Save {{name}} to favorites{{/if}}">
+                        <i data-lucide="heart" aria-hidden="true"></i>
+                    </button>
+                    {{else}}
+                    <a href="/login" class="favorite-button favorite-button--card" aria-label="Sign in to save {{name}}" title="Sign in to save">
+                        <i data-lucide="heart" aria-hidden="true"></i>
+                    </a>
+                    {{/if}}
+                    <div class="explore-place-card__body">
+                        <div class="explore-place-card__meta"><span><i data-lucide="star" aria-hidden="true"></i>{{rating}}</span><span>{{reviewsCount}} reviews</span></div>
+                        <h3><a href="/establishments/{{_id}}">{{name}}</a></h3>
+                        <p>{{description}}</p>
+                        <div class="explore-place-card__footer">
+                            {{#if phone}}<span><i data-lucide="phone" aria-hidden="true"></i>{{phone}}</span>{{else}}<span>Taft, Manila</span>{{/if}}
+                            <a href="/establishments/{{_id}}"><strong>View place <i data-lucide="arrow-up-right" aria-hidden="true"></i></strong></a>
+                        </div>
+                    </div>
+                </article>
+                {{else}}
+                <div class="modern-empty-state"><h3>No matches yet</h3><p>Try loosening your filters or reset the list.</p><a href="/establishments">Reset filters</a></div>
+                {{/each}}
+            </div>
+        </section>
+
+        <aside class="explore-map-panel" aria-labelledby="map-heading" data-establishments-panel="map">
+            <div class="explore-panel-heading">
+                <div><h2 id="map-heading">Map</h2><p>Pins follow your filters.</p></div>
+            </div>
+            <div id="establishments-map" class="establishments-map-in-grid" role="application" aria-label="Establishments map"></div>
+            <script type="application/json" id="establishments-geo-json">{{{establishmentsGeoJson}}}</script>
+        </aside>
     </div>
+
+    <p class="explore-data-attribution">Establishment data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a> · Street-level imagery © <a href="https://www.mapillary.com/" target="_blank" rel="noopener noreferrer">Mapillary</a></p>
 </div>
 
 <script src="/js/establishments-map.js"></script>
 <script src="/js/establishment-images-from-geo-api.js"></script>
-<script src="/js/establishments-layout-resize.js"></script>
+<script src="/js/establishments-view-toggle.js"></script>

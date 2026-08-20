@@ -2,12 +2,13 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-  username: { type: String, required: true },
+  username: { type: String, required: true, trim: true, minlength: 3, maxlength: 30, unique: true },
   password: { type: String, required: true },
   avatar: { type: String, required: true },
   coverPhoto: { type: String },
-  description: { type: String },
+  description: { type: String, maxlength: 200 },
   favorites: { type: String },
+  favoriteEstablishments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Establishment' }],
   averageRating: { type: Number, default: 0 },
   reviewsCount: { type: Number, default: 0 },
   joinedDate: {type: Date, default: Date.now}

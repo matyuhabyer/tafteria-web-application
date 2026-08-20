@@ -4,14 +4,14 @@ const mongoose = require('mongoose');
 
 const reviewSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  rating: { type: Number, required: true, min: 0, max: 5 },
-  comment: { type: String, required: true },
+  rating: { type: Number, required: true, min: 1, max: 5 },
+  comment: { type: String, required: true, trim: true, maxlength: 2000 },
   establishment: { type: mongoose.Schema.Types.ObjectId, ref: 'Establishment', required: true },
   photos: [{ type: String }], // Array of photo filenames
   date: { type: Date, default: Date.now },
   likes: { type: Number, default: 0 },
   likesUserIds: { type: [mongoose.Schema.Types.ObjectId], ref: 'User' },
-  comments: [{ user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, text: String, date: { type: Date, default: Date.now } }]
+  comments: [{ user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, text: { type: String, trim: true, maxlength: 1000 }, date: { type: Date, default: Date.now } }]
 }, {
   timestamps: true
 });

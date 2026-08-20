@@ -15,7 +15,7 @@
                 <div class="profile-sidebar-card">
                     <img src="/uploads/{{user.avatar}}" alt="" class="profile-sidebar-avatar" width="120" height="120">
                     <h1 class="profile-sidebar-name">{{user.username}}</h1>
-                    <p class="profile-sidebar-meta">Member since {{user.joinedDate}}</p>
+                    <p class="profile-sidebar-meta">Member since {{user.joinedDateFormatted}}</p>
 
                     <div class="profile-stat-rows" aria-label="Your stats">
                         <div class="profile-stat-row">
@@ -30,24 +30,31 @@
                             <span class="profile-stat-row__label">Photos</span>
                             <span class="profile-stat-row__value">{{photoCount}}</span>
                         </div>
+                        <div class="profile-stat-row">
+                            <span class="profile-stat-row__label">Favorites</span>
+                            <span class="profile-stat-row__value" data-profile-favorite-count>{{favoriteCount}}</span>
+                        </div>
                     </div>
 
                     <div class="profile-sidebar-actions">
                         <button type="button" id="editProfileBtn" class="w-full rounded-full bg-green-800 text-white font-semibold text-sm py-2.5 hover:bg-green-700 transition-colors shadow-sm">
                             Edit profile
                         </button>
-                        <a href="/establishments" class="w-full inline-flex justify-center items-center rounded-full bg-yellow-500 text-white font-semibold text-sm py-2.5 hover:bg-yellow-400 transition-colors shadow-sm">
+                        <button type="button" id="openProfileReviewModalBtn" class="w-full inline-flex justify-center items-center rounded-full bg-yellow-500 text-white font-semibold text-sm py-2.5 hover:bg-yellow-400 transition-colors shadow-sm" aria-haspopup="dialog" aria-controls="profileReviewModal">
                             Write a review
-                        </a>
-                        <a href="/establishments" class="w-full inline-flex justify-center items-center rounded-full border-2 border-green-800 text-green-900 font-semibold text-sm py-2.5 hover:bg-green-50 transition-colors">
-                            Explore places
-                        </a>
+                        </button>
                     </div>
                 </div>
             </aside>
 
             <!-- Main: about, form, tabs -->
             <div class="profile-main-column order-2">
+                {{#if reviewSubmitted}}
+                <div class="profile-review-submitted" role="status">
+                    <i data-lucide="circle-check" aria-hidden="true"></i>
+                    Your review was published.
+                </div>
+                {{/if}}
                 <section class="profile-about-card" aria-labelledby="about-heading">
                     <h2 id="about-heading" class="profile-section-title">About</h2>
                     <p class="text-gray-700 leading-relaxed text-sm md:text-base">{{#if user.description}}{{user.description}}{{else}}Add a short bio so others know your taste.{{/if}}</p>
@@ -66,10 +73,6 @@
                             <div class="form-field-profile">
                                 <label for="description">Bio</label>
                                 <textarea id="description" name="description" rows="3">{{user.description}}</textarea>
-                            </div>
-                            <div class="form-field-profile">
-                                <label for="favorites">Favorite foods</label>
-                                <textarea id="favorites" name="favorites" rows="2" placeholder="e.g. silog, ramen, milk tea">{{user.favorites}}</textarea>
                             </div>
                             <button type="submit" class="rounded-full bg-green-800 text-white font-semibold px-8 py-2.5 text-sm hover:bg-green-700 transition-colors shadow-sm">
                                 Save changes
@@ -127,15 +130,33 @@
 
                     <div id="favorites-tab" class="p-5 md:p-7 hidden" role="tabpanel" hidden>
                         <h2 class="text-lg font-bold text-gray-900 mb-5" style="font-family: var(--font-display);">Favorites</h2>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div class="profile-review-card">
-                                <h3 class="font-semibold text-gray-900 mb-2">Favorite foods</h3>
-                                <p class="text-gray-600 text-sm leading-relaxed">{{#if user.favorites}}{{user.favorites}}{{else}}Add favorites in your profile edit form.{{/if}}</p>
-                            </div>
-                            <div class="profile-review-card">
-                                <h3 class="font-semibold text-gray-900 mb-2">Favorite places</h3>
-                                <p class="text-gray-500 text-sm">Coming soon.</p>
-                            </div>
+                        <div>
+                                <h3 class="font-semibold text-gray-900 mb-2">Saved places</h3>
+                                <div class="profile-favorite-places" data-favorite-list>
+                                    {{#each favoriteEstablishments}}
+                                    <article class="profile-favorite-place" data-favorite-card data-establishment-id="{{_id}}">
+                                        <a href="/establishments/{{_id}}" class="profile-favorite-place__image">
+                                            <img src="{{mainImage}}" alt="{{name}}">
+                                        </a>
+                                        <div class="profile-favorite-place__body">
+                                            <div>
+                                                {{#if category}}<span class="profile-favorite-place__category">{{category}}</span>{{/if}}
+                                                <h4><a href="/establishments/{{_id}}">{{name}}</a></h4>
+                                                <p><i data-lucide="star" aria-hidden="true"></i> {{rating}} · {{reviewsCount}} reviews</p>
+                                            </div>
+                                            <button type="button" class="favorite-button is-favorite" data-favorite-button data-establishment-id="{{_id}}" data-place-name="{{name}}" data-remove-card-on-unfavorite aria-pressed="true" aria-label="Remove {{name}} from favorites">
+                                                <i data-lucide="heart" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
+                                    </article>
+                                    {{else}}
+                                    <div class="profile-favorites-empty" data-favorite-empty>
+                                        <i data-lucide="heart" aria-hidden="true"></i>
+                                        <p>No favorite places yet.</p>
+                                        <a href="/establishments">Explore establishments</a>
+                                    </div>
+                                    {{/each}}
+                                </div>
                         </div>
                     </div>
 
@@ -168,6 +189,85 @@
                 </section>
             </div>
         </div>
+    </div>
+</div>
+
+<div id="profileReviewModal" class="establishment-modal-overlay hidden" aria-modal="true" role="dialog" aria-labelledby="profile-review-modal-title">
+    <div class="establishment-modal-panel establishment-modal-panel--wide profile-review-picker">
+        <button type="button" id="closeProfileReviewModalBtn" class="establishment-modal-close" aria-label="Close establishment chooser">
+            <i data-lucide="x" aria-hidden="true"></i>
+        </button>
+        <div class="profile-review-picker__header">
+            <p class="page-establishments-eyebrow">Share your experience</p>
+            <h2 id="profile-review-modal-title">Choose an establishment</h2>
+            <p>Select a place to open its review form.</p>
+        </div>
+        <label class="profile-review-picker__search" for="profile-review-place-search">
+            <i data-lucide="search" aria-hidden="true"></i>
+            <span class="sr-only">Search establishments</span>
+            <input id="profile-review-place-search" type="search" placeholder="Search establishments" autocomplete="off" data-modal-initial-focus>
+        </label>
+        <div class="profile-review-picker__list" data-profile-review-options>
+            {{#each reviewEstablishments}}
+            <button type="button" class="profile-review-picker__option" data-profile-review-option data-search-text="{{name}} {{category}}" data-establishment-id="{{_id}}" data-establishment-name="{{name}}" data-establishment-category="{{category}}" data-establishment-image="{{mainImage}}">
+                <img src="{{mainImage}}" alt="">
+                <span>
+                    <strong>{{name}}</strong>
+                    <small>{{#if category}}{{category}} · {{/if}}{{rating}} <i data-lucide="star" aria-hidden="true"></i></small>
+                </span>
+                <i data-lucide="arrow-right" aria-hidden="true"></i>
+            </button>
+            {{/each}}
+        </div>
+        <div class="profile-review-picker__empty hidden" data-profile-review-empty>
+            <i data-lucide="search-x" aria-hidden="true"></i>
+            <p>No establishments match that search.</p>
+        </div>
+    </div>
+</div>
+
+<div id="profileReviewFormModal" class="establishment-modal-overlay hidden" aria-modal="true" role="dialog" aria-labelledby="profile-review-form-title">
+    <div class="establishment-modal-panel establishment-modal-panel--wide profile-review-form-modal">
+        <button type="button" id="closeProfileReviewFormModalBtn" class="establishment-modal-close" aria-label="Close review form">
+            <i data-lucide="x" aria-hidden="true"></i>
+        </button>
+        <div class="profile-review-form-modal__place">
+            <img src="/images/place-placeholder.svg" alt="" data-profile-review-image>
+            <div>
+                <p class="page-establishments-eyebrow">Reviewing</p>
+                <h2 id="profile-review-form-title" data-profile-review-name>Selected establishment</h2>
+                <span data-profile-review-category></span>
+            </div>
+        </div>
+        <form id="profileReviewForm" action="#" method="POST" enctype="multipart/form-data" class="profile-review-form-modal__form">
+            <input type="hidden" name="returnTo" value="profile">
+            <fieldset class="rating-picker">
+                <legend>Your rating</legend>
+                <div class="star-rating" aria-describedby="profile-rating-scale-help">
+                    <input type="radio" id="profile-1-star" name="rating" value="1" class="sr-only" aria-label="1 star" required>
+                    <label for="profile-1-star" title="1 star"><i data-lucide="star" aria-hidden="true"></i></label>
+                    <input type="radio" id="profile-2-stars" name="rating" value="2" class="sr-only" aria-label="2 stars">
+                    <label for="profile-2-stars" title="2 stars"><i data-lucide="star" aria-hidden="true"></i></label>
+                    <input type="radio" id="profile-3-stars" name="rating" value="3" class="sr-only" aria-label="3 stars">
+                    <label for="profile-3-stars" title="3 stars"><i data-lucide="star" aria-hidden="true"></i></label>
+                    <input type="radio" id="profile-4-stars" name="rating" value="4" class="sr-only" aria-label="4 stars">
+                    <label for="profile-4-stars" title="4 stars"><i data-lucide="star" aria-hidden="true"></i></label>
+                    <input type="radio" id="profile-5-stars" name="rating" value="5" class="sr-only" aria-label="5 stars">
+                    <label for="profile-5-stars" title="5 stars"><i data-lucide="star" aria-hidden="true"></i></label>
+                </div>
+                <div id="profile-rating-scale-help" class="rating-picker__scale"><span>1 · Not for me</span><span>5 · Excellent</span></div>
+            </fieldset>
+            <label class="profile-review-form-modal__field" for="profile-review-comment">Your review
+                <textarea id="profile-review-comment" name="comment" maxlength="2000" rows="5" placeholder="Share details about the food, price, service, or atmosphere." required></textarea>
+            </label>
+            <label class="profile-review-form-modal__field" for="profile-review-photos">Photos <span>(optional)</span>
+                <input id="profile-review-photos" type="file" name="photos" accept="image/jpeg,image/png,image/webp,image/gif" multiple>
+            </label>
+            <div class="profile-review-form-modal__actions">
+                <button type="button" id="backToProfileReviewPlacesBtn" class="establishment-detail__btn-ghost">Back</button>
+                <button type="submit" class="establishment-detail__btn-primary">Publish review</button>
+            </div>
+        </form>
     </div>
 </div>
 

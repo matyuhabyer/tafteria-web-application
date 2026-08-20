@@ -28,7 +28,7 @@ const ADDITIONAL = [
     reviewsCount: 0,
     description:
       'Fried chicken, Jolly Spaghetti, and burgers—the Taft crowd favorite for a reason.',
-    gallery: ['/images/subway.jpg', '/images/subway.jpg', '/images/subway.jpg'],
+    gallery: ['/images/subway.jpeg', '/images/subway.jpeg', '/images/subway.jpeg'],
     category: 'Fastfood',
     lat: 14.566,
     lng: 120.993,
@@ -77,7 +77,7 @@ const ADDITIONAL = [
     rating: 0,
     reviewsCount: 0,
     description: 'Crispy chicken with signature sauces—stall vibes with big flavor.',
-    gallery: ['/images/bcs.jpg', '/images/bcs.jpg', '/images/bcs.jpg'],
+    gallery: ['/images/bcs.png', '/images/bcs.png', '/images/bcs.png'],
     category: 'Stall',
     lat: 14.5654,
     lng: 120.9942,
